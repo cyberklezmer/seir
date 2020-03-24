@@ -1,0 +1,327 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+Compartments 
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $S$
+\end_inset
+
+ - suspectible
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $A$
+\end_inset
+
+ - infected asymptomatic
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $M$
+\end_inset
+
+ - infected symptomatic
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $C$
+\end_inset
+
+ - infected critical
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $D$
+\end_inset
+
+ - dead
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $R$
+\end_inset
+
+ - recovered
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta S_{t}=-k_{t}S_{t}(\beta_{A}A_{t}+\beta_{M}M_{t})
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Delta A_{t+1}=k_{t}S_{t}(\beta_{A}A_{t}+\beta_{M}M_{t})-\delta_{A}A_{t}-\gamma_{A}A_{t}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\Delta M_{t+1} & =\delta_{A}A_{t}-\epsilon_{M}M_{t}-\gamma_{M}M_{t}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Delta C_{t+1}=\epsilon_{M}M_{t}-\phi_{C}C_{t}-\gamma_{C}C_{t}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\Delta D_{t+1} & =\phi_{C}C_{t-\Delta_{D}}+\psi_{C}[C_{t-\Delta_{D}}-C_{0}]_{+}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Delta R_{t+1}=\gamma_{A}A_{t}+\gamma_{M}M_{t}+\gamma_{C}C_{t}\text{}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Assume 
+\begin_inset Formula $S$
+\end_inset
+
+ constant (i.e.
+ first equation irrelevant).
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+A_{t+1}=(1+k_{t}S\beta_{A}-\delta_{A}-\gamma_{A})A_{t}-k_{t}S\beta_{M}M_{t}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+M_{t+1} & =(1-\epsilon_{M}-\gamma_{M})M_{t}+\delta_{A}A_{t}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+C_{t+1}=(1-\phi_{C})C_{t}+\epsilon_{M}M_{t}-\phi_{C}(C_{t-\Delta_{D}})-\psi_{C}[C_{t-\Delta_{D}}-c_{0}]_{+}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+D_{t+1} & =D_{t}+\phi_{C}(C_{t-\Delta_{D}})-\psi_{C}[C_{t-\Delta_{D}}-c_{0}]_{+}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+R_{t+1}=R_{t}+\gamma_{A}A_{t}+\gamma_{M}M_{t}+\gamma_{C}C_{t}
+\]
+
+\end_inset
+
+Unfortunately do not observe 
+\begin_inset Formula $A$
+\end_inset
+
+ and still also not 
+\begin_inset Formula $C$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Need to impose
+\begin_inset Formula 
+\begin{multline*}
+A_{t}=\mu_{t-1}M_{t-1}+\nu_{t-1}(\mu_{t-2}M_{t-2}+\nu_{t-2}(\mu_{t-3}M_{t-3}+\dots))\\
+=\mu_{t-1}M_{t-1}+\nu_{t-1}\mu_{t-2}M_{t-2}+\nu_{t-1}\nu_{t-2}\mu_{t-3}M_{t-3}+\dots+(\nu_{t-1}\times\dots\times\nu_{0})A_{0}
+\end{multline*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\mu_{t}=-k_{t}S\beta_{M},\qquad\nu_{t}=1+k_{t}S\beta_{A}-\delta_{A}-\gamma_{A}
+\]
+
+\end_inset
+
+As for 
+\begin_inset Formula $C$
+\end_inset
+
+, introduce new compartment 
+\begin_inset Formula $X=C+D$
+\end_inset
+
+.
+ We have
+\begin_inset Formula 
+\[
+\Delta X_{t+1}=\epsilon_{M}M_{t}-\gamma_{C}C_{t}=\epsilon_{M}M_{t}-\gamma_{C}(X_{t}-D_{t})
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+D_{t+1}=D_{t}+\phi_{C}((X-D)_{t-\Delta_{D}})+\psi_{C}[(X-D)_{t-\Delta_{D}}-c_{0}]_{+}=
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline*}
+...\text{´}\\
+\end{multline*}
+
+\end_inset
+
+giving
+\begin_inset Formula 
+\[
+M_{t+1}=(1-\epsilon_{M}-\gamma_{M})M_{t}+\delta_{A}Z_{t},\qquad Z_{t}=\sum_{\tau=1}^{t-1}(\nu_{\tau+1}\times\dots\times\nu_{t-1})\mu_{\tau}M_{\tau}+(\nu_{t-1}\times\dots\times\nu_{0})A_{0}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+C_{t+1}=(1-\phi_{C})C_{t}+\epsilon_{M}M_{t}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Delta D_{t+1}=\phi_{C}Y_{t-\Delta_{D}}+\psi_{C}[Y_{t-\Delta_{D}}-C_{0}]_{+}\qquad Y_{t}=\epsilon_{M}\sum_{\tau=0}^{t-1}(1-\phi_{C}){}^{t-\tau}M_{\tau}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Delta R_{t+1}=\gamma_{A}Z_{t}+\gamma_{M}M_{t}+\gamma_{C}C_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
