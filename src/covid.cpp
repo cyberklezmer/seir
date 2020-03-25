@@ -25,9 +25,9 @@ struct country
     string province;
     string name;
     vector<vector<double>> data;
-    unsigned Deltad=10;
+    unsigned Deltad=20;
     unsigned trsh=10;
-    double c0 = 2000;
+    double c0 = 1000;
 
     vector<double> z;
     vector<vector<double>> reg;
@@ -100,6 +100,7 @@ enum eparams { ealpha, edeltaa, egammaa, egammai,ephii, epsii, emu1, etheta1, em
 const vector<string> parnames = {"alpha", "deltaa","gammaa","gammai", "phii", "psii",  "mu1", "theta1","mu2","theta2"};
 const vector<double> initvals = {20, 0.2,0.1,0.1, 0.01, 0.05, 0.5, 0.5, 0.5, 0.5};
 
+const unsigned pred = 20;
 
 double olsobj(const std::vector<double> &v, std::vector<double> &, void* f_data)
 {    
@@ -113,8 +114,10 @@ double olsobj(const std::vector<double> &v, std::vector<double> &, void* f_data)
 //for(unsigned i=0;i<enumpars; i++)
 //    clog << v[i] << ", v=";
 //clog << endl;
-    for(unsigned t=0; t<x.size(); t++)
+    bool forecast = false;
+    for(unsigned t=0; t<x.size()+pred; t++)
     {
+        forecast = t >= x.size();
         double ytm1;
         if(t >=c.Deltad+1)
         {
@@ -128,7 +131,6 @@ double olsobj(const std::vector<double> &v, std::vector<double> &, void* f_data)
         double nutm1 = 1-v[edeltaa]-v[egammaa] + thetatm1;
         if(t>=2)
             ztm1 += nutm1*ztm1 + mutm1 * last[eI];
-        const vector<double> pres = x[t];
         vector<double> reg =
         {
             (1-v[egammai]) * last[eI] + v[edeltaa] * ztm1 - ytm1,
@@ -136,17 +138,27 @@ double olsobj(const std::vector<double> &v, std::vector<double> &, void* f_data)
             last[eR] + v[egammaa] * ztm1 + v[egammai] * last[eI]
         };
 
-        double dI = reg[eI] - pres[eI];
-        double dD = reg[eD] - pres[eD];
-        double dR = reg[eR] - pres[eR];
+        if(!forecast)
+        {
+            const vector<double> pres = x[t];
 
-        double wI = max(fabs(v[egammai] * last[eI] + v[edeltaa] * ztm1),10.0);
-        double wD = max(ytm1,10.0);
-        double wR = max(fabs(v[egammaa] * ztm1 + v[egammai] * last[eI]),10.0);
+            double dI = reg[eI] - pres[eI];
+            double dD = reg[eD] - pres[eD];
+            double dR = reg[eR] - pres[eR];
 
-        r += (dI*dI) / wI + dD*dD / wD +dR*dR / wR;
-        last = pres;
-        c.reg.push_back(reg);
+            double wI = max(fabs(v[egammai] * last[eI] + v[edeltaa] * ztm1),10.0);
+            double wD = max(ytm1,10.0);
+            double wR = max(fabs(v[egammaa] * ztm1 + v[egammai] * last[eI]),10.0);
+
+            r += (dI*dI) / wI + dD*dD / wD +dR*dR / wR;
+            last = pres;
+            c.reg.push_back(reg);
+        }
+        else
+        {
+            c.reg.push_back(reg);
+            last = reg;
+        }
         c.z.push_back(ztm1);
     }
 //clog << r << endl;
@@ -187,13 +199,21 @@ vector<double> ols(const country& ac, vector<paraminfo> p)
         cout << p[i].name << "=" << v[i] << endl;
     }
 
-    assert(c.data.size()==c.reg.size());
-    assert(c.data.size()==c.z.size());
-    for(unsigned i=0; i<c.data.size(); i++)
+    assert(c.data.size()+pred==c.reg.size());
+    assert(c.data.size()+pred==c.z.size());
+    unsigned i=0;
+    for(; i<c.data.size(); i++)
     {
         clog << c.data[i][eI] << "," << c.reg[i][eI] << ","
              << c.data[i][eD] << "," << c.reg[i][eD] << ","
              << c.data[i][eR] << "," << c.reg[i][eR] << ","
+             << c.z[i] << endl;
+    }
+    for(;i<c.data.size()+pred; i++)
+    {
+        clog << "," << c.reg[i][eI] << ","
+             << "," << c.reg[i][eD] << ","
+             << "," << c.reg[i][eR] << ","
              << c.z[i] << endl;
     }
     return v;
