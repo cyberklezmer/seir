@@ -24,13 +24,13 @@ struct country
         province(ap), name(an) {}
     string province;
     string name;
+    unsigned firstnz = 1;
     vector<vector<double>> data;
-    unsigned Deltad=20;
-    unsigned trsh=10;
-    double c0 = 1000;
-
-    vector<double> z;
+    vector<double> cr;
+    vector<double> cd;
+    vector<double> a;
     vector<vector<double>> reg;
+    unsigned s = 10;
 };
 
 
@@ -41,6 +41,7 @@ void addcountry(const vector<csv<','>>& input, country& c)
     ostringstream es;
     es << "Country " << c.name << " (" << c.province << "): ";
     assert(c.data.size()==0);
+
     for(unsigned i=1; i<input[1].r(); i++)
     {
         if(input[0](i,0) == c.province && input[0](i,1) == c.name)
@@ -53,10 +54,11 @@ void addcountry(const vector<csv<','>>& input, country& c)
                     throw(es.str());
                 }
             }
-            for(unsigned k=4; k<input[0].c(i); k++)
+            unsigned t=1;
+            bool isnz = false;
+            for(unsigned k=4; k<input[0].c(i); k++, t++)
             {
                 vector<double> rec;
-                bool isnz = false;
                 for(unsigned j=0; j<input.size(); j++)
                 {
                     if(input[j].c(i)<k)
@@ -74,7 +76,8 @@ void addcountry(const vector<csv<','>>& input, country& c)
                     rec.push_back(v);
                     if(v>0 && !isnz)
                     {
-                        clog << "first nonzero " << k-4 << endl;
+                        c.firstnz = t;
+                        clog << "first nonzero " << t << endl;
                         isnz = true;
                     }
                 }
@@ -95,10 +98,17 @@ void addcountry(const vector<csv<','>>& input, country& c)
     throw(es.str());
 }
 
-enum eparams { ealpha, edeltaa, egammaa, egammai,ephii, epsii, emu1, etheta1, emu2, etheta2, enumpars };
+enum eparams { esigma, eiotaalpha, etheta, etheta2, eiotanu, ephidelta, eiparams=ephidelta, eomega, egammai , egammacdelta, enumallpars };
 
-const vector<string> parnames = {"alpha", "deltaa","gammaa","gammai", "phii", "psii",  "mu1", "theta1","mu2","theta2"};
-const vector<double> initvals = {20, 0.2,0.1,0.1, 0.01, 0.05, 0.5, 0.5, 0.5, 0.5};
+
+const vector<string> parnames =
+{"sigma", "iotaalpha", "theta", "theta2", "iotanu",  "phidelta", "omega", "gammai" , "gammacdelta"};
+
+
+const vector<double> upper =
+{ 1,       1000,        2,       2,        1,         1,         1 ,       1,         1 };
+
+
 
 const unsigned pred = 20;
 
@@ -106,39 +116,27 @@ double olsobj(const std::vector<double> &v, std::vector<double> &, void* f_data)
 {    
     country& c = *(static_cast<country*>(f_data));
     c.reg.resize(0);
-    c.z.resize(0);
+    c.a.resize(0);
+    c.cr.resize(0);
+    c.cd.resize(0);
     const vector<vector<double>> x = c.data;
     double r = 0.0;
+
     vector<double> last(enumcols,0.0);
-    double ztm1 = v[ealpha];
-//for(unsigned i=0;i<enumpars; i++)
-//    clog << v[i] << ", v=";
-//clog << endl;
-    bool forecast = false;
+    double iotaztm1 = v[eiotaalpha];
+    double phiytm1 = 0;
+    double gammacytm1 = 0;
+
     for(unsigned t=0; t<x.size()+pred; t++)
     {
-        forecast = t >= x.size();
-        double ytm1;
-        if(t >=c.Deltad+1)
-        {
-            double Itau = x[t-(c.Deltad+1)][eI];
-            ytm1 = Itau * v[ephii] + max(Itau - c.c0,0.0) * v[epsii];
-        }
-        else
-            ytm1 = 0;
-        double thetatm1 = t < c.trsh+1 ? v[etheta1] : v[etheta2];
-        double mutm1 = t < c.trsh+1 ? v[emu1] : v[emu2];
-        double nutm1 = 1-v[edeltaa]-v[egammaa] + thetatm1;
-        if(t>=2)
-            ztm1 += nutm1*ztm1 + mutm1 * last[eI];
         vector<double> reg =
         {
-            (1-v[egammai]) * last[eI] + v[edeltaa] * ztm1 - ytm1,
-            last[eD]+ ytm1 ,
-            last[eR] + v[egammaa] * ztm1 + v[egammai] * last[eI]
+            v[esigma] * last[eI] + iotaztm1,
+            last[eD] + phiytm1,
+            last[eR] + v[egammai] * last[eI] + gammacytm1
         };
 
-        if(!forecast)
+        if(t<x.size())
         {
             const vector<double> pres = x[t];
 
@@ -146,20 +144,31 @@ double olsobj(const std::vector<double> &v, std::vector<double> &, void* f_data)
             double dD = reg[eD] - pres[eD];
             double dR = reg[eR] - pres[eR];
 
-            double wI = max(fabs(v[egammai] * last[eI] + v[edeltaa] * ztm1),10.0);
-            double wD = max(ytm1,10.0);
-            double wR = max(fabs(v[egammaa] * ztm1 + v[egammai] * last[eI]),10.0);
+            double wI = max(fabs((v[esigma]-1)* last[eI]) + fabs(iotaztm1),5.0);
+            double wD = max(fabs(phiytm1),1.0);
+            double wR = max(fabs(v[egammai] * last[eI]) + fabs(gammacytm1),1.0);
 
-            r += (dI*dI) / wI + dD*dD / wD +dR*dR / wR;
-            last = pres;
+            r += (dI*dI) / wI;
             c.reg.push_back(reg);
         }
         else
         {
             c.reg.push_back(reg);
-            last = reg;
         }
-        c.z.push_back(ztm1);
+
+        double thetatm1 = t+1 <= c.s ? v[etheta] : v[etheta2];
+        iotaztm1 = thetatm1*iotaztm1 + v[eiotanu] * last[eI];
+        phiytm1 = v[eomega]*phiytm1 + v[ephidelta] * last[eI];
+        gammacytm1 = v[eomega]*gammacytm1 + v[egammacdelta] * last[eI];
+
+        if(t<x.size())
+            last =  x[t];
+        else
+            last = reg;
+
+        c.a.push_back(iotaztm1);
+        c.cr.push_back(gammacytm1);
+        c.cd.push_back(phiytm1);
     }
 //clog << r << endl;
     return r;
@@ -168,15 +177,16 @@ double olsobj(const std::vector<double> &v, std::vector<double> &, void* f_data)
 vector<double> ols(const country& ac, vector<paraminfo> p)
 {
     country c(ac);
-    opt o(LN_COBYLA,enumpars);
-    o.set_lower_bounds(vector<double>(enumpars,0));
+    opt o(LN_COBYLA,enumallpars);
+    o.set_lower_bounds(vector<double>(enumallpars,0));
+    o.set_upper_bounds(upper);
     o.set_ftol_abs(0.00001);
     o.set_maxtime(10);
 
     o.set_min_objective(olsobj, &c);
 
-    vector<double> v(enumpars);
-    for(unsigned i=0; i<enumpars; i++)
+    vector<double> v(enumallpars);
+    for(unsigned i=0; i<enumallpars; i++)
         v[i] = p[i].initial;
     nlopt::result oresult;
     double ov;
@@ -194,28 +204,30 @@ vector<double> ols(const country& ac, vector<paraminfo> p)
         es << "Negative result of nlopt: " << oresult << endl;
         throw es.str();
     }
-    for(unsigned i=0; i<enumpars; i++)
-    {
-        cout << p[i].name << "=" << v[i] << endl;
-    }
-
     assert(c.data.size()+pred==c.reg.size());
-    assert(c.data.size()+pred==c.z.size());
+    assert(c.data.size()+pred==c.cr.size());
+    assert(c.data.size()+pred==c.cd.size());
+    assert(c.data.size()+pred==c.a.size());
     unsigned i=0;
     for(; i<c.data.size(); i++)
     {
         clog << c.data[i][eI] << "," << c.reg[i][eI] << ","
              << c.data[i][eD] << "," << c.reg[i][eD] << ","
              << c.data[i][eR] << "," << c.reg[i][eR] << ","
-             << c.z[i] << endl;
+             << c.a[i] << "," << c.cd[i] << "," << c.cr[i] << endl;
     }
     for(;i<c.data.size()+pred; i++)
     {
         clog << "," << c.reg[i][eI] << ","
              << "," << c.reg[i][eD] << ","
              << "," << c.reg[i][eR] << ","
-             << c.z[i] << endl;
+             << c.a[i] << "," << c.cd[i] << "," << c.cr[i] << endl;
     }
+    for(unsigned i=0; i<enumallpars; i++)
+    {
+        clog << p[i].name << "=" << v[i] << endl;
+    }
+    clog << "ov=" << ov << endl;
     return v;
 }
 
@@ -249,12 +261,33 @@ int main(/* int argc, char *argv[] */)
         for(unsigned i=0; i<countries.size(); i++)
             addcountry(input, countries[i]);
 
-        vector<paraminfo> p(enumpars);
-        for(unsigned i=0; i<enumpars; i++)
+        vector<paraminfo> p(enumallpars);
+        for(unsigned i=0; i<enumallpars; i++)
         {
             p[i].name = parnames[i];
-            p[i].initial = initvals[i];
         }
+
+        double mu = 1;
+        double nu = 0.2;
+        double iota = 0.2;
+        double gamma = 1.0 / 12.0;
+        double delta = 0.03;
+        double gammai = 0.11;
+        double phi = 1.0 / 15.0;
+        double gammac = 2.0 / 15.0;
+        double alpha = 100;
+
+        p[esigma].initial = 1-delta -gammai;
+        p[eiotaalpha].initial = iota * alpha ;
+        p[etheta].initial= 1+mu-gamma-iota;
+        p[etheta2].initial= 1+mu-gamma-iota;
+        p[eiotanu].initial= iota*nu;
+        p[ephidelta].initial= phi*delta;
+        p[eomega].initial=1 - delta - gammac;
+        p[egammai].initial= gammai;
+        p[egammacdelta].initial= gammac * delta;
+
+
         ols(countries[0],p);
 
 

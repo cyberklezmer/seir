@@ -129,6 +129,13 @@ Compartments
 \end_layout
 
 \begin_layout Description
+\begin_inset Formula $C$
+\end_inset
+
+ - critical
+\end_layout
+
+\begin_layout Description
 \begin_inset Formula $D$
 \end_inset
 
@@ -144,8 +151,10 @@ Compartments
 
 \begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="6" columns="7">
+<lyxtabular version="3" rows="8" columns="9">
 <features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
@@ -176,6 +185,15 @@ S
 \begin_inset Text
 
 \begin_layout Plain Layout
+B
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 A
 \end_layout
 
@@ -186,6 +204,15 @@ A
 
 \begin_layout Plain Layout
 I
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+C
 \end_layout
 
 \end_inset
@@ -219,7 +246,7 @@ R - outside
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+<cell multirow="3" alignment="center" valignment="middle" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -241,7 +268,111 @@ S
 \begin_inset Text
 
 \begin_layout Plain Layout
-x
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mu_{t}A+\text{\ensuremath{\beta\nu I}}$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+B
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -315,7 +446,28 @@ A
 \begin_inset Text
 
 \begin_layout Plain Layout
-x
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\iota$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -342,7 +494,10 @@ x
 \begin_inset Text
 
 \begin_layout Plain Layout
-X
+\begin_inset Formula $\gamma_{A}$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -389,7 +544,7 @@ I
 \begin_inset Text
 
 \begin_layout Plain Layout
-x
+
 \end_layout
 
 \end_inset
@@ -398,7 +553,120 @@ x
 \begin_inset Text
 
 \begin_layout Plain Layout
-X
+\begin_inset Formula $\delta$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\gamma_{I}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+C
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\phi$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\gamma_{C}$
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -468,6 +736,24 @@ D
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
@@ -484,6 +770,24 @@ D
 
 \begin_layout Plain Layout
 R
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -551,158 +855,12 @@ R
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\[
-\Delta A_{t+1}=k_{t}S(\beta_{A}A_{t}+\beta_{I}I_{t})-\delta_{A}A_{t}-\gamma_{A}A_{t}+\eta_{A,t}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\Delta I_{t+1} & =\delta_{A}A_{t}-Y_{t-1}-\gamma_{I}I_{t}+\eta_{I,t}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\Delta D_{t+1} & =Y_{t-1}+\eta_{D,t}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\Delta R_{t+1}=\gamma_{I}I_{t}+\eta_{R,t}
-\]
-
-\end_inset
-
-where 
-\begin_inset Formula $Y_{t}=\phi_{I}I_{t-\Delta_{D}}+\psi_{I}[I_{t-\Delta_{D}}-i_{0}]_{+}$
-\end_inset
-
- and where 
-\begin_inset Formula 
-\[
-\var(\eta_{\bullet,t}|\F_{t})=\text{\ensuremath{\sum} of variance of Poisson variables on the rhs}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\end_layout
-
-\begin_layout Standard
-Assume 
-\begin_inset Formula $S$
-\end_inset
-
- constant (i.e.
- first equation irrelevant).
- Denote 
-\begin_inset Formula 
-\[
-\mu_{t}=k_{t}S\beta_{I},\qquad\nu_{t}=1+k_{t}S\beta_{A}-\delta_{A}-\gamma_{A}
-\]
-
-\end_inset
-
-we rewrite 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-A_{t}=\nu_{t-1}A_{t-1}+\mu_{t-1}I_{t-1}+\eta_{t}
-\]
-
-\end_inset
-
- Unfortunately do not observe 
-\begin_inset Formula $A$
-\end_inset
-
- - need to impose.
- we have
-\begin_inset Formula 
-\begin{multline*}
-A_{t}=\mu_{t-1}I_{t-1}+\nu_{t-1}A_{t-1}+\eta_{t}=\mu_{t-1}I_{t-1}+\nu_{t-1}\mu_{t-2}I_{t-2}+\nu_{t-1}\nu_{t-1}A_{t-2}+\nu_{t-1}\eta_{t-1}+\eta_{t}\\
-=Z_{t}+\epsilon_{A,t}\\
-Z_{t}=\sum_{\tau=1}^{t-1}(\nu_{\tau+1}\times\dots\times\nu_{t-1})\mu_{\tau}I_{\tau}+\alpha_{0},\qquad\alpha_{0}=(\nu_{t-1}\times\dots\times\nu_{0})A_{0}\\
-\epsilon_{A,t}=\sum_{\tau=1}^{t}(\nu_{\tau}\times\times\nu_{t-1})\eta_{A,\tau}
-\end{multline*}
-
-\end_inset
-
-(i.e.
- 
-\begin_inset Formula $Z_{1}=0,\text{ \ensuremath{Z_{2}=\mu_{1}I_{1},} \ensuremath{Z_{3}=\nu_{2}\mu_{1}I_{1}+\text{\ensuremath{\mu_{2}I_{2}}, \ensuremath{Z_{3}=}}\nu_{3}\nu_{2}\mu_{1}I_{1}+\nu_{3}\mu_{2}I_{2}+\mu_{3}I_{3}},\ensuremath{...)}}$
-\end_inset
-
-giving (e
-\begin_inset Formula 
-\[
-I_{t}=(1-\gamma_{I})I_{t-1}+\delta_{A}Z_{t-1}-Y_{t-1}+e_{t}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-D_{t}=D_{t-1}+Y_{t-1}+f_{t}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-R_{t}=R_{t-1}+\gamma_{A}Z_{t-1}+\gamma_{I}I_{t-1}+g_{t}
-\]
-
-\end_inset
-
-where 
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-e_{t}=\eta_{I,t}+\delta_{A}\epsilon_{A,t-1},\qquad f_{t}=\eta_{D,t},\qquad g_{t}=\eta_{R,t}+\gamma_{A}\epsilon_{A,t-1}
-\]
-
-\end_inset
-
-It is not easy to compute 
-\begin_inset Formula $\var(\epsilon_{t-1}|\G_{t-1})$
-\end_inset
-
- (possible in normal case via well known formula for conditional distribution,
- no time here for this).
- So we dare to estimate the variances by 
-\begin_inset Formula $\var(\bullet_{t}|\F_{\t-1}),$
-\end_inset
-
- which are equal to the r.h.s.'s 
-\end_layout
-
-\begin_layout Standard
-Summary of parameters
+By Pavuo, chart 1: 
 \end_layout
 
 \begin_layout Standard
 \begin_inset Tabular
-<lyxtabular version="3" rows="11" columns="4">
+<lyxtabular version="3" rows="7" columns="4">
 <features tabularvalignment="middle">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
@@ -751,7 +909,7 @@ Summary of parameters
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mu_{t}=k_{t}\beta_{I}$
+\begin_inset Formula $\mu$
 \end_inset
 
 
@@ -763,7 +921,11 @@ Summary of parameters
 \begin_inset Text
 
 \begin_layout Plain Layout
+infection of 
+\begin_inset Formula $A$
+\end_inset
 
+ per day
 \end_layout
 
 \end_inset
@@ -772,6 +934,9 @@ Summary of parameters
 \begin_inset Text
 
 \begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
 
 \end_layout
 
@@ -792,7 +957,7 @@ Summary of parameters
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\theta_{t}\defined k_{t}\beta_{A}$
+\begin_inset Formula $\nu$
 \end_inset
 
 
@@ -804,7 +969,11 @@ Summary of parameters
 \begin_inset Text
 
 \begin_layout Plain Layout
+of 
+\begin_inset Formula $I$
+\end_inset
 
+ per day
 \end_layout
 
 \end_inset
@@ -813,7 +982,7 @@ Summary of parameters
 \begin_inset Text
 
 \begin_layout Plain Layout
-
+0.2
 \end_layout
 
 \end_inset
@@ -833,47 +1002,10 @@ Summary of parameters
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\delta_{A}$
+\begin_inset Formula $\iota$
 \end_inset
 
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
+,
 \begin_inset Formula $\gamma_{A}$
 \end_inset
 
@@ -886,6 +1018,728 @@ Summary of parameters
 \begin_inset Text
 
 \begin_layout Plain Layout
+transitions from 
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{\iota}{\iota+\gamma_{a}}=0.7$
+\end_inset
+
+ 
+\begin_inset Formula $\iota=5^{-1}$
+\end_inset
+
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+
+\begin_inset Formula $\gamma_{A}=\frac{1}{12}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\delta,\gamma_{i}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+from I
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{\delta}{\delta+\gamma_{i}}=\frac{15}{70}$
+\end_inset
+
+ ,
+\begin_inset Formula $\delta+\gamma_{i}=\frac{1}{7}$
+\end_inset
+
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+
+\begin_inset Formula $\delta=0.03,\gamma=\text{´0.11}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\phi,\gamma_{C}$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+from 
+\begin_inset Formula $C$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{\phi}{\phi+\gamma_{C}}=\frac{1}{3}$
+\end_inset
+
+,
+\begin_inset Formula $\phi+\gamma_{C}=\frac{1}{5}\rightarrow\phi=\frac{1}{15},\gamma_{C}=\frac{2}{15}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Equations
+\begin_inset Formula 
+\[
+\Delta A_{t}=\mu_{t}A_{t-1}+\nu I_{t-1}-\gamma_{A}A_{t-1}-\iota A_{t}+\eta_{A,t}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Delta I_{t}=\iota A_{t-1}-\delta I_{t-1}-\gamma_{I}I_{t-1}+\eta_{I,t}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Delta C_{t}=\delta I_{t-1}-\phi C_{t-1}-\gamma_{C}C_{t-1}+\eta_{C,t}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\Delta D_{t} & =\phi C_{t-1}+\eta_{D,t}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Delta R_{t}=\gamma_{I}I_{t-1}+\gamma_{C}C_{t-1}+\eta_{R,t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula 
+\[
+\var(\eta_{\bullet,t}|\F_{t})=\text{rest of the r.h.s.}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $C$
+\end_inset
+
+ unobserved.
+\end_layout
+
+\begin_layout Standard
+We have
+\begin_inset Formula 
+\[
+A_{t}=\underbrace{(1+\mu_{t}-\gamma_{A}-\iota)}_{\theta_{t}}A_{t-1}+\nu I_{t-1}+\eta_{A,t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+we rewrite 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline*}
+A_{t}=\theta_{t}A_{t-1}+\nu I_{t-1}+\eta_{A,t}=\theta_{t}(\theta_{t-1}A_{t-2}+\nu I_{t-2}+\eta_{A,t-1})+\nu I_{t-1}+\eta_{A,t}\\
+=Z_{t}+\epsilon_{t},\qquad Z_{t}=(\theta_{1}\times\dots\times\theta_{t})\alpha_{0}+\nu\sum_{\tau=1}^{t-1}(\theta_{\tau+2}\times\dots\times\theta_{t})I_{\tau},\qquad\epsilon_{t}=\sum_{\tau=1}^{t}(\theta_{\tau+1}\times\dots\times\theta_{t})\eta_{A,t}
+\end{multline*}
+
+\end_inset
+
+where 
+\begin_inset Formula $\alpha_{0}=A_{0}$
+\end_inset
+
+ (to be estimated), and Similarly,
+\begin_inset Formula 
+\[
+C_{t}=\underbrace{(1-\phi-\gamma_{C})}_{\omega}C_{t-1}+\delta I_{t-1}+\eta_{C,t}
+\]
+
+\end_inset
+
+so 
+\begin_inset Formula 
+\[
+C_{t}=Y_{t}+\varepsilon_{t},\qquad Y_{t}=\sum_{\tau=1}^{t-1}\omega^{t-\tau-1}\delta I_{\tau},\qquad\varepsilon_{t}=\omega^{t-\tau}\eta_{C,t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Both 
+\begin_inset Formula $Z$
+\end_inset
+
+ and Y may be evaluated recursively (assuming 
+\begin_inset Formula $I_{0}=0$
+\end_inset
+
+: 
+\begin_inset Formula 
+\[
+Z_{0}=\alpha_{0},Z_{1}=\theta_{1}\alpha_{0}+\nu I_{0},Z_{2}=\theta_{2}\theta_{1}\alpha_{0}+\theta_{2}\nu I_{0}+\nu I_{1},\dots Z_{t}=\theta_{t}Z_{t-1}+\nu I_{t-1}
+\]
+
+\end_inset
+
+and 
+\begin_inset Formula 
+\[
+Y_{0}=0,Y_{1}=0,Y_{2}=\sigma I_{1},Y_{3}=\omega\delta I_{1}+\delta I_{2}\qquad Y_{t}=\omega Y_{t-1}+\delta I_{t-1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This gives 
+\begin_inset Formula 
+\[
+I_{t}=\underbrace{(1-\delta-\gamma_{I})}_{\sigma}I_{t-1}+\iota Z_{t-1}+e_{t},\qquad e_{t}=\iota\epsilon_{t-1}+\eta_{I,t}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+D_{t}=D_{t-1}+\phi Y_{t-1}+f_{t},\qquad f_{t}=\phi\varepsilon_{t-1}+\eta_{D,t}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+R_{t}=R_{t-1}+\gamma_{I}I_{t-1}+\gamma_{C}Y_{t-1}+g_{t},\qquad g_{t}=\gamma_{C}\varepsilon_{t-1}+\eta_{R,t}
+\]
+
+\end_inset
+
+It is not easy to compute 
+\begin_inset Formula $\var(e,f,g|\G_{t-1})$
+\end_inset
+
+ (possible in normal case via well known formula for conditional distribution,
+ no time here for this).
+ So we dare to estimate the variances by 
+\begin_inset Formula $\var(\bullet_{t}|\F_{\t-1}),$
+\end_inset
+
+ which equals to those of etas.
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $s$
+\end_inset
+
+ be the threshold when different policy started to be applied.
+ 
+\end_layout
+
+\begin_layout Standard
+Summary of parameters
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="12" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\sigma$
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1-\delta-\gamma_{I}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\iota\alpha_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\theta$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1+\mu-\gamma_{A}-\iota$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\theta_{t}=\theta$
+\end_inset
+
+ for 
+\begin_inset Formula $t<s$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\theta_{t}=\theta_{1}$
+\end_inset
+
+ for 
+\begin_inset Formula $t\geq s$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\iota\nu$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\phi\delta$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\omega$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1-\delta-\gamma_{C}$
+\end_inset
+
 
 \end_layout
 
@@ -956,7 +1810,7 @@ Summary of parameters
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\phi_{I}$
+\begin_inset Formula $\gamma_{C}\delta$
 \end_inset
 
 
@@ -997,91 +1851,6 @@ Summary of parameters
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\psi_{I}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\Delta_{D}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $c_{0}$
-\end_inset
-
 
 \end_layout
 
@@ -1120,9 +1889,6 @@ Summary of parameters
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\alpha_{0}$
-\end_inset
-
 
 \end_layout
 

@@ -142,7 +142,7 @@ class csv : private vector<vector<string>>
         {
             if((signed)c > 128)
                 throw "Czech characters cannot be used";
-            if(c==sep || is.eof())
+            if((c==sep && !quotes) || is.eof())
                 break;
             if(c=='"' && quotes)
             {
