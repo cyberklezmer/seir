@@ -86,10 +86,9 @@ void addcountry(const vector<csv<','>>& input, country& c)
             }
             for(unsigned i=0;i<c.data.size(); i++)
             {
-                 c.data[i][eI] -= c.data[i][eR] + c.data[i][eD];
                  for(unsigned j=0; j<c.data[i].size(); j++)
                       clog << c.data[i][j] << ",";
-                 clog << endl;
+                 clog << c.data[i][eI] - c.data[i][eR] - c.data[i][eD] << endl;
             }
             return;
         }
@@ -148,7 +147,7 @@ double olsobj(const std::vector<double> &v, std::vector<double> &, void* f_data)
             double wD = max(fabs(phiytm1),1.0);
             double wR = max(fabs(v[egammai] * last[eI]) + fabs(gammacytm1),1.0);
 
-            r += (dI*dI) / wI;
+            r += (dI*dI) / wI + (dD*dD) / wD + (dR*dR) / wR;
             c.reg.push_back(reg);
         }
         else
@@ -156,10 +155,11 @@ double olsobj(const std::vector<double> &v, std::vector<double> &, void* f_data)
             c.reg.push_back(reg);
         }
 
+        double lastIActive = last[eI]-last[eR]-last[eD];
         double thetatm1 = t+1 <= c.s ? v[etheta] : v[etheta2];
-        iotaztm1 = thetatm1*iotaztm1 + v[eiotanu] * last[eI];
-        phiytm1 = v[eomega]*phiytm1 + v[ephidelta] * last[eI];
-        gammacytm1 = v[eomega]*gammacytm1 + v[egammacdelta] * last[eI];
+        iotaztm1 = thetatm1*iotaztm1 + v[eiotanu] * lastIActive ;
+        phiytm1 = v[eomega]*phiytm1 + v[ephidelta] * lastIActive;
+        gammacytm1 = v[eomega]*gammacytm1 + v[egammacdelta] * lastIActive;
 
         if(t<x.size())
             last =  x[t];
@@ -277,7 +277,7 @@ int main(/* int argc, char *argv[] */)
         double gammac = 2.0 / 15.0;
         double alpha = 100;
 
-        p[esigma].initial = 1-delta -gammai;
+        p[esigma].initial = 1;
         p[eiotaalpha].initial = iota * alpha ;
         p[etheta].initial= 1+mu-gamma-iota;
         p[etheta2].initial= 1+mu-gamma-iota;
@@ -286,7 +286,6 @@ int main(/* int argc, char *argv[] */)
         p[eomega].initial=1 - delta - gammac;
         p[egammai].initial= gammai;
         p[egammacdelta].initial= gammac * delta;
-
 
         ols(countries[0],p);
 
