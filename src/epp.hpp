@@ -109,16 +109,17 @@ struct paramresult
     paraminfo info;
 	double value;
 	double std;
+    double grad;
 	double z() const
 	{
         return (std==na || value==na || std==0)
                   ? na : value / std;
 	}
 	paramresult(const paraminfo& ainfo) :
-	   info(ainfo), value(na), std(na)
+       info(ainfo), value(na), std(na), grad(na)
 	   {}
 	paramresult(const paramresult& r) :
-	   info(r.info), value(r.value), std(r.std)
+       info(r.info), value(r.value), std(r.std), grad(r.grad)
 	   {}
     static string stars(double z)
     {
@@ -158,6 +159,8 @@ struct paramresult
                 else
                     str << stars();
             }
+            if(grad!=na)
+                str << " g=" << grad;
         }
         if(latex)
             str << "$";
@@ -262,6 +265,8 @@ class nloptuser: public virtual object
     double maxtime;
     double xtolrel;
     double ftolrel;
+    double xtolabs;
+    double ftolabs;
     bool gradient;
 
 	string what;
@@ -277,7 +282,7 @@ class nloptuser: public virtual object
         {
             res = self->objf(x,g);
         }
-        catch(runtime_error& e)
+        catch(exception& e)
         {
             self->what = e.what();
             throw;
@@ -287,7 +292,8 @@ class nloptuser: public virtual object
 protected:
     nloptuser(nlopt::algorithm aalg, bool amax):
        alg(aalg), ismax(amax), maxtime(HUGE_VAL),
-       xtolrel(na), ftolrel(na), gradient(true)
+       xtolrel(na), ftolrel(na), xtolabs(na), ftolabs(na),
+       gradient(true)
        {}
 	virtual double objf(const vector<double> &x,
 	                              vector<double> &g) = 0;
@@ -308,12 +314,16 @@ protected:
             lower[i] = params[i].lower;
             upper[i] = params[i].upper;
         }
-		nlopt::opt op(
-		  gradient ? nlopt::LD_LBFGS : nlopt::LN_BOBYQA , q); //LD_LBFGS
+        nlopt::opt op( // tbd use alg
+          gradient ? nlopt::LN_BOBYQA : nlopt::LN_BOBYQA , q); //LD_LBFGS
         if(xtolrel != na)
             op.set_xtol_rel(xtolrel);
         if(ftolrel != na)
             op.set_ftol_rel(ftolrel);
+        if(xtolabs != na)
+            op.set_xtol_abs(xtolabs);
+        if(ftolabs != na)
+            op.set_ftol_abs(ftolabs);
 
         op.set_maxtime(maxtime);
 		op.set_lower_bounds(lower);
@@ -329,6 +339,7 @@ protected:
 		try
 		{
 		   optr = op.optimize(x, r);
+clog << "nlopt res: " << optr << endl;
            result.clear();
            for(unsigned int i=0; i<q; i++)
            {
@@ -398,6 +409,14 @@ public:
     {
         xtolrel = f;
     }
+    void setftolabs(double f)
+    {
+        ftolabs = f;
+    }
+    void setxtolabs(double f)
+    {
+        xtolabs = f;
+    }
     void setgradient(bool g)
     {
         gradient = g;
@@ -459,6 +478,9 @@ class mle : public estimator, public nloptuser
 
 	double objf(const vector<double> &x, vector<double> &g)
 	{
+vector<double> xx = x;
+xx[2]-=0.0001;
+
         unsigned int R = x.size();
         beforeloglikeval(x);
         for(unsigned int j=0; j<g.size(); j++)
@@ -466,10 +488,18 @@ class mle : public estimator, public nloptuser
         boost::numeric::ublas::matrix<double>
           I(boost::numeric::ublas::zero_matrix<double>(R,R));
         double s=0;
+double ss=0;
+//clog << "evaluation (" << xx[0]<<","<< xx[1]<<"," << xx[2] << ") "<< endl;
+
         unsigned int M = getN();
         for(unsigned int i=0; i<M; i++)
         {
             vector<double> grad(R);
+double a = evallogdensity(i,x,grad);
+vector<double> ggg = grad;
+double b = evallogdensity(i,xx,ggg);
+//clog << "(" << x[0]<<","<< x[1]<<"," << x[2] << ") "<<  (b-a) / 0.0001 << "=mle=" << grad[2] << endl;
+ss += b;
             s += evallogdensity(i,x,grad);
             for(unsigned int j=0; j<g.size(); j++)
                 g[j] += grad[j];
@@ -519,6 +549,10 @@ class mle : public estimator, public nloptuser
             }
             lout << endl;
         }
+//clog << "l(" << xx[0]<<","<< xx[1]<<"," << xx[2] << ") "
+//        << "-l(" << x[0]<<","<< x[1]<<"," << x[2] << ") "
+//        << ss << "-" << s << "..." << (ss-s) / 0.0001 << "=mlr=" << g[2] ;
+//clog << " returning "<< s << endl;
         return s;
 	}
 
@@ -533,7 +567,7 @@ protected:
 public:
 
 	mle(const vector<paraminfo>& aparams):
-	    estimator(aparams), nloptuser(nlopt::LD_LBFGS, true),
+        estimator(aparams), nloptuser(nlopt::LD_LBFGS, true),
 		J(aparams.size(),aparams.size()),
 		computeJ(false)
       {}
@@ -568,7 +602,8 @@ public:
             {
                 double K = J(i,i);
                 if(K!=na)
-                    result[i].std=sqrt(K / (double) getN());
+                    result[i].std=sqrt(K / (double) getN());                
+                result[i].grad = g[i];
             }
         }
         if(islogging())
@@ -581,6 +616,16 @@ public:
 
         return loglik;
 	}
+
+    vector<vector<double>> getJ()
+    {
+        unsigned int R=getparams().size();
+        vector<vector<double>> res(R,vector<double>(R));
+        for(unsigned i=0; i<R; i++)
+            for(unsigned j=0; j<R; j++)
+                res[i][j]=J(i,j);
+        return res;
+    }
 
 /*	virtual string description()
 	{
@@ -677,6 +722,12 @@ public:
 			t << "\\end{center}" << endl<< endl<< endl<< endl;
 		}
 	}*/
+
+    double loglik(const vector<double> &x, vector<double> &g)
+    {
+        return objf(x,g);
+    }
+
 };
 
 /// A class encapsulting calls of GRETL

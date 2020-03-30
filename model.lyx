@@ -277,7 +277,7 @@ S
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\mu_{t}A+\text{\ensuremath{\beta\nu I}}$
+\begin_inset Formula $\mu_{t}A+\text{\ensuremath{\nu I}}$
 \end_inset
 
  
@@ -1218,7 +1218,7 @@ from
 Equations
 \begin_inset Formula 
 \[
-\Delta A_{t}=\mu_{t}A_{t-1}+\nu I_{t-1}-\gamma_{A}A_{t-1}-\iota A_{t}+\eta_{A,t}
+\Delta A_{t}=\mu_{t}A_{t-1}+\nu I_{t-1}^{k}-\gamma_{A}A_{t-1}-\iota A_{t}+\eta_{A,t}
 \]
 
 \end_inset
@@ -1226,31 +1226,7 @@ Equations
 
 \begin_inset Formula 
 \[
-\Delta I_{t}=\iota A_{t-1}-\delta I_{t-1}-\gamma_{I}I_{t-1}+\eta_{I,t}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\Delta C_{t}=\delta I_{t-1}-\phi C_{t-1}-\gamma_{C}C_{t-1}+\eta_{C,t}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\Delta D_{t} & =\phi C_{t-1}+\eta_{D,t}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\Delta R_{t}=\gamma_{I}I_{t-1}+\gamma_{C}C_{t-1}+\eta_{R,t}
+\Delta I_{t}=\iota A_{t-1}-\eta_{I,t}
 \]
 
 \end_inset
@@ -1274,10 +1250,6 @@ where
 \begin_inset Formula $A$
 \end_inset
 
- and 
-\begin_inset Formula $C$
-\end_inset
-
  unobserved.
 \end_layout
 
@@ -1285,7 +1257,7 @@ where
 We have
 \begin_inset Formula 
 \[
-A_{t}=\underbrace{(1+\mu_{t}-\gamma_{A}-\iota)}_{\theta_{t}}A_{t-1}+\nu I_{t-1}+\eta_{A,t}
+A_{t}=\underbrace{(1+\mu_{t}-\gamma_{A}-\iota)}_{\theta_{t}}A_{t-1}+\nu I_{t-1}^{k}+\eta_{A,t}
 \]
 
 \end_inset
@@ -1300,8 +1272,10 @@ we rewrite
 \begin_layout Standard
 \begin_inset Formula 
 \begin{multline*}
-A_{t}=\theta_{t}A_{t-1}+\nu I_{t-1}+\eta_{A,t}=\theta_{t}(\theta_{t-1}A_{t-2}+\nu I_{t-2}+\eta_{A,t-1})+\nu I_{t-1}+\eta_{A,t}\\
-=Z_{t}+\epsilon_{t},\qquad Z_{t}=(\theta_{1}\times\dots\times\theta_{t})\alpha_{0}+\nu\sum_{\tau=1}^{t-1}(\theta_{\tau+2}\times\dots\times\theta_{t})I_{\tau},\qquad\epsilon_{t}=\sum_{\tau=1}^{t}(\theta_{\tau+1}\times\dots\times\theta_{t})\eta_{A,t}
+A_{t}=\theta_{t}A_{t-1}+\nu I_{t-1}^{k}+\eta_{A,t}=\theta_{t}(\theta_{t-1}A_{t-2}+\nu I_{t-2}^{k}+\eta_{A,t-1})+\nu I_{t-1}^{k}+\eta_{A,t}\\
+=Z_{t}+\epsilon_{t},\\
+Z_{t}=(\theta_{1}\times\dots\times\theta_{t})\alpha_{0}+\nu\sum_{\tau=1}^{t-1}(\theta_{\tau+2}\times\dots\times\theta_{t})I_{\tau}^{k}=\theta^{s\wedge t}\theta_{1}^{(t-s)\wedge0}\alpha_{0}+\nu\sum_{\tau=1}^{t-1}\theta^{(s-(\tau+1))\wedge0}\theta_{1}^{t-(s\vee\tau+1)}\\
+\epsilon_{t}=\sum_{\tau=1}^{t}(\theta_{\tau+1}\times\dots\times\theta_{t})\eta_{A,t}
 \end{multline*}
 
 \end_inset
@@ -1310,46 +1284,18 @@ where
 \begin_inset Formula $\alpha_{0}=A_{0}$
 \end_inset
 
- (to be estimated), and Similarly,
-\begin_inset Formula 
-\[
-C_{t}=\underbrace{(1-\phi-\gamma_{C})}_{\omega}C_{t-1}+\delta I_{t-1}+\eta_{C,t}
-\]
-
-\end_inset
-
-so 
-\begin_inset Formula 
-\[
-C_{t}=Y_{t}+\varepsilon_{t},\qquad Y_{t}=\sum_{\tau=1}^{t-1}\omega^{t-\tau-1}\delta I_{\tau},\qquad\varepsilon_{t}=\omega^{t-\tau}\eta_{C,t}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Both 
+ (to be estimated) 
 \begin_inset Formula $Z$
 \end_inset
 
- and Y may be evaluated recursively (assuming 
+ may be evaluated recursively (assuming 
 \begin_inset Formula $I_{0}=0$
 \end_inset
 
-: 
+): 
 \begin_inset Formula 
 \[
 Z_{0}=\alpha_{0},Z_{1}=\theta_{1}\alpha_{0}+\nu I_{0},Z_{2}=\theta_{2}\theta_{1}\alpha_{0}+\theta_{2}\nu I_{0}+\nu I_{1},\dots Z_{t}=\theta_{t}Z_{t-1}+\nu I_{t-1}
-\]
-
-\end_inset
-
-and 
-\begin_inset Formula 
-\[
-Y_{0}=0,Y_{1}=0,Y_{2}=\sigma I_{1},Y_{3}=\omega\delta I_{1}+\delta I_{2}\qquad Y_{t}=\omega Y_{t-1}+\delta I_{t-1}
 \]
 
 \end_inset
@@ -1361,29 +1307,13 @@ Y_{0}=0,Y_{1}=0,Y_{2}=\sigma I_{1},Y_{3}=\omega\delta I_{1}+\delta I_{2}\qquad Y
 This gives 
 \begin_inset Formula 
 \[
-I_{t}=\underbrace{(1-\delta-\gamma_{I})}_{\sigma}I_{t-1}+\iota Z_{t-1}+e_{t},\qquad e_{t}=\iota\epsilon_{t-1}+\eta_{I,t}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-D_{t}=D_{t-1}+\phi Y_{t-1}+f_{t},\qquad f_{t}=\phi\varepsilon_{t-1}+\eta_{D,t}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-R_{t}=R_{t-1}+\gamma_{I}I_{t-1}+\gamma_{C}Y_{t-1}+g_{t},\qquad g_{t}=\gamma_{C}\varepsilon_{t-1}+\eta_{R,t}
+\Delta I_{t}=\iota Z_{t-1}+e_{t},\qquad e_{t}=\iota\epsilon_{t-1}+\eta_{I,t}
 \]
 
 \end_inset
 
 It is not easy to compute 
-\begin_inset Formula $\var(e,f,g|\G_{t-1})$
+\begin_inset Formula $\var(e|\G_{t-1})$
 \end_inset
 
  (possible in normal case via well known formula for conditional distribution,
@@ -1408,9 +1338,9 @@ Let
 Summary of parameters
 \end_layout
 
-\begin_layout Standard
+\begin_layout Subsubsection*
 \begin_inset Tabular
-<lyxtabular version="3" rows="12" columns="4">
+<lyxtabular version="3" rows="7" columns="4">
 <features tabularvalignment="middle">
 <column alignment="center" valignment="top">
 <column alignment="center" valignment="top">
@@ -1445,50 +1375,6 @@ Summary of parameters
 \end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\sigma$
-\end_inset
-
- 
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $1-\delta-\gamma_{I}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -1684,173 +1570,6 @@ Summary of parameters
 \begin_inset Text
 
 \begin_layout Plain Layout
-\begin_inset Formula $\phi\delta$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\omega$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $1-\delta-\gamma_{C}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\gamma_{I}$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-\begin_inset Formula $\gamma_{C}\delta$
-\end_inset
-
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -1929,6 +1648,79 @@ Summary of parameters
 
 \begin_inset Formula 
 \[
+\]
+
+\end_inset
+
+Estimation
+\end_layout
+
+\begin_layout Standard
+MLE.
+ Loglikelihood
+\begin_inset Formula 
+\[
+C-\frac{1}{2w}\sum_{i=1}^{T}(Y_{t}-\Delta I_{t})^{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+Y_{t}=\iota Z_{t-1}=\iota\alpha_{0}\theta^{s\vee}\theta_{1}^{(t-1-s)\vee0}+\iota\nu\sum_{\tau=1}^{t-2}\theta^{(s-(\tau+1))\wedge0}\theta_{1}^{t-1-(s\vee\tau+1)}
+\]
+
+\end_inset
+
+derivatives by the multipliers clear, by thetas recursively: by 
+\begin_inset Formula $\theta$
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{align*}
+Y'_{0} & =0,\qquad Y'_{1}=\begin{cases}
+\iota\alpha_{0}(=Y_{\tau-1}) & s\geq1\\
+0 & s<1
+\end{cases},\qquad
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Y'_{\tau}=(\theta_{\tau}Y_{\tau-1}+\iota\nu I_{\tau-1})'=\begin{cases}
+Y_{\tau-1}+\theta Y'_{\tau-1} & \tau\leq s\\
+\theta_{1}Y'_{\tau-1} & \tau>s
+\end{cases}
+\]
+
+\end_inset
+
+and by 
+\begin_inset Formula $\theta_{1}:$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+Y'_{0}=\dots=Y'_{s}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Y'_{s+1}=Y_{s},\qquad Y'_{\tau}=Y_{\tau-1}+\theta_{1}Y'_{\tau-1},\tau>s+1\text{}
 \]
 
 \end_inset
