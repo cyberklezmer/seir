@@ -7,12 +7,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # change accordingly
 include_directories("/usr/local/include")
+include_directories("../orpp/orpp")
 
 # nlopt has to be installed, change accordingly
 find_library(LNLOPT libnlopt.so "/usr/local/lib" )
 
-add_executable(covid covid.cpp)
+add_executable(seir main.cpp)
 
-target_link_libraries("covid" ${LNLOPT} )
+target_link_libraries("seir" ${LNLOPT} )
 
 
