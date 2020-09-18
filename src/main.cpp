@@ -12,11 +12,11 @@ using namespace orpp;
 //#define APAR
 //#define ASYMP
 #define GAMMAS
-#define PIECEWISE
+//#define PIECEWISE
 //#define BETAADD
-//#define SCURVE
-//#define K
-//#define K2
+#define SCURVE
+#define K
+#define K2
 //#define TESTSPERCAND
 
 enum eparams {
@@ -445,22 +445,20 @@ void seir()
     auto siest = si;
 
     vector<double> initvals = {
-        1.81726, // beta
-        0.162673, // fcontacts
-        1, // omega
-        0.000204306, // gammad
-        99.9881, // gammar
-        0.00336866, // rho0
-        0.050808, // rho1
-        0.118298, // rho2
-        0.171672, // rho3
-        0.228443, // rho4
-        0.244557, // rho5
-        3.55014e-20, // rho6
-        6.81617e-20, // etamin
-        0.265398, // etasize
-        245.283, // etamid
-        0.0595663, // etak
+        2.88683, //(2.73357)
+        0.0625782, //(0.709454)
+        0.616715, //(1.47662)
+        0.000716167, //(0.000992258)
+        18.2234, //(22.5192)
+        154.33, //(37.7187)
+        140.214, //(44.7486)
+        0.0692896, //(0.885257)
+        0.0622334, //(3.28362)
+        174.594, //(1635.68)
+        0.0977849, //(10.019)
+        0.476656, //(0.28197)
+        47.037, //(92.0962)
+        0.0225183, //(0.0323629)
     };
 
     vector<paraminfo> params
@@ -470,7 +468,7 @@ void seir()
               paraminfo("betaadd",0,0,3),
 #endif
 #ifdef FAMILYCONTACTS
-                paraminfo("fcontacts",0,0,0.4),
+                paraminfo("fcontacts",0.16,0,0.4),
 #endif
 
                 paraminfo("omega", 0.828601, 0.5, 1),
@@ -527,12 +525,12 @@ void seir()
     vector<bool> filter(params.size(),false);
     obsseir s;
 
-    for(unsigned i=0; i<params.size(); i++)
-        params[i].initial = initvals[i];
+//    for(unsigned i=0; i<params.size(); i++)
+//        params[i].initial = initvals[i];
     if(1)
     {
         vector<double> rp;
-        if(0)
+        if(1)
         {
             uncertain res;
             cout << "ll= " << s.estimate(params,siest,res,filter) << endl;
@@ -609,7 +607,6 @@ void seir()
                 T(2,2) -= delta;
                 T(3,3) -= delta;
             }
-            throw;
         }
 
         clog <<
@@ -784,22 +781,3 @@ int main()
     return 0;
 }
 
-/*
-to do
-   střílet domácnosti mezigeneračně
-   udělat pro intergenerační subtype
-   hospody
-   exportní uzly
-   directed - mezirezortní?
-
-   rodiny: přidat mezigenerační
-   školy: vztahy mezi učitelkama, kontakty mimo svou třídu, jídelny.
-
-
-
-   a pak ladit
-
-
-   později:
-     u czsoonly draw věk
-*/
