@@ -3,12 +3,13 @@
 #include "emodel.hpp"
 #include "orpp.hpp"
 #include "seir.hpp"
+#include <cmath>
 
 using namespace std;
 using namespace orpp;
 
 #define FAMILYCONTACTS
-#define SETA
+//#define SETA
 //#define APAR
 //#define ASYMP
 #define GAMMAS
@@ -104,7 +105,7 @@ public:
         eT,
 #endif
         eD,  enumobs};
-    enum eexp { eI, econtacts, emasks, edayadjust, etests, esmT,
+    enum eexp { eI, econtacts, emasks, ehygiene, edayadjust, etests, esmT,
                 enumexp};
 private:
     static matrix getH()
@@ -212,8 +213,8 @@ public:
         {
             switch(i)
             {
-                case eseire:
-                case eseirqe:
+//                case eseire:
+//                case eseirqe:
                 case eseird:
                 case eseirdda:
                 case eseirdds:
@@ -297,7 +298,7 @@ public:
 #ifdef FAMILYCONTACTS
         c -= p[efcontacts];
 #endif
-        double preiota =c*(1-p[eomega] *g.z[t][emasks]);
+        double preiota =c*(1-0.85*g.z[t][emasks])*(1-p[eomega] *g.z[t][ehygiene]);
         vector<double> iota(eseirnumstates,0);
         iota[eseiria] = iota[eseiris] = (p[ebeta]/*+p[ebetaadd]*/)*preiota;
         iota[eseirin] = (p[ebeta]+ba)*preiota;
@@ -445,20 +446,17 @@ void seir()
     auto siest = si;
 
     vector<double> initvals = {
-        2.88683, //(2.73357)
-        0.0625782, //(0.709454)
-        0.616715, //(1.47662)
-        0.000716167, //(0.000992258)
-        18.2234, //(22.5192)
-        154.33, //(37.7187)
-        140.214, //(44.7486)
-        0.0692896, //(0.885257)
-        0.0622334, //(3.28362)
-        174.594, //(1635.68)
-        0.0977849, //(10.019)
-        0.476656, //(0.28197)
-        47.037, //(92.0962)
-        0.0225183, //(0.0323629)
+        2.66452, // beta
+        0.146487, // fcontacts
+        0.889302, // omega
+        1.6263e-17, // gammad
+        22.9477, // gammar
+        105.594, // k
+        131.547, // k2
+        0.107862, // eta
+        0.414669, // rhosize
+        129.49, // rhomid
+        0.0677453, // rhok
     };
 
     vector<paraminfo> params
@@ -555,7 +553,7 @@ void seir()
              << "Duseks survey = " << s.numantibodies(r,70) << endl
              << endl << endl;
 
-        if(1) // zkroceni
+        if(0) // zkroceni
         {
             matrix T(eseirin+1,eseirin+1,0);
             for(unsigned i=0; i<7; i++)
@@ -564,6 +562,11 @@ void seir()
 
             clog << "T" << endl <<  T << endl;
             clog << "rho(T)=" << range(T) << endl << endl;
+
+
+            double c=si.z[si.z.size()-1][czseir::econtacts];
+            double c0=rp[efcontacts];
+            clog << "c=" << c << endl;
 
             double delta = 0.01;
             clog << "theta,rho,iota98" << endl;
@@ -579,21 +582,32 @@ void seir()
             for(unsigned i=0; i<7; i++)
                 theta += r.Ts[si.y.size()-1-i](eseirqe,eseire);
             theta /= 7.0;
+            bool firsttime = true;
+
+
             for(; theta<0.30; theta+= delta)
             {
-                clog << theta << "," << range(T) << ",";
-                double dd=T(0,1);
+
+                double kappa=T(0,1);
+                double origkappa = kappa;
+                double factor = origkappa / (c-c0);
+
                 if(range(T) > required)
                 {
                     auto Tt =T;
                     for(unsigned i=0; i<100000; i++)
                     {
-                        dd -= 0.001;
-                        Tt(0,1)=Tt(0,1)=Tt(0,2)=dd;
+                        kappa -= 0.001;
+                        Tt(0,1)=Tt(0,2)=Tt(0,3)=kappa;
+                        double cc = kappa / factor + c0;
+                        if(firsttime && cc - floor(cc*100)/100 < 0.005)
+                            clog << "," << cc << "," << range(Tt) << endl;
+
                         if(range(Tt) < 0.98)
                             break;
                     }
-                    clog << dd+rp[efcontacts];
+                    clog << theta << "," << range(T) << ",";
+                    clog << kappa / factor + c0;
                 }
 
                 auto bound = ((I - T).inverse())*m;
@@ -606,7 +620,9 @@ void seir()
                 T(1,1) -= delta;
                 T(2,2) -= delta;
                 T(3,3) -= delta;
+                firsttime = false;
             }
+            throw;
         }
 
         clog <<
