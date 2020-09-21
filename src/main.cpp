@@ -298,7 +298,7 @@ public:
 #ifdef FAMILYCONTACTS
         c -= p[efcontacts];
 #endif
-        double preiota =c*(1-0.85*g.z[t][emasks])*(1-p[eomega] *g.z[t][ehygiene]);
+        double preiota =c*(1-0.6*g.z[t][emasks])*(1-p[eomega] *g.z[t][ehygiene]);
         vector<double> iota(eseirnumstates,0);
         iota[eseiria] = iota[eseiris] = (p[ebeta]/*+p[ebetaadd]*/)*preiota;
         iota[eseirin] = (p[ebeta]+ba)*preiota;
@@ -523,8 +523,8 @@ void seir()
     vector<bool> filter(params.size(),false);
     obsseir s;
 
-//    for(unsigned i=0; i<params.size(); i++)
-//        params[i].initial = initvals[i];
+    for(unsigned i=0; i<params.size(); i++)
+        params[i].initial = initvals[i];
     if(1)
     {
         vector<double> rp;
@@ -553,7 +553,7 @@ void seir()
              << "Duseks survey = " << s.numantibodies(r,70) << endl
              << endl << endl;
 
-        if(0) // zkroceni
+        if(1) // zkroceni
         {
             matrix T(eseirin+1,eseirin+1,0);
             for(unsigned i=0; i<7; i++)
@@ -622,7 +622,6 @@ void seir()
                 T(3,3) -= delta;
                 firsttime = false;
             }
-            throw;
         }
 
         clog <<
