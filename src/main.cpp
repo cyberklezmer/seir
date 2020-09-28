@@ -102,10 +102,14 @@ public:
 #ifdef ASYMP
         eRA, eRS,
 #else
-        eT,
+        eR,
 #endif
-        eD,  enumobs};
-    enum eexp { eI, econtacts, emasks, ehygiene, edayadjust, etests, esmT,
+        eD,
+#ifdef HOSPITALS
+        eH, eHC,
+#endif
+        enumobs};
+    enum eexp { eI, econtacts, emasks, ehygiene, etests, edayadjust,
                 enumexp};
 private:
     static matrix getH()
@@ -119,8 +123,8 @@ private:
         ret(eRS,eseird)=1;
 #else
         for(unsigned i=eseiriada; i<eseirnumstates; i++)
-            ret(eT,i) = 1;
-        ret(eT,eseird)=1;
+            ret(eR,i) = 1;
+        ret(eR,eseird)=1;
 #endif
         ret(eD,eseird)=1;
         ret(eD,eseirdda)=1;
@@ -242,12 +246,12 @@ public:
     }
 
 
-    matrix I(unsigned t, const vector<double>& params, const G& g) const
+    matrix J(unsigned t, const vector<double>& params, const G& g) const
     {
         vector<double> iot = getiota(t,params,g);
         matrix ret(k(),k(),0);
         for(unsigned i=0; i<eseirnumstates; i++)
-            ret(0,i) = iot[i];
+            ret(i,0) = iot[i];
         return ret;
     };
     vector<double> X0(const vector<double>& , const G&) const
@@ -273,7 +277,7 @@ public:
         ret(eRS,eseiris) = gammar;
         ret(eRA,eseire+eseiria) = gammar;
 #else
-        ret(eT,eseiris) = gammar;
+        ret(eR,eseiris) = gammar;
 #endif
         ret(eD,eseirjsda) = gammad;
         ret(eD,eseirjsds) = gammad;
@@ -305,10 +309,25 @@ public:
         return iota;
     }
 
+    double weekave(unsigned t, const G& g) const
+    {
+        unsigned former = t>7 ? t-7 : 0;
+        double numrep;
+        if(t == 0)
+            numrep=0;
+        else
+        {
+#ifdef ASYMP
+            numrep = (g.y[t][eRA]+g.y[t][eRS]-g.y[former][eRA]-g.y[former][eRS])/ (t-former);
+#else
+            numrep = (g.y[t][eR]-g.y[former][eR])/ (t-former);
+#endif
+        }
+    }
+
     virtual double getthetas(unsigned t, const vector<double>& params, const G& g) const
     {
         double rh;
-        double numrep = g.z[t][esmT];
 #ifdef ETAPIECE
         unsigned numetas = elasteta + 1 - eeta0;
         unsigned period = 35;
@@ -338,6 +357,7 @@ public:
        if(t >= 100)
           k = params[ek2];
 #endif
+        double numrep = weekave(t,g);
         double c = numrep < k ? rh : rh * k / numrep ;
 if(c> 0.7)
     cout << "c > 0.7";
@@ -356,7 +376,6 @@ if(c> 0.7)
             return min(params[erhocoef] * g.z[t][etests]/numtraceable,0.7);
 #endif
         double rh;
-        double numrep = g.z[t][esmT];
 #ifdef PIECEWISE
         unsigned numrhos = elastrho + 1 - erho0;
         unsigned period = 35;
@@ -382,6 +401,7 @@ if(c> 0.7)
        if(t >= 100)
           k = params[ek2];
 #endif
+       double numrep = weekave(t,g);
         double c = numrep < k ? rh : rh * k / numrep ;
 
 if(c> 0.7)
@@ -393,37 +413,42 @@ if(c> 0.7)
 void fillsi(seirmodel::data& si, csv<','>c, unsigned lag = 0)
 {
     bool rfin = false;
+    vector<unsigned> trsf(czseir::enumobs);
+#ifdef ASYMP
+    trsf[eRA] = 0;
+    trsf[erB] = 1;
+#else
+    trsf[czseir::eR] = 2;
+#endif
+    trsf[czseir::eD] = 3;
+#ifdef HOSPITALS
+    trsf[czseir::eH] = 4;
+    trsf[czseir::eHC] = 5;
+#endif
+    const unsigned firstexp = 6;
     for(unsigned j=0; j<czseir::enumobs; j++)
     {
-        si.ylabels.push_back(c(0,1+j));
+        si.ylabels.push_back(c(0,1+trsf[j]));
     }
 
     for(unsigned j=0; j<czseir::enumexp; j++)
-        si.zlabels.push_back(c(0,czseir::enumobs+1+j));
+        si.zlabels.push_back(c(0,firstexp+j));
 
     for(unsigned i=lag; i< c.r()-1; i++)
     {
-
         si.dates.push_back(c(i+1,0));
-        unsigned k=1;
         if(c(i+1,1) != "" && !rfin)
         {
             vector<double> obs;
             for(unsigned j=0; j<czseir::enumobs; j++)
-                obs.push_back(c.getunsigned(i+1,k++));
+                obs.push_back(c.getunsigned(i+1,1+trsf[j]));
             si.y.push_back(obs);
         }
         else
-        {
             rfin = true;
-            k += czseir::enumobs;
-        }
         vector<double> exp;
         for(unsigned j=0; j<czseir::enumexp; j++)
-//if(j!=czseir::econtacts && j!=czseir::emasks)
-            exp.push_back(c.getdouble(i+1,k++));
-//else
-//  exp.push_back(c.getdouble(i+10 < c.r() ? i+10 : c.r()-1,k++));
+            exp.push_back(c.getdouble(i+1,1+firstexp+j));
         si.z.push_back(exp);
     }
 }
@@ -432,11 +457,7 @@ void fillsi(seirmodel::data& si, csv<','>c, unsigned lag = 0)
 
 void seir()
 {
-#ifdef ASYMP
-    csv<','> c("../input/cza.csv");
-#else
     csv<','> c("../input/cz.csv");
-#endif
     seirmodel::data si;
 
     fillsi(si,c,0);
@@ -446,17 +467,17 @@ void seir()
     auto siest = si;
 
     vector<double> initvals = {
-        2.66452, // beta
-        0.146487, // fcontacts
-        0.889302, // omega
-        1.6263e-17, // gammad
-        22.9477, // gammar
-        105.594, // k
-        131.547, // k2
-        0.107862, // eta
-        0.414669, // rhosize
-        129.49, // rhomid
-        0.0677453, // rhok
+        2.77548, // beta
+        0.0915122, // fcontacts
+        0.979805, // omega
+        4.32527e-17, // gammad
+        99.4493, // gammar
+        219.709, // k
+        158.551, // k2
+        0.0676016, // eta
+        0.537422, // rhosize
+        146.251, // rhomid
+        0.024098, // rhok
     };
 
     vector<paraminfo> params
@@ -528,7 +549,7 @@ void seir()
     if(1)
     {
         vector<double> rp;
-        if(1)
+        if(0)
         {
             uncertain res;
             cout << "ll= " << s.estimate(params,siest,res,filter) << endl;
@@ -545,7 +566,7 @@ void seir()
             rp = initvals;
 
         csvout<double,','>(clog, rp);
-        czseir::evalresult r = s.eval<true>(rp,si);
+        czseir::evalresult r = s.eval<true>(rp,si, si.z.size()-si.y.size());
         ofstream o("output.csv");
         r.output(o,si);
         clog << "ll/n=" << r.contrast / r.contrasts.size() << endl
@@ -553,7 +574,19 @@ void seir()
              << "Duseks survey = " << s.numantibodies(r,70) << endl
              << endl << endl;
 
-        if(1) // zkroceni
+        if(1) // R
+        {
+            clog << "rho, R,lastval" << endl;
+            for(unsigned t=0; t<si.y.size(); t++)
+            {
+                double lv;
+                double R = s.R(t,r,lv);
+                clog << s.rho(t,r,eseirin+1) << "," << R << "," << lv << endl;
+            }
+            throw;
+        }
+
+        if(0) // zkroceni
         {
             matrix T(eseirin+1,eseirin+1,0);
             for(unsigned i=0; i<7; i++)
@@ -642,7 +675,7 @@ void seir()
             double predPAtrend;
             double predPStrend;
 #else
-            double P = si.y[i][czseir::eT];
+            double P = si.y[i][czseir::eR];
             double predPtrend;
 #endif
             double predDtrend;
@@ -658,7 +691,7 @@ void seir()
                 predPAtrend = rx.pred[i].x()[eseirnumstates+czseir::eRA];
                 predPStrend = rx.pred[i].x()[eseirnumstates+czseir::eRS];
 #else
-                predPtrend = rx.pred[i].x()[eseirnumstates+czseir::eT];
+                predPtrend = rx.pred[i].x()[eseirnumstates+czseir::eR];
 #endif
                 predDtrend = rx.pred[i].x()[eseirnumstates+czseir::eD];
                 trendm = rx.Ts[i].submatrix(0,0,eseirin+1,eseirin+1);
@@ -678,7 +711,7 @@ void seir()
             double predPA = r.pred[i].x()[eseirnumstates+czseir::eRA];
             double predPS = r.pred[i].x()[eseirnumstates+czseir::eRS];
 #else
-            double predP = r.pred[i].x()[eseirnumstates+czseir::eT];
+            double predP = r.pred[i].x()[eseirnumstates+czseir::eR];
 #endif
             double predD = r.pred[i].x()[eseirnumstates+czseir::eD];
 //            double predPtrend = r2.pred[i].x()[eseirnumstates+czseir::eT];
@@ -706,7 +739,7 @@ void seir()
                     << predPStrend - PS << ","
 #else
                  << P << "," << predP << "," << predPtrend << ","
-                 << (predP - P)/sqrt(r.pred[i].var()(eseirnumstates+czseir::eT,eseirnumstates+czseir::eT)) << ","
+                 << (predP - P)/sqrt(r.pred[i].var()(eseirnumstates+czseir::eR,eseirnumstates+czseir::eR)) << ","
                  << predPtrend - P << ",,,,,,"
 #endif
                  << D << "," << predD << "," << predDtrend << ","

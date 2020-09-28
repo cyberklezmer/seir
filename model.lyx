@@ -353,19 +353,22 @@ theorems-ams
 
 \end_layout
 
+\begin_layout Title
+Model G – a SEIR filter
+\end_layout
+
 \begin_layout Itemize
 Estimating parameters in stochastic compartmental models using Markov chain
  methods GAVIN J GIBSON (continuous Markov chain, Bayesian inference) 
 \end_layout
 
 \begin_layout Standard
-Assume an infinite population, each individual of which finds himself either
- in one of the states 
+Assume an infinite population, each individual of which finds himself in
+ one of the states 
 \begin_inset Formula $S_{0},\dots,S_{k}$
 \end_inset
 
-.
- For any 
+, For any 
 \begin_inset Formula $t\in\N_{0}$
 \end_inset
 
@@ -373,13 +376,17 @@ Assume an infinite population, each individual of which finds himself either
 \begin_inset Formula $X_{t}=(X_{t}^{1},\dots,X_{t}^{k})\in\N_{0}^{k}$
 \end_inset
 
- be a possibly hidden stochastic process of finite amounts of individuals
- finding themselves in states (compartments) 
+ be a possibly hidden stochastic process amounts of individuals finding
+ themselves in states (compartments) 
 \begin_inset Formula $\{1,\dots,k\}$
 \end_inset
 
  at time 
 \begin_inset Formula $t$
+\end_inset
+
+ such that 
+\begin_inset Formula $\|X_{t}\|<\infty$
 \end_inset
 
  and let 
@@ -394,7 +401,7 @@ be a process of observations where
 \begin_inset Formula $H$
 \end_inset
 
- is a 
+ is a deterministic 
 \begin_inset Formula $m\times k$
 \end_inset
 
@@ -441,8 +448,12 @@ Let
 \end_inset
 
  be possibly random.
- During each interval 
-\begin_inset Formula $(t,t+1]$
+ From time 
+\begin_inset Formula $t$
+\end_inset
+
+ to 
+\begin_inset Formula $t+1$
 \end_inset
 
 , 
@@ -450,47 +461,35 @@ Let
 \end_inset
 
  let there be inflow 
-\begin_inset Formula $UZ_{t}\geq0$
+\begin_inset Formula $I_{t}\defined U_{t}Z_{t}\geq0$
 \end_inset
 
  of individuals into the states 
 \begin_inset Formula $\{1,\dots,k\}$
 \end_inset
 
- and conditionally Poisson inflows from 
+ where 
+\begin_inset Formula $U_{t}\in\G_{t}$
+\end_inset
+
+ is a matrix and let there be conditionally Poisson inflows from 
 \begin_inset Formula $S_{0}$
 \end_inset
 
  into each of the remaining states having intensities 
-\begin_inset Formula $I_{t}X_{t}$
+\begin_inset Formula $J_{t}^{T}X_{t}$
 \end_inset
 
-, 
-\begin_inset Formula $I_{t}=(\iota_{t}^{ij})_{i,j}$
+, where 
+\begin_inset Formula $J_{t}=(\iota_{t}^{ij})_{i,j}\in\G_{t}$
 \end_inset
 
  and let each individual change her state according to transition matrix
  
-\begin_inset Formula $P_{t}=(p_{t}^{ij})_{i,j}$
+\begin_inset Formula $P_{t}=(p_{t}^{ij})_{i,j}\in\G_{t}$
 \end_inset
 
-; here, 
-\begin_inset Formula $I_{t}$
-\end_inset
-
- and 
-\begin_inset Formula $P_{t}$
-\end_inset
-
- are 
-\begin_inset Formula $\G_{t}$
-\end_inset
-
- measurable and 
-\begin_inset Formula $U$
-\end_inset
-
- is deterministic.
+.
  Let all the inflows and the inter-state jumps be conditionally independent
  given 
 \begin_inset Formula $\F_{t}$
@@ -504,10 +503,10 @@ Let
 \begin_inset Formula 
 \[
 X_{t+1}|\F_{t}=\bigcirc_{1\leq i\leq k}\mathrm{Mult}(X_{t}^{i},p_{t}^{i,1},\dots,p_{t}^{i,k})\circ\left[\begin{array}{c}
-\mathrm{Po}(\sum_{1\leq i\leq k}\iota_{t}^{1,i}X_{t}^{i})\\
+\mathrm{Po}(\sum_{1\leq i\leq k}\iota_{t}^{i,1}X_{t}^{i})\\
 \vdots\\
-\mathrm{Po}(\sum_{1\leq i\leq k}\iota_{t}^{k,i}X_{t}^{i})
-\end{array}\right]\circ\delta(UZ_{t})
+\mathrm{Po}(\sum_{1\leq i\leq k}\iota_{t}^{i,k}X_{t}^{i})
+\end{array}\right]\circ\delta(I_{t})
 \]
 
 \end_inset
@@ -528,148 +527,200 @@ where
 \end_inset
 
 where 
-\begin_inset Formula $\Gamma_{t}$
+\begin_inset Formula $\Gamma_{t}\in\G_{t}$
 \end_inset
 
  is a 
-\begin_inset Formula $\G_{t}$
-\end_inset
-
--measurable 
 \begin_inset Formula $m\times k$
 \end_inset
 
- matrix.
- 
+ matrix
 \end_layout
 
 \begin_layout Standard
-This implies that
+By probability calculus we get that 
 \begin_inset Formula 
-\begin{equation}
-\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]=\left[{U\atop HU}\right]Z_{t}+\left[{T_{t}\atop HT_{t}}\right]X_{t},\qquad\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[\begin{array}{cc}
-\Lambda_{t} & \Lambda_{t}H^{T}\\
-H\Lambda_{t} & \quad H\Lambda_{t}H^{T}+\mathrm{diag(}\Gamma_{t}X_{t})
-\end{array}\right]\label{eq:moments}
-\end{equation}
+\[
+\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]=\left[{E\atop H}\right](T_{t}X_{t}+I_{t}),\qquad\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop H}\right]\Lambda_{t}(X_{t})\left[{E\atop H}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}X_{t}}\right)}
+\]
 
 \end_inset
 
 where 
 \begin_inset Formula 
 \begin{multline*}
-T_{t}\defined P_{t}^{T}+I_{t},\\
-\Lambda_{t}=\Lambda_{t}(X_{t})\defined\sum_{i=1}^{k}\mathrm{[diag}(p_{t}^{i})-p_{t}^{i}(p_{t}^{i})^{T}]X_{t}^{i}+\mathrm{diag}(I_{t}X_{t\text{¨}})=\sum_{i=1}^{k}\Phi_{t,i}X_{t}^{i}\\
-\Phi_{t,i}\defined\mathrm{diag}(\iota_{t}^{i}??+p_{t}^{i})-p_{t}^{i}(p_{t}^{i})^{T}
+T_{t}\defined P_{t}^{T}+J_{t}^{T},\\
+\Lambda_{t}(X_{t})\defined\sum_{i=1}^{k}\mathrm{[diag}(P_{t}^{i,\bullet})-P_{t}^{i,\bullet}(P_{t}^{i,\bullet}){}^{T}]X_{t}^{i}+\mathrm{diag}(J_{t}^{T}X_{t})=\sum_{i=1}^{k}\Phi_{t,i}X_{t}^{i}\\
+\Phi_{t,i}\defined\mathrm{diag}(J_{t}^{i}+P_{t}^{i})-(P_{t}^{i})^{T}P_{t}^{i}
 \end{multline*}
 
 \end_inset
 
-X
-\begin_inset Newline newline
+vhere, for any matrix 
+\begin_inset Formula $M$
 \end_inset
 
-and 
-\begin_inset Formula $p_{t}^{i}=(p_{t}^{i,1},\dots,p_{t}^{i,k})^{T}$
+ , 
+\begin_inset Formula $M^{i}$
 \end_inset
 
-.
- Further, denoting 
-\begin_inset Formula $\hat{A}_{s|t}=\E(A_{s}|\G_{t})$
+ is its 
+\begin_inset Formula $i$
 \end_inset
 
- for any stochastic process 
+-th row.
+ For any stochastic process 
 \begin_inset Formula $A$
 \end_inset
 
-, we get, for 
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\xout off
-\uuline off
-\uwave off
-\noun off
-\color none
-
-\begin_inset Formula $s>t,$
+ and integers 
+\begin_inset Formula $s>t$
 \end_inset
 
+, denote 
+\begin_inset Formula $\hat{A}_{s|t}=\E(A_{s}|\G_{t})$
+\end_inset
 
+.
+ If 
+\begin_inset Formula $T_{\tau},\in\G_{t},t<\tau\leq s-1$
+\end_inset
+
+ (which is trivially true if 
+\begin_inset Formula $s=t+1$
+\end_inset
+
+), we get that
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
 \begin{multline*}
-\left.{\hat{X}_{s|t}\atop \hat{Y}_{s|t}}\right|=\E(\E(\left.{\hat{X}_{s}\atop \hat{Y}_{s}}\right||\F_{s-1})|\G_{t})=\E(\left[{T_{s-1}\atop HT_{s-1}}\right]X_{s-1}+\left[{U\atop HU}\right]Z_{s-1}|\G_{t})\\
-=\left[{T_{s-1}\atop HT_{s-1}}\right]\hat{X}_{s-1|t}+\left[{U\atop HU}\right]\hat{Z}_{s-1|t},
-\end{multline*}
-
-\end_inset
-
- 
-\begin_inset Formula 
-\begin{multline*}
-V_{s|t}\defined\var\left(\left.{X_{s}\atop Y_{s}}\right|\G_{t}\right)=\var\left(\left.\E\left[\left.{X_{s}\atop Y_{s}}\right|\F_{s-1}\right]\right|\G_{t}\right)+\E\left(\left.\var\left[\left.{X_{s}\atop Y_{s}}\right|\F_{s-1}\right]\right|\G_{t}\right)\\
-=\var\left(\left[{U\atop HU}\right]Z_{s-1}+\left[{T_{t}\atop HT_{t}}\right]X_{s-1}|\G_{t}\right)+\E\left(\left[\begin{array}{cc}
-\Lambda(X_{s-1}) & \Lambda_{s-1}(X_{s-1})H^{T}\\
-H\Lambda(X_{s-1}) & \quad H\Lambda_{s-1}(X_{s-1})H^{T}+\mathrm{diag(}\Gamma_{s-1}X_{s-1})
-\end{array}\right]|\G_{t}\right)\\
-=\left[{U\atop HU}\right]\var(Z_{s-1}|\G_{t})\left[{U\atop HU}\right]^{T}+2\left[{U\atop HU}\right]\cov(Z_{s-1},X_{s-1}|\G_{t})\left[{T_{t}\atop HT_{t}}\right]^{T}+\left[{T_{t}\atop HT_{t}}\right]W_{s-1|t}\left[{T_{t}\atop HT_{t}}\right]^{T}+\\
-\left[\begin{array}{cc}
-\Lambda(\hat{X}_{s-1|t}) & \Lambda_{s-1}(\hat{X}_{s-1|t})H^{T}\\
-H\Lambda(\hat{X}_{s-1|t}) & \quad H\Lambda_{s-1}(\hat{X}_{s-1|t})H^{T}+\mathrm{diag(}\Gamma_{s-1}\hat{X}_{s-1|t})
-\end{array}\right],\qquad s>t+1\\
+\left[{\hat{X}_{s|t}\atop \hat{Y}_{s|t}}\right]=\E\left(\left.\E\left(\left.\left[{\hat{X}_{s}\atop \hat{Y}_{s}}\right]\right||\F_{s-1}\right)\right|\G_{t}\right)=\left[{E\atop H}\right]\left(T_{s-1}\hat{X}_{s-1|t}+\hat{I}_{s-1|t}\right)\\
+=\left[{E\atop H}\right]\left(T_{t,s-1}X_{t}+\sum_{\theta=t}^{s-1}T_{\theta+1,s-1}\hat{I}_{\theta|t}\right)
 \end{multline*}
 
 \end_inset
 
 where 
-\begin_inset Formula $W_{s|t}=\var(X_{s}|\G_{t}),$
+\begin_inset Formula $T_{t,s}=\prod_{\theta=t}^{s}T_{\theta}$
 \end_inset
 
-
-\begin_inset Formula $ $
+ with 
+\begin_inset Formula $T_{t,t-1}=E$
 \end_inset
 
+ and
+\begin_inset Formula 
+\begin{multline*}
+W_{s|t}\defined\var\left(\left.X_{s}\right|\G_{t}\right)=\var\left(\left.\E\left(\left.X_{s}\right|\F_{s-1}\right)\right|\G_{t}\right)+\E\left(\left.\var\left(\left.X_{s}\right|\F_{s-1}\right)\right|\G_{t}\right)\\
+=\var\left(T_{s-1}X_{s-1}+I_{s-1}|\G_{t}\right)+\E\left(\left.\Lambda_{s-1}(X_{s-1})\right|\G_{t}\right)\\
+=T_{s-1}W_{s-1|t}T_{s-1}^{T}+2T_{s-1}\cov(X_{s-1},I_{s-1}|\G_{t})+\var\left(I_{s-1}|\G_{t}\right)+\Lambda_{s-1}(\hat{X}_{s-1|t})
+\end{multline*}
+
+\end_inset
+
+and
+\begin_inset Formula 
+\[
+V_{s|t}\defined\var\left(\left.{X_{s}\atop Y_{s}}\right|\G_{t}\right)=\left[{E\atop H}\right]W_{s|t}\left[{E\atop H}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{s-1}\hat{X}_{s-1|t}}\right)}
+\]
+
+\end_inset
+
+The reproduction number 
+\begin_inset Formula $R_{t}$
+\end_inset
+
+, i.e.
+ the conditional expectation (w.r.t.
  
-\end_layout
+\begin_inset Formula $\G_{t-1})$
+\end_inset
 
-\begin_layout Proposition
-Denote 
-\begin_inset Formula $M_{t}=UZ_{t}$
+ with respect of the infections caused by an individual having arrived at
+ 
+\begin_inset Formula $t,$
+\end_inset
+
+ at computed as 
+\begin_inset Formula 
+\[
+\sum_{\tau=t}^{\infty}\mathbf{1}^{T}\E(J_{\tau}P_{t,\tau-1}|\G_{t-1})N_{t},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $N_{t}$
+\end_inset
+
+ is the conditional distribution (with respect to 
+\begin_inset Formula $\G_{t-1}$
+\end_inset
+
+) of states in which the newcomers find themselves at 
+\begin_inset Formula $t$
 \end_inset
 
 .
- 
-\begin_inset Newline newline
+ Indeed, the state the expected number of those infected by him at 
+\begin_inset Formula $t+1$
 \end_inset
 
+ is given by the sum of components of 
+\begin_inset Formula $J_{t}M_{t}$
+\end_inset
+
+, the number infected at 
+\begin_inset Formula $t+1$
+\end_inset
+
+ is given by 
+\begin_inset Formula $J_{t+1}P_{t}N_{t}$
+\end_inset
+
+ etc.
+ Note that there could be difficulties when computing 
+\begin_inset Formula $N_{t}$
+\end_inset
+
+ – most straightforward estimate is 
+\begin_inset Formula $N_{t}\doteq\nu(J_{t-1}\hat{X}_{t-1|t-1}+I_{t-1})$
+\end_inset
+
+ where 
+\begin_inset Formula $\nu$
+\end_inset
+
+ stands for normalization; however, it is generally not unbiased due to
+ the normalization.
+ This problem, however, vanishes in the case that imports and new infections
+ fall into a single state (typically called exposed), in which case 
+\begin_inset Formula $N_{t}=(1,0,\dots,0)^{T}$
+\end_inset
+
+.´ 
+\end_layout
+
+\begin_layout Proposition
 (i) If 
 \begin_inset Formula $T_{t}\leq S$
 \end_inset
 
- component-wise where 
-\begin_inset Formula $T$
-\end_inset
-
- is deterministic with 
+ component-wise where S is deterministic with 
 \begin_inset Formula $s_{0}\defined\rho(S)<1$
 \end_inset
 
  and if 
-\begin_inset Formula $\E M_{t}=o(\sigma^{t})$
+\begin_inset Formula $\E I_{t}=o(t^{-\alpha})$
 \end_inset
 
- with 
-\begin_inset Formula $\sigma<1$
+ for some 
+\begin_inset Formula $\alpha>0$
 \end_inset
 
-, then 
+ then 
 \begin_inset Formula $X_{t}\rightarrow0$
 \end_inset
 
@@ -691,7 +742,7 @@ Denote
 \end_inset
 
  or 
-\begin_inset Formula $\E M_{\tau}\neq0$
+\begin_inset Formula $\E I_{\tau}\neq0$
 \end_inset
 
  for some 
@@ -707,7 +758,7 @@ Denote
 \end_inset
 
 (iii) If 
-\begin_inset Formula $\E M_{t}\equiv\mu$
+\begin_inset Formula $\E I_{t}\equiv\mu$
 \end_inset
 
  and 
@@ -721,7 +772,7 @@ Denote
  then 
 \begin_inset Formula 
 \[
-\liminf_{t}\E X_{t}\ge(I-R)^{-1}\mu,\qquad\limsup_{t}\E X_{t}\leq(I-S)^{-1}\mu
+\liminf_{t}\E X_{t}\ge(E-R)^{-1}\mu,\qquad\limsup_{t}\E X_{t}\leq(I-S)^{-1}\mu
 \]
 
 \end_inset
@@ -730,90 +781,90 @@ Denote
 \end_layout
 
 \begin_layout Proof
-By the positivity of 
-\begin_inset Formula $M$
+(i) We have 
+\begin_inset Formula 
+\begin{multline*}
+\E X_{t}=\E(\E(X_{t}|\G_{0}))=\E(T_{0,\tau-1}X_{0}+\sum_{\theta=0}^{t-1}T_{\theta+1,t-1}\hat{I}_{\theta|0})=\\
+=T_{0,t-1}\E X_{0}+\sum_{\theta=0}^{t-1}T_{\theta+1,t-1}\E I_{\theta}\leq a_{t}+b_{t,}\qquad a_{t}=S^{t}\E X_{0},\qquad b_{t}=\sum_{\theta=0}^{t-1}S^{t-\theta-1}\E I_{\theta}
+\end{multline*}
+
 \end_inset
 
- and our assumptions, there exists 
+Thanks to the sub-unit spectral radius of 
+\begin_inset Formula $S$
+\end_inset
+
+, 
+\begin_inset Formula $a_{t}\rightarrow0$
+\end_inset
+
+.
+ Further, by the positivity of 
+\begin_inset Formula $I$
+\end_inset
+
+ and the properties of convergence, there exists 
 \begin_inset Formula $c\in\R_{+}^{k}$
 \end_inset
 
- and 
-\begin_inset Formula $\sigma<s$
-\end_inset
-
  such that 
-\begin_inset Formula $\E M_{t}\leq cs^{t}.$
+\begin_inset Formula $\E I_{t}\leq c(t+1)^{-1}.$
 \end_inset
 
- As 
-\begin_inset Formula 
-\begin{multline*}
-\E X_{t}=\E(\E(M_{t-1}|\G_{0})+\E(T_{t-1}X_{t-1}|\G_{0}))\\
-=\E(M_{t-1})+\E(T_{t-1}X_{t-1})\leq c\sigma^{t-1}+T\E X_{t-1}
-\end{multline*}
-
-\end_inset
-
-for any 
-\begin_inset Formula $t,$
-\end_inset
-
-we have 
-\begin_inset Formula 
-\begin{multline*}
-\E X_{t}\leq a_{t}+b_{t,}\qquad a_{t}=\sum_{\tau=0}^{t-1}T^{\tau}c\sigma^{t-\tau-1},\qquad b_{t}=T^{t-1}\E X_{0}
-\end{multline*}
-
-\end_inset
-
-
-\begin_inset Formula $b_{t}$
-\end_inset
-
- converging thanks to the sub-unit spectral radius of 
-\begin_inset Formula $T$
-\end_inset
-
- and, for any 
+ Thus, for any 
 \begin_inset Formula $\varsigma$
 \end_inset
 
  such that 
-\begin_inset Formula $\max(s_{0},\sigma)<\varsigma<1$
+\begin_inset Formula $s_{0}<\varsigma<1$
 \end_inset
 
-,
+, reindex and get
 \begin_inset Formula 
 \[
-a_{t}\leq\sum_{\tau=0}^{t-1}T^{\tau}c\varsigma^{t-\tau-1}=\varsigma^{t-1}\sum_{\tau=0}^{t-1}(\varsigma^{-1}T)^{\tau}c\leq\varsigma^{t-1}(t-1)d\rightarrow0.
+b_{t}=\sum_{\tau=0}^{t-1}S^{\tau}\E I_{t-\tau-1}\leq\sum_{\tau=0}^{t-1}S^{\tau}c\frac{1}{(t-\tau)^{\alpha}}=\underbrace{\frac{1}{t^{\alpha}}}_{\rightarrow0}\times\underbrace{\sum_{\tau=0}^{t-1}(\varsigma^{-1}S)^{\tau}c}_{\rightarrow(E-\varsigma^{-1}S)^{-1}c}\underbrace{\left(\frac{\varsigma^{\tau/\alpha}}{t-\tau}\right)^{\alpha}}_{\leq d}\rightarrow0
 \]
 
 \end_inset
 
-for some 
-\begin_inset Formula $d$
+because 
+\begin_inset Formula $\rho(\varsigma^{-1}S)=\frac{s_{0}}{\varsigma_{t}}<1$
 \end_inset
 
- where the last inequality holds because 
-\begin_inset Formula $\rho(\varsigma^{-1}T)=\frac{s_{0}}{\varsigma_{t}}<1$
+, and the upper bound exsits as 
+\begin_inset Formula $f(\tau)\defined\underbrace{\frac{t\varsigma^{\tau/\alpha}}{t-\tau}}$
 \end_inset
 
- and, consequently, 
-\begin_inset Formula $(\varsigma^{-1}T)^{\tau}\rightarrow0$
+ increases in 
+\begin_inset Formula $\tau=t-1$
 \end_inset
 
- and is thus bounded.
- By non-negativity of 
-\begin_inset Formula $X$
+ and its derivative has only a single root, we have 
+\begin_inset Formula $f(\tau)\leq\max(f(0),f(t-1))=\max(1,\varsigma^{\frac{t-1}{\alpha}}t)\leq d\defined\max(1,\frac{1}{e\varsigma^{1/\alpha}|\alpha^{-1}\ln\varsigma|})$
 \end_inset
 
-, this suffices for a.s.
- convergence.
+ on 
+\begin_inset Formula $[0,t-1].$
+\end_inset
+
+ Finally, 
+\begin_inset Formula $X\geq0$
+\end_inset
+
+, convergence of 
+\begin_inset Formula $a_{t}+b_{t}$
+\end_inset
+
+ suffices for a.s.
+ convergence of 
+\begin_inset Formula $X_{t}$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Proof
-Let 
+(ii) Let 
 \begin_inset Formula $\E X_{0}\neq0$
 \end_inset
 
@@ -823,14 +874,14 @@ Let
 
 .
  As 
-\begin_inset Formula $T$
+\begin_inset Formula $R$
 \end_inset
 
  is irreducible non-negative, by the Perron-Frobenius Theorem, 
 \begin_inset Formula $s_{0}$
 \end_inset
 
- is an eigenvalue and the corresponding eigenvector 
+ is its eigenvalue and the corresponding eigenvector 
 \begin_inset Formula $x$
 \end_inset
 
@@ -866,14 +917,18 @@ Let
 
 norm of which converges to infinity.
  The proof for 
-\begin_inset Formula $\E M_{\tau}\neq0$
+\begin_inset Formula $\E I_{\tau}\neq0$
 \end_inset
 
- is analogousl
+ is analogous.
 \end_layout
 
 \begin_layout Proof
-\begin_inset Formula $\E X_{t}=\sum_{\tau=0}^{t-1}\prod_{s=\tau}^{t}T_{s}\mu+\prod_{s=0}^{t-1}T_{s}\E X_{0}\leq\sum_{\tau=0}^{t-1}T^{\tau}\mu+T^{t-1}\E X_{0}\rightarrow(\sum_{\tau=0}^{\infty}T^{\tau})\mu=(E-T)^{-1}\mu$
+(iii) 
+\end_layout
+
+\begin_layout Proof
+\begin_inset Formula $\E X_{t}=\sum_{\tau=0}^{t-1}(\prod_{s=\tau}^{t-2}T_{s})\mu+\prod_{s=0}^{t-1}T_{s}\E X_{0}\leq\sum_{\tau=0}^{t-1}S^{\tau}\mu+S^{t-1}\E X_{0}\rightarrow(\sum_{\tau=0}^{\infty}S^{\tau})\mu=(E-S)^{-1}\mu$
 \end_inset
 
 

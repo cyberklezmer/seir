@@ -40,7 +40,7 @@ public:
 protected:
     matrix T(unsigned t, const vector<double>& pars, const G& g) const
     {
-        return P(t,pars,g).transpose()+I(t,pars,g);
+        return P(t,pars,g).transpose()+J(t,pars,g).transpose();
     }
     matrix Phi(unsigned t, const vector<double>& pars, unsigned s, const G& g) const
     {
@@ -72,8 +72,8 @@ protected:
             n[i] = max(N[i],0.0);
 
         matrix ret(k()+m(),k()+m(),0);
-        vector<double> Ix = vec(I(t,pars,g) * n);
-        matrix D= diag(Ix);
+        vector<double> Jx = vec(J(t,pars,g).transpose() * n);
+        matrix D= diag(Jx);
         return block( D, D*H.transpose(), H*D, H*D*H.transpose()
                       + diag(vec(Gamma(t,pars, g)*n)));
     }
@@ -106,12 +106,14 @@ public:
     struct evalresult
     {
         evalresult(unsigned t, unsigned s, const seirmodel& am) :
-            pred(s+1), est(t+1),Ts(s+1),yVs(t+1),
+            pred(s+1), est(t+1),Ts(s+1),Js(s+1),Ps(s+1),yVs(t+1),
             contrasts(t,0), contrast(0), sm(am)
            { assert(s>=t); }
         vector<uncertain> pred;
         vector<uncertain> est;
         vector<matrix> Ts;
+        vector<matrix> Js;
+        vector<matrix> Ps;
         vector<matrix> yVs;
         vector<double> contrasts;
         double contrast;
@@ -162,25 +164,42 @@ public:
         }
     };
 
-/*    pair<vector<vector<double>>,vector<vector<double>>> evaltrend(const vector<double>& pars, unsigned ds=0) const
+    double rho(unsigned t, const evalresult& er,unsigned i) const
     {
-        unsigned t = obs().size();
-        vector<vector<double>> resobs(t+ds);
-        vector<vector<double>> resx(t+ds);
-        vector<double> x0 = X0(pars);
-        vector<double> lastx = x0;
-        for(unsigned i=0; i<t+ds; i++)
-        {
-            matrix T = this->T(i, pars);
-            vector<double> x = vec(T*lastx);
+        return range(er.Ts[t].submatrix(0,0,i,i));
+    }
+    double R(unsigned t, const evalresult& er, double& lastval) const
+    {
+//clog << "Computing R from at " << t << endl;
+        unsigned inf = er.Ps.size();
+        assert(t<inf);
 
-            matrix THT = stackv(T,H*T);
-            resx[i] = x;
-            resobs[i] = vec(H*x);
-            lastx = x;
+        const matrix& J = er.Js[t];
+        for(unsigned i=0; i<J.r(); i++)
+        {
+            for(unsigned j=1; j<J.c(); j++)
+                assert(J(i,j)==0);
         }
-        return {resx, resobs};
-    }*/
+        matrix p(k(),1,0);
+        p(0,0) = 1;
+        double res = 0;
+        for(unsigned tau = t; tau<inf; tau++)
+        {
+            matrix r = er.Js[tau].transpose() * p;
+            lastval = 0;
+            for(unsigned i=0; i<k(); i++)
+                lastval += r(i,0);
+            res += lastval;
+//clog << "lv:" << lastval << endl;
+//clog <<er.Js[tau] << endl;
+//clog << p << endl << endl;
+//clog << lastval << endl;
+            p = er.Ps[tau].transpose() * p;
+//clog << "t=" << t << endl;
+//clog << r << endl;
+        }
+        return res;
+    }
 
     template <bool contrasts=true>
     evalresult eval(const vector<double>& pars,
@@ -199,6 +218,8 @@ public:
         g.est = {x0};
         res.est[0]=x0;
         res.Ts[0]=this->T(0, pars, g);
+        res.Js[0]=this->J(0, pars, g);
+        res.Ps[0]=this->P(0, pars, g);
         unsigned i=1;
         for(; i<= t+ds; i++)
         {
@@ -275,6 +296,8 @@ public:
             }
             g.z.push_back(d.z[i]);
             res.Ts[i] = this->T(i, pars, g);
+            res.Js[i] = this->J(i,pars, g);
+            res.Ps[i] = this->P(i,pars, g);
         }
         return res;
     }
@@ -303,27 +326,7 @@ private:
         return ret;
     }
 
-/*    static double trendobj(const std::vector<double> &v, std::vector<double> &, void* f_data)
-    {
-        seirmodel& f = *((seirmodel*) f_data);
-        vector<double> x(f.filter.size());
-        unsigned i=0;
-        for(unsigned j=0; j<f.filter.size(); j++)
-            if(f.filter[j])
-                x[j]=f.prs[j];
-            else
-                x[j]=v[i++];
-        vector<vector<double>> r = f.evaltrend(x).second;
-        vector<vector<double>> os = f.obs();
-        double ret = 0;
-        for(unsigned i=0; i<os.size(); i++)
-        {
-            for(unsigned j=0; j<os[i].size(); j++)
-                ret += pow(os[i][j]-r[i][j],2);
-        }
-        clog << ret << endl;
-        return ret;
-    }*/
+
 
 
 
@@ -468,7 +471,7 @@ public:
     }
 
     virtual matrix P(unsigned t, const vector<double>& params, const G& g) const = 0;
-    virtual matrix I(unsigned t, const vector<double>& params, const G& g) const = 0;
+    virtual matrix J(unsigned t, const vector<double>& params, const G& g) const = 0;
     virtual matrix Gamma(unsigned /* t */, const vector<double>& /* params */, const G& /*g*/) const
         { return matrix(m(),k(),0); }
 

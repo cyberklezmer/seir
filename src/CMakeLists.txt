@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(mvp LANGUAGES CXX)
+project(seirfilter LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,8 +12,8 @@ include_directories("../orpp/orpp")
 # nlopt has to be installed, change accordingly
 find_library(LNLOPT libnlopt.so "/usr/local/lib" )
 
-add_executable(seir main.cpp)
+add_executable(seirfilter main.cpp)
 
-target_link_libraries("seir" ${LNLOPT} )
+target_link_libraries("seirfilter" ${LNLOPT} )
 
 
