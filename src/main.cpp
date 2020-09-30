@@ -8,16 +8,26 @@
 using namespace std;
 using namespace orpp;
 
+static constexpr unsigned horizon=100;
+
 #define FAMILYCONTACTS
-//#define SETA
+//#define BETAADD
 //#define APAR
 //#define ASYMP
+
+
+#define PIECEWISEIOTA
+
+//#define SETA
+//#ifdef ETAPIECE
 #define GAMMAS
+
 //#define PIECEWISE
-//#define BETAADD
-#define SCURVE
-#define K
-#define K2
+//#define SCURVE
+
+//#define K
+//#define K2
+
 //#define TESTSPERCAND
 
 enum eparams {
@@ -25,42 +35,52 @@ enum eparams {
 #ifdef BETAADD
     ebetaadd,
 #endif
+
+#ifdef APAR
+    easymprate,
+#endif
+
+#ifdef PIECEWISEIOTA
+    eiota0,eiota1,eiota2,eiota3,eiota4,eiota5,
+    eiota6, eiota7,eiota8,eiota9,eiota10, elastiota = eiota10,
+#else
 #ifdef FAMILYCONTACTS
     efcontacts,
 #endif
     eomega, // ebetaadd,
-#ifdef GAMMAS
-               egammad, egammar,
-#endif
-#ifdef K
-    ek,
-#endif
-#ifdef K2
-    ek2,
-#endif
-#ifdef APAR
-    easymprate,
-#endif
+#endif // PIECEWISEIOTA
+
 #ifdef PIECEWISE
                erho0,erho1, erho2, erho3, erho4, erho5,
                erho6, elastrho = erho6,
+#elsifdef SCURVE
+        erhosize, erhomid, erhok,
+#else
+        erho,
 #endif
+
 #ifdef ETAPIECE
                eeta0,eeta1,eeta2,eeta3,eeta4,eeta5,
                eeta6, elasteta = eeta6,
-#else
-#ifdef SETA
+#elsifdef SETA
                   eetamin,
         eetasize, eetamid, eetak,
 #else
                eeta,
 #endif
+
+#ifdef K
+    ek,
 #endif
 
-#ifdef SCURVE
-//               erhomin,
-    erhosize, erhomid, erhok,
+#ifdef K2
+    ek2,
 #endif
+
+#ifdef GAMMAS
+               egammad, egammar,
+#endif
+
 #ifdef TESTSPERCAND
     erhocoef,
 #endif
@@ -298,11 +318,25 @@ public:
 #ifdef BETAADD
         ba = p[ebetaadd];
 #endif
+#ifdef PIECEWISEIOTA
+        double preiota;
+        unsigned numiotas = elastiota + 1 - eiota0;
+        unsigned period = horizon / numiotas;
+        unsigned i = min(t / period, numiotas - 1);
+        if(i == numiotas - 1)
+            preiota = p[eiota0 + i];
+        else
+        {
+            double w = (t % period) / static_cast<double>(period);
+            preiota = (1-w) * p[eiota0+i] + w * p[eiota0+i+1];
+        }
+#else
         double c = g.z[t][econtacts];
 #ifdef FAMILYCONTACTS
         c -= p[efcontacts];
 #endif
         double preiota =c*(1-0.6*g.z[t][emasks])*(1-p[eomega] *g.z[t][ehygiene]);
+#endif
         vector<double> iota(eseirnumstates,0);
         iota[eseiria] = iota[eseiris] = (p[ebeta]/*+p[ebetaadd]*/)*preiota;
         iota[eseirin] = (p[ebeta]+ba)*preiota;
@@ -387,10 +421,10 @@ if(c> 0.7)
             double w = (t % period) / static_cast<double>(period);
             rh = (1-w) * params[erho0+i] + w * params[erho0+i+1];
         }
-#endif
-#ifdef SCURVE
-       rh = //params[erhomin]
-               params[erhosize] / (1.0 + exp(-params[erhok] * (t -params[erhomid] )));
+#elsifdef SCURVE
+       rh = params[erhosize] / (1.0 + exp(-params[erhok] * (t -params[erhomid] )));
+#else
+       rh = params[erho];
 #endif
        double k = 1e10;
 #ifdef K
@@ -461,49 +495,60 @@ void seir()
     seirmodel::data si;
 
     fillsi(si,c,0);
-//    si.y.resize(si.y.size()-70);
-//    si.z.resize(si.z.size()-70);
+    assert(horizon <= si.y.size());
+    si.y.resize(horizon);
+    si.z.resize(horizon);
 
     auto siest = si;
 
     vector<double> initvals = {
-        2.77548, // beta
-        0.0915122, // fcontacts
-        0.979805, // omega
-        4.32527e-17, // gammad
-        99.4493, // gammar
-        219.709, // k
-        158.551, // k2
-        0.0676016, // eta
-        0.537422, // rhosize
-        146.251, // rhomid
-        0.024098, // rhok
+        2.93826, // beta
+        0.130993, // fcontacts
+        0.979844, // omega
+        8.42021e-17, // gammad
+        17.9488, // gammar
+        100, // k
+        0.0514333, // eta
+        0.5272, // rhosize
+        80.711, // rhomid
+        0.0230799, // rhok
     };
+
+
+
+
+
 
     vector<paraminfo> params
             = {
-                 paraminfo("beta",1.47992,0,3),
+                 paraminfo("beta",2.08,0,3),
 #ifdef BETAADD
               paraminfo("betaadd",0,0,3),
 #endif
+
+#ifdef APAR
+    paraminfo("asymprate", 0.19, 0, 1),
+#endif
+
+#ifdef PIECEWISEIOTA
+        paraminfo("iota0",3.28,0,5),
+        paraminfo("iota1",0.2,0,5),
+        paraminfo("iota2",0.3,0,5),
+        paraminfo("iota3",0.3,0,5),
+        paraminfo("iota4",0.4,0,5),
+        paraminfo("iota5",0.4,0,5),
+        paraminfo("iota6",0.5,0,5),
+        paraminfo("iota7",0.5,0,5),
+        paraminfo("iota8",0.6,0,5),
+        paraminfo("iota9",0.6,0,5),
+        paraminfo("iota10",0.7,0,5),
+#else
 #ifdef FAMILYCONTACTS
                 paraminfo("fcontacts",0.16,0,0.4),
 #endif
-
                 paraminfo("omega", 0.828601, 0.5, 1),
-#ifdef GAMMAS
-                paraminfo("gammad",0,0, 100),
-                paraminfo("gammar",10, 0 , 100 ),
-#endif
-#ifdef K
-                paraminfo("k", 50, 0, 260),
-#endif
-#ifdef K2
-               paraminfo("k2", 50, 0, 325),
-#endif
-#ifdef APAR
-        paraminfo("asymprate", 0.19, 0, 1),
-#endif
+#endif // PIECEWISEIOTA
+
 #ifdef PIECEWISE
                 paraminfo("rho0", 0, 0, 0.7),
                 paraminfo("rho1", 0.05, 0, 0.7),
@@ -512,7 +557,14 @@ void seir()
                 paraminfo("rho4", 0.20, 0, 0.7),
                 paraminfo("rho5", 0.50, 0, 0.7),
                 paraminfo("rho6", 0.5, 0, 0.7),
+#elseifdef SCURVE
+            paraminfo("rhosize", 0.3, 0, 0.7),
+            paraminfo("rhomid", 100, 0, 300),
+            paraminfo("rhok", 0.06, 0, 1),
+#else
+            paraminfo("rho", 0.21, 0, 0.7),
 #endif
+
 #ifdef ETAPIECE
                 paraminfo("eta0", 0, 0, 0.7),
                 paraminfo("eta1", 0.05, 0, 0.7),
@@ -521,35 +573,45 @@ void seir()
                 paraminfo("eta4", 0.20, 0, 0.7),
                 paraminfo("eta5", 0.50, 0, 0.7),
                 paraminfo("eta6", 0.5, 0, 0.7),
-#else
-    #ifdef SETA
+#elifdef SETA
         paraminfo("etamin", 0, 0, 0.3),
         paraminfo("etasize", 0.0, -0.7, 0.7),
         paraminfo("etamid", 100, 0, 300),
         paraminfo("etak", 0.06, 0, 1),
-    #else
-               paraminfo("eta", 0, 0, 0.7),
+#else
+        paraminfo("eta", 0.18, 0, 0.7),
 #endif
+
+#ifdef K
+                paraminfo("k", 50, 0, 260),
 #endif
-#ifdef SCURVE
-        paraminfo("rhosize", 0.3, 0, 0.7),
-        paraminfo("rhomid", 100, 0, 300),
-        paraminfo("rhok", 0.06, 0, 1),
+#ifdef K2
+               paraminfo("k2", 50, 0, 325),
 #endif
+
+#ifdef GAMMAS
+                paraminfo("gammad",0.000802503,0, 100),
+                paraminfo("gammar",18.35, 0 , 100 ),
+#endif
+
 #ifdef TESTSPERCAND
         paraminfo("rhocoef", 0.1, 0, 1)
 #endif
-
               };
+
+assert(params.size()==enumparams);
+
     vector<bool> filter(params.size(),false);
+    filter[ebeta]=filter[erho]=filter[eeta]=filter[egammad]=filter[egammar]=true;
+
     obsseir s;
 
-    for(unsigned i=0; i<params.size(); i++)
-        params[i].initial = initvals[i];
+//    for(unsigned i=0; i<params.size(); i++)
+//        params[i].initial = initvals[i];
     if(1)
     {
         vector<double> rp;
-        if(0)
+        if(1)
         {
             uncertain res;
             cout << "ll= " << s.estimate(params,siest,res,filter) << endl;
@@ -574,7 +636,7 @@ void seir()
              << "Duseks survey = " << s.numantibodies(r,70) << endl
              << endl << endl;
 
-        if(1) // R
+        if(0) // R
         {
             clog << "rho, R,lastval" << endl;
             for(unsigned t=0; t<si.y.size(); t++)
@@ -598,7 +660,11 @@ void seir()
 
 
             double c=si.z[si.z.size()-1][czseir::econtacts];
+#if defined(FAMILYCONTACTS) && !defined(PIECEWISEIOTA)
             double c0=rp[efcontacts];
+#else
+            double c0=0;
+#endif
             clog << "c=" << c << endl;
 
             double delta = 0.01;
@@ -757,10 +823,9 @@ void seir()
         }
         for(unsigned i=0; i<params.size(); i++)
         {
-            cout << rp[i] << ", // ";
-            cout << params[i].name << " ";
-//            cout << "(" << sqrt(res.var()(i,i)) << ")"
-//
+            cout << "{\"" << params[i].name << "\","
+                << rp[i] << "},";
+//            cout << "(" << sqrt(r.var()(i,i)) << ")"
             cout << endl;
         }
 

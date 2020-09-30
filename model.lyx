@@ -477,7 +477,7 @@ Let
 \end_inset
 
  into each of the remaining states having intensities 
-\begin_inset Formula $J_{t}^{T}X_{t}$
+\begin_inset Formula $J_{t}X_{t}$
 \end_inset
 
 , where 
@@ -503,9 +503,9 @@ Let
 \begin_inset Formula 
 \[
 X_{t+1}|\F_{t}=\bigcirc_{1\leq i\leq k}\mathrm{Mult}(X_{t}^{i},p_{t}^{i,1},\dots,p_{t}^{i,k})\circ\left[\begin{array}{c}
-\mathrm{Po}(\sum_{1\leq i\leq k}\iota_{t}^{i,1}X_{t}^{i})\\
+\mathrm{Po}(\sum_{1\leq i\leq k}\iota_{t}^{1,i}X_{t}^{i})\\
 \vdots\\
-\mathrm{Po}(\sum_{1\leq i\leq k}\iota_{t}^{i,k}X_{t}^{i})
+\mathrm{Po}(\sum_{1\leq i\leq k}\iota_{t}^{k,i}X_{t}^{i})
 \end{array}\right]\circ\delta(I_{t})
 \]
 
@@ -517,7 +517,11 @@ where
 
  stands for convolution and the the components of the vector in the middle
  of the r.h.s.
- are conditionally independent.
+ are conditionally independent given 
+\begin_inset Formula $\F_{t}$
+\end_inset
+
+.
  Further, we assume that
 \begin_inset Formula 
 \[
@@ -540,8 +544,16 @@ where
 \begin_layout Standard
 By probability calculus we get that 
 \begin_inset Formula 
+\begin{equation}
+\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]=\left[{E\atop H}\right](T_{t}X_{t}+I_{t}),\qquad\label{eq:moments}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
 \[
-\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]=\left[{E\atop H}\right](T_{t}X_{t}+I_{t}),\qquad\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop H}\right]\Lambda_{t}(X_{t})\left[{E\atop H}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}X_{t}}\right)}
+\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop H}\right]\Lambda_{t}(X_{t})\left[{E\atop H}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}X_{t}}\right)}
 \]
 
 \end_inset
@@ -549,14 +561,14 @@ By probability calculus we get that
 where 
 \begin_inset Formula 
 \begin{multline*}
-T_{t}\defined P_{t}^{T}+J_{t}^{T},\\
-\Lambda_{t}(X_{t})\defined\sum_{i=1}^{k}\mathrm{[diag}(P_{t}^{i,\bullet})-P_{t}^{i,\bullet}(P_{t}^{i,\bullet}){}^{T}]X_{t}^{i}+\mathrm{diag}(J_{t}^{T}X_{t})=\sum_{i=1}^{k}\Phi_{t,i}X_{t}^{i}\\
-\Phi_{t,i}\defined\mathrm{diag}(J_{t}^{i}+P_{t}^{i})-(P_{t}^{i})^{T}P_{t}^{i}
+T_{t}\defined P_{t}+J_{t},\\
+\Lambda_{t}(X_{t})\defined\sum_{i=1}^{k}\mathrm{[diag}(P_{t}^{i})-P_{t}^{i}(P_{t}^{i}){}^{T}]X_{t}^{i}+\mathrm{diag}(J_{t}X_{t})=\sum_{i=1}^{k}\Phi_{t,i}X_{t}^{i}\\
+\Phi_{t,i}\defined\mathrm{diag}(J_{t}^{i}+P_{t}^{i})-P_{t}^{i}(P_{t}^{i})^{T}
 \end{multline*}
 
 \end_inset
 
-vhere, for any matrix 
+where, for any matrix 
 \begin_inset Formula $M$
 \end_inset
 
@@ -568,8 +580,12 @@ vhere, for any matrix
 \begin_inset Formula $i$
 \end_inset
 
--th row.
- For any stochastic process 
+-th column.
+ 
+\end_layout
+
+\begin_layout Standard
+For any stochastic process 
 \begin_inset Formula $A$
 \end_inset
 
@@ -583,7 +599,7 @@ vhere, for any matrix
 
 .
  If 
-\begin_inset Formula $T_{\tau},\in\G_{t},t<\tau\leq s-1$
+\begin_inset Formula $T_{\tau}\in\G_{t},t<\tau\leq s-1$
 \end_inset
 
  (which is trivially true if 
@@ -596,21 +612,22 @@ vhere, for any matrix
 \begin_layout Standard
 \begin_inset Formula 
 \begin{multline*}
-\left[{\hat{X}_{s|t}\atop \hat{Y}_{s|t}}\right]=\E\left(\left.\E\left(\left.\left[{\hat{X}_{s}\atop \hat{Y}_{s}}\right]\right||\F_{s-1}\right)\right|\G_{t}\right)=\left[{E\atop H}\right]\left(T_{s-1}\hat{X}_{s-1|t}+\hat{I}_{s-1|t}\right)\\
+\left[{\hat{X}_{s|t}\atop \hat{Y}_{s|t}}\right]=\E\left(\left.\E\left(\left.\left[{\hat{X}_{s}\atop \hat{Y}_{s}}\right]\right|\F_{s-1}\right)\right|\G_{t}\right)=\left[{E\atop H}\right]\left(T_{s-1}\hat{X}_{s-1|t}+\hat{I}_{s-1|t}\right)\\
 =\left[{E\atop H}\right]\left(T_{t,s-1}X_{t}+\sum_{\theta=t}^{s-1}T_{\theta+1,s-1}\hat{I}_{\theta|t}\right)
 \end{multline*}
 
 \end_inset
 
 where 
-\begin_inset Formula $T_{t,s}=\prod_{\theta=t}^{s}T_{\theta}$
+\begin_inset Formula $T_{t,s}\defined\prod_{\theta=t}^{s}T_{\theta}$
 \end_inset
 
  with 
 \begin_inset Formula $T_{t,t-1}=E$
 \end_inset
 
- and
+.
+ Further,
 \begin_inset Formula 
 \begin{multline*}
 W_{s|t}\defined\var\left(\left.X_{s}\right|\G_{t}\right)=\var\left(\left.\E\left(\left.X_{s}\right|\F_{s-1}\right)\right|\G_{t}\right)+\E\left(\left.\var\left(\left.X_{s}\right|\F_{s-1}\right)\right|\G_{t}\right)\\
@@ -623,7 +640,7 @@ W_{s|t}\defined\var\left(\left.X_{s}\right|\G_{t}\right)=\var\left(\left.\E\left
 and
 \begin_inset Formula 
 \[
-V_{s|t}\defined\var\left(\left.{X_{s}\atop Y_{s}}\right|\G_{t}\right)=\left[{E\atop H}\right]W_{s|t}\left[{E\atop H}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{s-1}\hat{X}_{s-1|t}}\right)}
+V_{s|t}\defined\var\left(\left.{X_{s}\atop Y_{s}}\right|\G_{t}\right)=\var\left(\left.{X_{s}\atop HX_{s}+\epsilon_{s}}\right|\G_{t}\right)=\left[{E\atop H}\right]W_{s|t}\left[{E\atop H}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{s-1}\hat{X}_{s-1|t}}\right)}
 \]
 
 \end_inset
@@ -638,8 +655,7 @@ The reproduction number
 \begin_inset Formula $\G_{t-1})$
 \end_inset
 
- with respect of the infections caused by an individual having arrived at
- 
+ of the infections caused by an individual having arrived at 
 \begin_inset Formula $t,$
 \end_inset
 
@@ -664,12 +680,16 @@ where
 \end_inset
 
 .
- Indeed, the state the expected number of those infected by him at 
+ To understand the formula, note that, for each newcomer at 
+\begin_inset Formula $t$
+\end_inset
+
+, the expected number of those infected by him at 
 \begin_inset Formula $t+1$
 \end_inset
 
  is given by the sum of components of 
-\begin_inset Formula $J_{t}M_{t}$
+\begin_inset Formula $J_{t}N_{t}$
 \end_inset
 
 , the number infected at 
@@ -681,11 +701,11 @@ where
 \end_inset
 
  etc.
- Note that there could be difficulties when computing 
+ Note and that there could be difficulties when computing 
 \begin_inset Formula $N_{t}$
 \end_inset
 
- – most straightforward estimate is 
+ – yet there is a straightforward estimate 
 \begin_inset Formula $N_{t}\doteq\nu(J_{t-1}\hat{X}_{t-1|t-1}+I_{t-1})$
 \end_inset
 
@@ -693,14 +713,16 @@ where
 \begin_inset Formula $\nu$
 \end_inset
 
- stands for normalization; however, it is generally not unbiased due to
- the normalization.
+ stands for normalization, this estimator is generally not unbiased due
+ to the normalization.
  This problem, however, vanishes in the case that imports and new infections
- fall into a single state (typically called exposed), in which case 
+ all fall into a single state (typically called exposed), in which case
+ 
 \begin_inset Formula $N_{t}=(1,0,\dots,0)^{T}$
 \end_inset
 
-.´ 
+.
+ 
 \end_layout
 
 \begin_layout Proposition
@@ -749,7 +771,7 @@ where
 \begin_inset Formula $\tau$
 \end_inset
 
- then 
+, then 
 \begin_inset Formula $\|\E X_{t}\|\rightarrow\infty$
 \end_inset
 
@@ -772,7 +794,7 @@ where
  then 
 \begin_inset Formula 
 \[
-\liminf_{t}\E X_{t}\ge(E-R)^{-1}\mu,\qquad\limsup_{t}\E X_{t}\leq(I-S)^{-1}\mu
+\liminf_{t}\E X_{t}\ge(E-R)^{-1}\mu,\qquad\limsup_{t}\E X_{t}\leq(E-S)^{-1}\mu
 \]
 
 \end_inset
@@ -819,7 +841,7 @@ Thanks to the sub-unit spectral radius of
 \begin_inset Formula $s_{0}<\varsigma<1$
 \end_inset
 
-, reindex and get
+, re-index and get
 \begin_inset Formula 
 \[
 b_{t}=\sum_{\tau=0}^{t-1}S^{\tau}\E I_{t-\tau-1}\leq\sum_{\tau=0}^{t-1}S^{\tau}c\frac{1}{(t-\tau)^{\alpha}}=\underbrace{\frac{1}{t^{\alpha}}}_{\rightarrow0}\times\underbrace{\sum_{\tau=0}^{t-1}(\varsigma^{-1}S)^{\tau}c}_{\rightarrow(E-\varsigma^{-1}S)^{-1}c}\underbrace{\left(\frac{\varsigma^{\tau/\alpha}}{t-\tau}\right)^{\alpha}}_{\leq d}\rightarrow0
@@ -832,7 +854,7 @@ because
 \end_inset
 
 , and the upper bound exsits as 
-\begin_inset Formula $f(\tau)\defined\underbrace{\frac{t\varsigma^{\tau/\alpha}}{t-\tau}}$
+\begin_inset Formula $f(\tau)\defined\frac{t\varsigma^{\tau/\alpha}}{t-\tau}$
 \end_inset
 
  increases in 
@@ -934,6 +956,10 @@ norm of which converges to infinity.
 
 \end_layout
 
+\begin_layout Section
+Estimation
+\end_layout
+
 \begin_layout Standard
 Unfortunately, due to the non-Gaussianity, we do not have analytical formulas
  for 
@@ -941,20 +967,20 @@ Unfortunately, due to the non-Gaussianity, we do not have analytical formulas
 \end_inset
 
  and 
-\begin_inset Formula $\mathrm{W_{t}}$
+\begin_inset Formula $\mathrm{W_{t|t}}$
 \end_inset
 
- at our disposal, which fact prevents us from a correct estimation because
+ at our disposal, which fact prevents us from correct estimation because
  we can formulate neither a (quasi) maximum likelihood function nor a least
- square estimate.
+ square estimate without knowledge of the moments.
  Two, from the computational point of view equivalent, ways to cope with
  this could be using estimates of the conditional expectation and variance,
  or approximating the residuals.
- We go the latter way and assume that 
+ We go the latter way: in the present Section, assume that 
 \begin_inset Formula $\left.\left[{X_{t+1}\atop Y_{t+1}}\right]\right|\F_{t}$
 \end_inset
 
- is normal fulfilling (
+ is normal with mean given by (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:moments"
@@ -964,12 +990,19 @@ noprefix "false"
 
 \end_inset
 
-).
- Given this assumption, 
+) and 
+\begin_inset Formula 
+\[
+\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop H}\right]\Lambda_{t}(X_{t}\vee0)\left[{E\atop H}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}(X_{t}\vee0)}\right)}
+\]
+
+\end_inset
+
+ Given this assumption we have, by Eatonxxx, 
 \begin_inset Formula 
 \begin{multline*}
-\hat{X}_{t|t}\defined\E\left[\left.X_{t}\right|\G_{t}\right]=UZ_{t-1}+\hat{X}_{t|t-1}+K_{t}\left(Y_{t}-\hat{Y}_{t|t-1}\right)\\
-K_{t}\defined V_{t}^{XY}(V_{t}^{YY})^{-1}=\Lambda_{t-1}(\hat{X}_{t-1|t-1})H^{T}[H\Lambda_{t-1}(\hat{X}_{t-1|t-1})H^{T}+\mathrm{diag}(\Gamma_{t-1}\hat{X}_{t-1|t-1})]^{-1}
+\hat{X}_{t|t}=I_{t-1}+\hat{X}_{t|t-1}+K_{t}\left(Y_{t}-\hat{Y}_{t|t-1}\right)\\
+K_{t}\defined V_{t|t-1}^{XY}(V_{t|-1}^{YY})^{-1}=W_{t|t-1}H^{T}U_{t}^{-1},\qquad U_{t}=HW_{t|t-1}H^{T}+\mathrm{diag}(\Gamma_{t}\hat{X}_{t|t-1})
 \end{multline*}
 
 \end_inset
@@ -980,8 +1013,7 @@ K_{t}\defined V_{t}^{XY}(V_{t}^{YY})^{-1}=\Lambda_{t-1}(\hat{X}_{t-1|t-1})H^{T}[
 \begin_layout Standard
 \begin_inset Formula 
 \begin{multline*}
-W_{t}\defined\var\left(\left.X_{t}\right|\G_{t}\right)=V_{t}^{XX}-V_{t}^{XY}(V_{t}^{YY})^{-1}V_{t}^{YX}\\
-=\Lambda_{t-1}(\hat{X}_{t-1|t-1})H^{T}[H\Lambda_{t-1}(\hat{X}_{t-1|t-1})H^{T}+\mathrm{diag}(\Gamma_{t-1}\hat{X}_{t-1|t-1})]^{-1}H\Lambda_{t-1}(\hat{X}_{t-1|t-1})
+W_{t|t}=V_{t|t-1}^{XX}-V_{t|t-1}^{XY}(V_{t|t-1}^{YY})^{-1}V_{t|t-1}^{YX}=W_{t|t-1}-W_{t|t-1}H^{T}U_{t}^{-1}HW_{t|t-1}
 \end{multline*}
 
 \end_inset
@@ -993,8 +1025,54 @@ Note that
  may be seen as a conditional version of a Kalman gain matrix.
 \end_layout
 
+\begin_layout Standard
+As for the estimation itself, assume that 
+\begin_inset Formula $H=H(\Theta_{0}),$
+\end_inset
+
+
+\begin_inset Formula $P_{t}=P_{t}(\Theta_{0})$
+\end_inset
+
+, 
+\begin_inset Formula $J_{t}=J_{t}(\Theta_{0})$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma_{t}=\Gamma_{t}(\Theta_{0})$
+\end_inset
+
+ where 
+\begin_inset Formula $\Theta_{0}\in\R^{r}$
+\end_inset
+
+ is an unknown parameter.
+ For its estimation, it is possible to possible to use either nonlinear
+ least squares, i.e.
+ 
+\begin_inset Formula 
+\[
+\hat{\Theta}=\arg\min\sum_{t}(Y_{t}-\hat{Y}_{t|t}(\Theta))^{T}U(\Theta)_{t}^{-1}(Y_{t}-\hat{Y}_{t|t}(\Theta))
+\]
+
+\end_inset
+
+or quasi-maximum likelihood 
+\begin_inset Formula 
+\[
+\tilde{\Theta}=\arg\min\sum_{t}q((Y_{t}-\hat{Y}_{t|t}(\Theta)),U_{t}(\Theta)),\qquad q(x,v)=-\frac{k\ln2\pi+\ln\mathrm{det}(U(\Theta))+x^{T}U^{-1}x}{2}
+\]
+
+\end_inset
+
+Both these estimators are consistent and asymptotically normal under some
+ additional conditions, see Jacob, Jacob respectively (footnote one dim),
+ verifying these conditions for our model is, however, beyond the scope
+ of this short research letter and remains as a future research.
+\end_layout
+
 \begin_layout Subsection*
-Estimation
+Application to 
 \end_layout
 
 \begin_layout Standard
