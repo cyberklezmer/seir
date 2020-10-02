@@ -6,7 +6,8 @@
 
 using namespace orpp;
 
-inline bool isVar(const matrix& W, const string& label)
+inline bool isVar(const matrix& W, const string& label, unsigned t,
+                  vector<double> params)
 {
     for(unsigned j=0; j<W.c();j++)
     {
@@ -15,8 +16,12 @@ inline bool isVar(const matrix& W, const string& label)
             cerr << label << "("<<j<<","<<j<<")=" << W(j,j) << endl;
             cerr << label << endl;
             cerr << W << endl;
+            cerr << "t=" << t << endl;
+            cerr << "pars" << endl;
+            csvout<double,','>(cerr,params);
             return false;
         }
+
     }
     return true;
 }
@@ -73,6 +78,9 @@ protected:
 
         matrix ret(k()+m(),k()+m(),0);
         vector<double> Jx = vec(J(t,pars,g).transpose() * n);
+        for(unsigned i=0; i<Jx.size(); i++)
+            if(Jx[i]<0.0)
+                throw "negative J";
         matrix D= diag(Jx);
         return block( D, D*H.transpose(), H*D, H*D*H.transpose()
                       + diag(vec(Gamma(t,pars, g)*n)));
@@ -225,7 +233,6 @@ public:
         {
             matrix& T = res.Ts[i-1];
             matrix THT = stackv(T,H*T);
-            matrix UhU = stackv(U,H*U);
 
             vector<double> N;
             matrix W;
@@ -233,26 +240,26 @@ public:
             {
                 N = res.est[i-1].x();
                 W = res.est[i-1].var();
-                assert(isVar(W,"W1"));
+                assert(isVar(W,"W1",i-1,pars));
             }
             else
             {
                 N = res.pred[i-1].x();
                 N.resize(k());
                 W = res.pred[i-1].var().submatrix(0,0,k(),k());
-                assert(isVar(W,"W2"));
+                assert(isVar(W,"W2",i-1,pars));
             }
-            vector<double> Mx = vec(T * N + U * g.z[i-1]);
+            vector<double> Mx = vec(T * N + I(i-1,pars,g));
             vector<double> My = vec(H * Mx);
 
             matrix V = THT * W * THT.transpose();
-            assert(isVar(V,"V2"));
+            assert(isVar(V,"V2",i-1,pars));
             for(unsigned j=0; j<k(); j++)
                 V = V + max(N[j],0.0) * bigPhi(i-1,pars,j,g);
-            assert(isVar(V,"V3"));
+            assert(isVar(V,"V3",i-1,pars));
 
             V = V + bigIwGamma(i-1, pars, N,g);
-            assert(isVar(V,"V4"));
+            assert(isVar(V,"V4",i-1,pars));
 
             res.pred[i] = uncertain(stackv(Mx, My),V);
             if(i<=t)
@@ -274,7 +281,7 @@ public:
                     matrix Vinv = pseudoinverse(Vyy); // Vyy.inverse();
                     vector<double> N = vec(Mx + Vxy * Vinv * (o-My));
                     matrix W =Vxx + ((-1) * Vxy) * Vinv * Vyx;
-                    assert(isVar(W,"W"));
+                    assert(isVar(W,"W",i-1,pars));
                     res.est[i] = uncertain(N,W);
 
                     if(contrasts && det(Vyy) != 0)
@@ -472,6 +479,7 @@ public:
 
     virtual matrix P(unsigned t, const vector<double>& params, const G& g) const = 0;
     virtual matrix J(unsigned t, const vector<double>& params, const G& g) const = 0;
+    virtual vector<double> I(unsigned t, const vector<double>& params, const G& g) const = 0;
     virtual matrix Gamma(unsigned /* t */, const vector<double>& /* params */, const G& /*g*/) const
         { return matrix(m(),k(),0); }
 
@@ -479,14 +487,13 @@ public:
     virtual string statelabel(unsigned i) const = 0;
     virtual vector<double> X0(const vector<double>& params, const G& g) const = 0;
 
-    seirmodel(const matrix& aH, const matrix& aU) :  H(aH), U(aU) {}
+    seirmodel(const matrix& aH) :  H(aH) {}
 
     unsigned k() const { return H.c(); }
     unsigned m() const { return H.r(); }
 
 protected:
     const matrix H;
-    const matrix U;
 };
 
 #endif // SEIR_HPP
