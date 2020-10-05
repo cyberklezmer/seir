@@ -25,7 +25,7 @@ struct paramval
 #define SHIFT
 #define FACTORPAQ
 #define MU
-#define FAMILYCONTACTS
+//#define FAMILYCONTACTS
 //#define BETAADD
 #define ARATE
 #define ASYMP
@@ -42,7 +42,7 @@ struct paramval
 //#define K2
 
 static constexpr unsigned horizon=120;
-static constexpr unsigned dusekpenalty=50;
+static constexpr unsigned dusekpenalty=5;
 
 
 struct paraminit { string n; double v; bool filtered; };
@@ -50,24 +50,27 @@ struct paraminit { string n; double v; bool filtered; };
 //filter[egammad]=filter[egammar]=true; //=filter[emu]=true;
 
 const vector<paraminit> initvals = {
-    {"marchimportrate",4.36492,false},
-    {"beta",4.34106,false},
-    {"shift",1.66554,false},
-    {"asymprate",0.594796,false},
-    {"mu",0.00132434,false},
-    {"fcontacts",0.299893,true},
-    {"omega0",0.66391,false},
-    {"omega1",0.9999,false},
-    {"rho0",0.0241073,false},
-    {"rho1",0.0015367,false},
-    {"rho2",0.00180871,false},
-    {"rho3",0.0115143,false},
-    {"rho4",0.021035,false},
-    {"rho5",0.0607982,false},
-    {"rho6",0.1008,false},
-    {"eta",0.0280871,false},
-    {"gammad",0.00049033,false},
-    {"gammar",3.76865,false}
+    {"marchimportrate",2.88297,false},
+    {"beta",4.92524,false},
+    {"shift",0.946462,false},
+    {"asymprate",0.844967,false},
+    {"mu",0.00460519,false},
+    {"omega0",0.647706,false},
+    {"omegas",0.997753,false},
+    {"omegag",0.999018,false},
+    {"rho0",0.046329,false},
+    {"rho1",0.00256723,false},
+    {"rho2",0.00144009,false},
+    {"rho3",0.00804512,false},
+    {"rho4",0.0120519,false},
+    {"rho5",0.0400626,false},
+    {"rho6",0.0624704,false},
+    {"etamin",0.256594,false},
+    {"etasize",0.161409,false},
+    {"etamid",151.465,false},
+    {"etak",0.0766934,false},
+    {"gammad",0.000858648,false},
+    {"gammar",7.95009,false},
 };
 
 #endif // paperv2
@@ -107,7 +110,7 @@ const vector<paraminit> initvals = {
     {"beta",2.32485,false},
     {"shift",4.32206,false},
     {"mu",0.0010861,false},
-    {"fcontacts",0.299893,true},
+    {"fcontacts",0.299893,false},
     {"omega0",0.747405,false},
     {"omega1",1,false},
     {"rho0",0.0155176,false},
@@ -163,12 +166,12 @@ enum eparams {
     eiota0,eiota1,eiota2,eiota3,eiota4,eiota5,
     eiota6, eiota7,eiota8,eiota9,eiota10, elastiota = eiota10,
 #else
+#ifdef FACTORPAQ
+    eomega0, eomegas,eomegag,
+#else
 #ifdef FAMILYCONTACTS
     efcontacts,
 #endif
-#ifdef FACTORPAQ
-    eomega0, eomega1,
-#else
     eomega,
 #endif
 #endif // PIECEWISEIOTA
@@ -489,14 +492,14 @@ public:
             preiota = (1-w) * p[eiota0+i] + w * p[eiota0+i+1];
         }
 #else
+#ifdef FACTORPAQ
+        double preiota =zofunction(1.0-p[eomegas]*(w* g.z[t1][esred] + (1-w)* g.z[t2][esred]))
+                * zofunction(p[eomega0] -p[eomegag]*(w* g.z[t1][egammared] + (1-w)* g.z[t2][egammared]));
+#else
         double c = w*g.z[t1][econtacts]+(1-w)*g.z[t2][econtacts];
 #ifdef FAMILYCONTACTS
         c -= p[efcontacts];
 #endif
-#ifdef FACTORPAQ
-        double preiota =c*zofunction(p[eomega0]-p[eomega1]
-                                     *(w* g.z[t1][egammared] + (1-w)* g.z[t2][egammared]) );
-#else
         //double preiota =c*(1-0.6*g.z[t][emasks])*(1-p[eomega] *g.z[t][ehygiene]);
         double preiota =c*(1-p[eomega]*g.z[t][emasks]);
 #endif
@@ -690,13 +693,14 @@ void seir()
         paraminfo("iota9",0.6,0,5),
         paraminfo("iota10",0.7,0,5),
 #else
-#ifdef FAMILYCONTACTS
-                paraminfo("fcontacts",0.16,0,0.3),
-#endif
 #ifdef FACTORPAQ
-        paraminfo("omega0", 1, 0, 1),
-        paraminfo("omega1", 1, 0, 1),
+        paraminfo("omega0", 0.7, 0, 1),
+        paraminfo("omegas", 1, 0, 1),
+        paraminfo("omegag", 0.99, 0, 1),
 #else
+    #ifdef FAMILYCONTACTS
+                    paraminfo("fcontacts",0.16,0,0.3),
+    #endif
                 paraminfo("omega", 0.828601, 0.5, 1),
 #endif
 #endif // PIECEWISEIOTA
@@ -808,9 +812,9 @@ assert(params.size()==enumparams);
             clog << "rho, R,lastval" << endl;
             for(unsigned t=0; t<si.y.size(); t++)
             {
-                double lv;
-                double R = s.R(t,r,lv);
-                clog << s.rho(t,r,eseirin+1) << "," << R << "," << lv << endl;
+                double R = s.R(t,r);
+                double Rcp = s.Rcp(t,r);
+                clog << s.rho(t,r,eseirin+1) << "," << R << "," << Rcp << endl;
             }
             throw;
         }
@@ -951,8 +955,7 @@ assert(params.size()==enumparams);
 
             double rng = range(r.Ts[i].submatrix(0,0,eseirin+1,eseirin+1));
 
-            double lastval;
-            double rn = s.R(i,r, lastval);
+            double rn = s.R(i,r);
 
             clog
 #ifdef ASYMP
@@ -975,7 +978,7 @@ assert(params.size()==enumparams);
                   << r.Ts[i](eseirqe,eseire) << ","
                  << rng << ","
                 << range(trendm) << ","
-                << rn << "," << lastval;
+                << rn << ",";
             if(i<r.contrasts.size())
                 clog << "," << r.contrasts[i];
             clog << endl;

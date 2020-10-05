@@ -184,7 +184,11 @@ public:
     {
         return range(er.Ts[t].submatrix(0,0,i,i));
     }
-    double R(unsigned t, const evalresult& er, double& lastval) const
+    double Rcp(unsigned t, const evalresult& er) const
+    {
+        return 0;
+    }
+    double R(unsigned t, const evalresult& er) const
     {
 //clog << "Computing R from at " << t << endl;
         unsigned inf = er.Ps.size();
@@ -199,18 +203,20 @@ public:
         matrix p(k(),1,0);
         p(0,0) = 1;
         double res = 0;
-        for(unsigned tau = t; tau<inf; tau++)
+        double thistau = HUGE_VAL;
+        for(unsigned tau = t; thistau > 0.00001 ; tau++)
         {
-            matrix r = er.Js[tau].transpose() * p;
-            lastval = 0;
+            auto lasttau = min(tau,inf-1);
+            matrix r = er.Js[lasttau].transpose() * p;
+            thistau = 0;
             for(unsigned i=0; i<k(); i++)
-                lastval += r(i,0);
-            res += lastval;
+                thistau += r(i,0);
+            res += thistau;
 //clog << "lv:" << lastval << endl;
 //clog <<er.Js[tau] << endl;
 //clog << p << endl << endl;
 //clog << lastval << endl;
-            p = er.Ps[tau].transpose() * p;
+            p = er.Ps[lasttau].transpose() * p;
 //clog << "t=" << t << endl;
 //clog << r << endl;
         }
