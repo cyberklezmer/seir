@@ -392,13 +392,13 @@ Assume an infinite population, each individual of which finds himself in
  and let 
 \begin_inset Formula 
 \[
-Y_{t}=HX_{t}+\epsilon_{t},\qquad t\geq0,
+Y_{t}=FX_{t}+\epsilon_{t},\qquad t\geq0,
 \]
 
 \end_inset
 
 be a process of observations where 
-\begin_inset Formula $H$
+\begin_inset Formula $F$
 \end_inset
 
  is a deterministic 
@@ -461,18 +461,14 @@ Let
 \end_inset
 
  let there be inflow 
-\begin_inset Formula $I_{t}\defined U_{t}Z_{t}\geq0$
+\begin_inset Formula $I_{t}\in\G_{t}$
 \end_inset
 
  of individuals into the states 
 \begin_inset Formula $\{1,\dots,k\}$
 \end_inset
 
- where 
-\begin_inset Formula $U_{t}\in\G_{t}$
-\end_inset
-
- is a matrix and let there be conditionally Poisson inflows from 
+ and let there be conditionally Poisson inflows from 
 \begin_inset Formula $S_{0}$
 \end_inset
 
@@ -502,30 +498,40 @@ Let
  This implies that
 \begin_inset Formula 
 \[
-X_{t+1}|\F_{t}=\bigcirc_{1\leq i\leq k}\mathrm{Mult}(X_{t}^{i},p_{t}^{i,1},\dots,p_{t}^{i,k})\circ\left[\begin{array}{c}
-\mathrm{Po}(\sum_{1\leq i\leq k}\iota_{t}^{1,i}X_{t}^{i})\\
-\vdots\\
-\mathrm{Po}(\sum_{1\leq i\leq k}\iota_{t}^{k,i}X_{t}^{i})
-\end{array}\right]\circ\delta(I_{t})
+\left.X_{t+1}\right|\F_{t}=\bigcirc_{1\leq i\leq k}\mathrm{Mult}(X_{t}^{i},P_{t}^{i})\circ\Po(J_{t}X_{t})\circ\delta(I_{t}),
 \]
 
 \end_inset
 
-where 
+Here, 
 \begin_inset Formula $\circ$
 \end_inset
 
- stands for convolution and the the components of the vector in the middle
- of the r.h.s.
- are conditionally independent given 
-\begin_inset Formula $\F_{t}$
+ stands for convolution, 
+\begin_inset Formula $P_{t}^{i}$
 \end_inset
 
-.
- Further, we assume that
+ is the 
+\begin_inset Formula $i$
+\end_inset
+
+-th column of 
+\begin_inset Formula $P_{t};$
+\end_inset
+
+ and, for any vector, 
+\begin_inset Formula $\Po(x)$
+\end_inset
+
+ is a vector of independent Poisson variables with corresponding intensities.
+ Further we assume that 
+\begin_inset Formula $X_{t+1}\indep{_{\F_{t}}\epsilon_{t+1}}$
+\end_inset
+
+ with 
 \begin_inset Formula 
 \[
-\E(\epsilon_{t+1}|\F_{t},X_{t+1})=0,\qquad\var(\epsilon_{t+1}|\F_{t},X_{t+1})=\mathrm{diag(}\Gamma_{t}X_{t}),
+\E(\epsilon_{t+1}|\F_{t})=0,\qquad\var(\epsilon_{t+1}|\F_{t})=\mathrm{diag(}\Gamma_{t}X_{t}),
 \]
 
 \end_inset
@@ -538,14 +544,14 @@ where
 \begin_inset Formula $m\times k$
 \end_inset
 
- matrix
+ matrix.
 \end_layout
 
 \begin_layout Standard
 By probability calculus we get that 
 \begin_inset Formula 
 \begin{equation}
-\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]=\left[{E\atop H}\right](T_{t}X_{t}+I_{t}),\qquad\label{eq:moments}
+\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]=\left[{E\atop F}\right](T_{t}X_{t}+I_{t}),\qquad\label{eq:moments}
 \end{equation}
 
 \end_inset
@@ -553,7 +559,7 @@ By probability calculus we get that
 
 \begin_inset Formula 
 \[
-\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop H}\right]\Lambda_{t}(X_{t})\left[{E\atop H}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}X_{t}}\right)}
+\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop F}\right]\Lambda_{t}(X_{t})\left[{E\atop F}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}X_{t}}\right)}
 \]
 
 \end_inset
@@ -563,25 +569,665 @@ where
 \begin{multline*}
 T_{t}\defined P_{t}+J_{t},\\
 \Lambda_{t}(X_{t})\defined\sum_{i=1}^{k}\mathrm{[diag}(P_{t}^{i})-P_{t}^{i}(P_{t}^{i}){}^{T}]X_{t}^{i}+\mathrm{diag}(J_{t}X_{t})=\sum_{i=1}^{k}\Phi_{t,i}X_{t}^{i}\\
-\Phi_{t,i}\defined\mathrm{diag}(J_{t}^{i}+P_{t}^{i})-P_{t}^{i}(P_{t}^{i})^{T}
+\Phi_{t,i}\defined\mathrm{diag}(J_{t}^{i}+P_{t}^{i})-P_{t}^{i}(P_{t}^{i})^{T}.
 \end{multline*}
 
 \end_inset
 
-where, for any matrix 
-\begin_inset Formula $M$
+
+\end_layout
+
+\begin_layout Section*
+Reproduction number
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $\text{\ensuremath{m}}$
 \end_inset
 
- , 
-\begin_inset Formula $M^{i}$
-\end_inset
-
- is its 
-\begin_inset Formula $i$
-\end_inset
-
--th column.
  
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+be the number of (pre-)infection states, i.e.
+ such that, for any 
+\begin_inset Formula $t$
+\end_inset
+
+, all non-zero elements of 
+\begin_inset Formula $J_{t}$
+\end_inset
+
+ find themselves in 
+\begin_inset Formula $K_{t}$
+\end_inset
+
+ is the restriction of 
+\begin_inset Formula $J_{t}$
+\end_inset
+
+ to 
+\begin_inset Formula $(1,\dots,m)\times(1,\dots,m)$
+\end_inset
+
+ (the compartments 
+\begin_inset Formula $>m$
+\end_inset
+
+ do not increase through direct infection and the infection does not depend
+ on the compartments 
+\begin_inset Formula $>m$
+\end_inset
+
+) and that 
+\begin_inset Formula $p_{t}^{i,j}\equiv0$
+\end_inset
+
+ whenever 
+\begin_inset Formula $i\leq m$
+\end_inset
+
+ and 
+\begin_inset Formula $j>m$
+\end_inset
+
+ (individuals do not transit from states 
+\begin_inset Formula $>m$
+\end_inset
+
+ into states 
+\begin_inset Formula $\leq m$
+\end_inset
+
+).
+ 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+Denote 
+\begin_inset Formula $\xi_{t}$
+\end_inset
+
+ the restriction of 
+\begin_inset Formula $X_{t}$
+\end_inset
+
+ to 
+\begin_inset Formula $(1,\dots,k$
+\end_inset
+
+) and observe that 
+\begin_inset Formula $\xi$
+\end_inset
+
+ follows its own version of our model, namely 
+\begin_inset Formula 
+\[
+\left.\xi_{t+1}\right|\F_{t}=\bigcirc_{1\leq i\leq k}\mathrm{Mult}(\xi_{t}^{i},Q_{t}^{i})\circ\Po(K_{t}\xi_{t})\circ\delta(H_{t}),
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $Q_{t}$
+\end_inset
+
+ is the restriction of 
+\begin_inset Formula $P_{t}$
+\end_inset
+
+ to 
+\begin_inset Formula $(1,\dots,m)\times(1,\dots,m)$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{t}$
+\end_inset
+
+ is the restriction of 
+\begin_inset Formula $I_{t}$
+\end_inset
+
+ to 
+\begin_inset Formula $(1,\dots,m)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The reproduction number 
+\begin_inset Formula $R_{t}$
+\end_inset
+
+, i.e.
+ the conditional expectation (w.r.t.
+ 
+\begin_inset Formula $\F_{t-1})$
+\end_inset
+
+ of the infections caused by an individual having arrived at 
+\begin_inset Formula $t,$
+\end_inset
+
+ at computed as 
+\begin_inset Formula 
+\[
+r_{t}\defined\sum_{\tau=t}^{\infty}\mathbf{1}^{T}\E(K_{\tau}Q_{t,\tau-1}N_{t}|\F_{t-1})=K_{t}N_{t}+\sum_{\tau=t+1}^{\infty}\mathbf{1}^{T}\E(K_{\tau}Q_{t+1,\tau-1}|\F_{t-1})Q_{t}N_{t},\qquad N_{t}=\nu(K_{t-1}\xi_{t-1}+H_{t-1})
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\nu$
+\end_inset
+
+ stands for normalization.
+ To understand the formula, note that 
+\begin_inset Formula $N_{t}$
+\end_inset
+
+ is the conditional distribution of the state in which the newcomers find
+ himself at 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Further, for each newcomer at 
+\begin_inset Formula $t$
+\end_inset
+
+, the expected number of those infected by him at 
+\begin_inset Formula $t+1$
+\end_inset
+
+ is given by the sum of components of 
+\begin_inset Formula $K_{t}N_{t}$
+\end_inset
+
+, the number infected at 
+\begin_inset Formula $t+1$
+\end_inset
+
+ is given by 
+\begin_inset Formula $K_{t+1}Q_{t}N_{t}$
+\end_inset
+
+ etc.
+ 
+\end_layout
+
+\begin_layout Standard
+In practice, not knowing 
+\begin_inset Formula $\xi$
+\end_inset
+
+, the reproduction number will be estimated by 
+\begin_inset Formula 
+\[
+\tilde{r}_{t}\defined\sum_{\tau=t}^{\infty}\mathbf{1}^{T}\E(K_{\tau}Q_{t,\tau-1}N_{t}|\G_{t-1})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the special case of 
+\begin_inset Formula $K_{\tau}\equiv K,$
+\end_inset
+
+ 
+\begin_inset Formula $Q_{\tau}\equiv\text{Q}$
+\end_inset
+
+, 
+\begin_inset Formula $\tau\geq t-1$
+\end_inset
+
+, for some 
+\begin_inset Formula $K$
+\end_inset
+
+ and 
+\begin_inset Formula $Q$
+\end_inset
+
+ such that 
+\begin_inset Formula $\rho(Q)<1$
+\end_inset
+
+ where 
+\begin_inset Formula $\rho$
+\end_inset
+
+ is the spectral radius , the formula simplifies to
+\begin_inset Formula 
+\[
+\tilde{r}_{t}=\mathbf{1}^{T}K\left(\sum_{i=0}^{\infty}Q^{i}\right)\E(N_{t}|\G_{t-1})=\mathbf{1}^{T}K(E-Q)^{-1}\E(N_{t}|\G_{t-1})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Note and that there could be difficulties computing 
+\begin_inset Formula $N_{t}$
+\end_inset
+
+ even in this special case – yet there is a straightforward estimate 
+\begin_inset Formula $N_{t}\doteq\nu(J_{t-1}\hat{X}_{t-1|t-1}+I_{t-1})$
+\end_inset
+
+, this estimator is generally not unbiased due to the normalization.
+ This problem, however, vanishes in the case that imports and new infections
+ all fall into a single state (typically called exposed), in which case
+ 
+\begin_inset Formula $N_{t}=(1,0,\dots,0)^{T}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Section
+Asymptotic behavior
+\end_layout
+
+\begin_layout Proposition
+Denote 
+\begin_inset Formula $U_{t}=Q_{t}+K_{t}.$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+(i) If 
+\begin_inset Formula $U_{t}\leq S$
+\end_inset
+
+ component-wise where S is deterministic with 
+\begin_inset Formula $\sigma\defined\rho(S)<1$
+\end_inset
+
+ and if 
+\begin_inset Formula $\E H_{t}=o(t^{-\alpha})$
+\end_inset
+
+ for some 
+\begin_inset Formula $\alpha>0$
+\end_inset
+
+ then 
+\begin_inset Formula $\xi_{t}\rightarrow0$
+\end_inset
+
+ almost sure.
+ 
+\begin_inset Newline newline
+\end_inset
+
+(ii) If 
+\begin_inset Formula $U_{t}\geq R$
+\end_inset
+
+ where R is deterministic irreducible with 
+\begin_inset Formula $\varrho\defined\rho(R)>1$
+\end_inset
+
+ and either 
+\begin_inset Formula $\E\xi_{0}\neq0$
+\end_inset
+
+ or 
+\begin_inset Formula $\E H_{\tau}\neq0$
+\end_inset
+
+ for some 
+\begin_inset Formula $\tau$
+\end_inset
+
+, then 
+\begin_inset Formula $\|\E\xi_{t}\|\rightarrow\infty$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+(iii) If 
+\begin_inset Formula $\E H_{t}\equiv\mu$
+\end_inset
+
+ and 
+\begin_inset Formula $R\leq U_{t}\leq S$
+\end_inset
+
+ such that 
+\begin_inset Formula $s_{0}<1$
+\end_inset
+
+ then 
+\begin_inset Formula 
+\[
+\liminf_{t}\E\xi_{t}\ge(E-R)^{-1}\mu,\qquad\limsup_{t}\E\xi_{t}\leq(E-S)^{-1}\mu
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proof
+(i) We have 
+\begin_inset Formula 
+\begin{multline*}
+\E\xi_{t}=\E(\E(\xi_{t}|\G_{0}))=\E(U_{0,\tau-1}X_{0}+\sum_{\theta=0}^{t-1}U_{\theta+1,t-1}\E(H_{\theta}|\G_{0}))=\\
+=U_{0,t-1}\E\xi_{0}+\sum_{\theta=0}^{t-1}U_{\theta+1,t-1}\E H_{\theta}\leq a_{t}+b_{t,}\qquad a_{t}=S^{t}\E\xi_{0},\qquad b_{t}=\sum_{\theta=0}^{t-1}S^{t-\theta-1}\E H_{\theta}
+\end{multline*}
+
+\end_inset
+
+Thanks to the sub-unit spectral radius of 
+\begin_inset Formula $S$
+\end_inset
+
+, 
+\begin_inset Formula $a_{t}\rightarrow0$
+\end_inset
+
+.
+ Further, by the positivity of 
+\begin_inset Formula $H$
+\end_inset
+
+ and the properties of convergence, there exists 
+\begin_inset Formula $c\in\R_{+}^{m}$
+\end_inset
+
+ such that 
+\begin_inset Formula $\E H_{t}\leq c(t+1)^{-1}.$
+\end_inset
+
+ Thus, for any 
+\begin_inset Formula $\varsigma$
+\end_inset
+
+ such that 
+\begin_inset Formula $\sigma<\varsigma<1$
+\end_inset
+
+, we get, after re-indexing, 
+\begin_inset Formula 
+\[
+b_{t}=\sum_{\tau=0}^{t-1}S^{\tau}\E H_{t-\tau-1}\leq\sum_{\tau=0}^{t-1}S^{\tau}c\frac{1}{(t-\tau)^{\alpha}}=\underbrace{\frac{1}{t^{\alpha}}}_{\rightarrow0}\times\underbrace{\sum_{\tau=0}^{t-1}(\varsigma^{-1}S)^{\tau}c}_{\rightarrow(E-\varsigma^{-1}S)^{-1}c}\underbrace{\left(\frac{\varsigma^{\tau/\alpha}}{t-\tau}\right)^{\alpha}}_{\leq d}\rightarrow0
+\]
+
+\end_inset
+
+because 
+\begin_inset Formula $\rho(\varsigma^{-1}S)=\frac{\sigma}{\varsigma_{t}}<1$
+\end_inset
+
+, and the upper bound 
+\begin_inset Formula $d$
+\end_inset
+
+ exists as 
+\begin_inset Formula $f(\tau)\defined\frac{t\varsigma^{\tau/\alpha}}{t-\tau}$
+\end_inset
+
+ increases in 
+\begin_inset Formula $\tau=t-1$
+\end_inset
+
+ and its derivative has only a single root, so we have 
+\begin_inset Formula $f(\tau)\leq\max(f(0),f(t-1))=\max(1,\varsigma^{\frac{t-1}{\alpha}}t)\leq d\defined\max(1,\frac{1}{e\varsigma^{1/\alpha}|\alpha^{-1}\ln\varsigma|})$
+\end_inset
+
+ on 
+\begin_inset Formula $[0,t-1].$
+\end_inset
+
+ Finally, thanks to the positivity of 
+\begin_inset Formula $\xi,$
+\end_inset
+
+ convergence of 
+\begin_inset Formula $\E\xi_{t}$
+\end_inset
+
+ suffices for a.s.
+ convergence of 
+\begin_inset Formula $\xi_{t}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Proof
+(ii) Let 
+\begin_inset Formula $\E\xi_{0}\neq0$
+\end_inset
+
+ and 
+\begin_inset Formula $\varrho>1$
+\end_inset
+
+.
+ As 
+\begin_inset Formula $R$
+\end_inset
+
+ is irreducible non-negative, by the Perron-Frobenius Theorem, 
+\begin_inset Formula $\varrho$
+\end_inset
+
+ is its eigenvalue and the corresponding eigenvector 
+\begin_inset Formula $x$
+\end_inset
+
+ is positive.
+ Further, by the irreducibility of 
+\begin_inset Formula $T$
+\end_inset
+
+, there exists 
+\begin_inset Formula $n$
+\end_inset
+
+ such that 
+\begin_inset Formula $y\defined R^{n}\E\xi_{0}>0$
+\end_inset
+
+ component-wise, so there exist 
+\begin_inset Formula $e>0$
+\end_inset
+
+ such that 
+\begin_inset Formula $y\geq ex$
+\end_inset
+
+.
+ Thus 
+\begin_inset Formula 
+\[
+\E\xi_{t}\geq R^{t}\E\xi_{0}\geq R^{t-n}y\geq eR^{t-n}x
+\]
+
+\end_inset
+
+norm of which converges to infinity.
+ The proof for 
+\begin_inset Formula $\E H_{\tau}\neq0$
+\end_inset
+
+ is analogous.
+\end_layout
+
+\begin_layout Proof
+(iii) 
+\end_layout
+
+\begin_layout Proof
+\begin_inset Formula $\E\xi_{t}=\sum_{\tau=0}^{t-1}U_{\tau,t-2}\mu+U_{0,t-1}\E\xi_{0}\leq\sum_{\tau=0}^{t-1}S^{\tau}\mu+S^{t-1}\E\xi_{0}\rightarrow(\sum_{\tau=0}^{\infty}S^{\tau})\mu=(E-S)^{-1}\mu$
+\end_inset
+
+ and similarly for 
+\begin_inset Formula $R.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+Say that 
+\begin_inset Formula $k=5$
+\end_inset
+
+ and label the stated the states 
+\begin_inset Formula $E,I_{a},I_{p},I_{s},R$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula 
+\[
+P_{t}=\left[\begin{array}{ccccc}
+\dots & 0 & 0 & 0 & 0\\
+p_{EA} & \dots & 0 & 0 & 0\\
+p_{EP} & 0 & \dots & 0 & 0\\
+0 & 0 & p_{PS} & \dots & 0\\
+\theta_{t}+p_{ER} & \theta_{t}+p_{AR} & \theta_{t}+p_{PR} & \theta_{t}+\eta+p_{SR} & 1
+\end{array}\right],\qquad J_{t}=\left[\begin{array}{ccccc}
+0 & \iota_{t} & \iota_{t} & \iota_{t} & 0\\
+0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0
+\end{array}\right]
+\]
+
+\end_inset
+
+Clearly, we can put 
+\begin_inset Formula $m=4.$
+\end_inset
+
+ having 
+\begin_inset Formula 
+\[
+U_{t}=B(\iota_{t})-\theta_{t}E,\qquad B(\iota)=\left[\begin{array}{cccc}
+q_{E} & \iota & \iota & \iota\\
+p_{EA} & q_{A} & 0 & 0\\
+p_{EP} & 0 & q_{P} & 0\\
+0 & 0 & p_{PS} & q_{S}-\eta
+\end{array}\right].
+\]
+
+\end_inset
+
+By the well known rule, we have 
+\begin_inset Formula $\rho(U_{t})=\rho(B(\iota_{t}))-\theta_{t}$
+\end_inset
+
+, 
+\begin_inset Formula $ $
+\end_inset
+
+ So, once 
+\begin_inset Formula $\rho(U_{t})\geq1$
+\end_inset
+
+, there are two ways to decrease the spectral radius: to decrease the infection
+ rate 
+\begin_inset Formula $\iota_{t}$
+\end_inset
+
+ (typically by some conter-epidemiologic measures) or to increase the isolation
+ rate 
+\begin_inset Formula $\theta_{t}$
+\end_inset
+
+ (e.g.
+ by strengthening the tracing cappacity).
+ Once there is a 
+\begin_inset Quotes eld
+\end_inset
+
+target
+\begin_inset Quotes erd
+\end_inset
+
+ spectral radius 
+\begin_inset Formula $\rho_{0},$
+\end_inset
+
+all the combinations of 
+\begin_inset Formula $\iota$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta(\iota)$
+\end_inset
+
+ giving it (locally) fulfil 
+\begin_inset Formula $\theta(\iota)+\rho_{0}-g(\iota)=0$
+\end_inset
+
+, 
+\begin_inset Formula $g(\iota)=\rho(B(\iota))$
+\end_inset
+
+ giving 
+\begin_inset Quotes eld
+\end_inset
+
+marginal rate of substitiution
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $\theta(\iota)'=-g'(\iota)$
+\end_inset
+
+ saying, how much we have to increase the isolation speed when wanting to
+ release the restrictions.
+ 
+\begin_inset Formula 
+\[
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Estimation
 \end_layout
 
 \begin_layout Standard
@@ -612,8 +1258,8 @@ For any stochastic process
 \begin_layout Standard
 \begin_inset Formula 
 \begin{multline*}
-\left[{\hat{X}_{s|t}\atop \hat{Y}_{s|t}}\right]=\E\left(\left.\E\left(\left.\left[{\hat{X}_{s}\atop \hat{Y}_{s}}\right]\right|\F_{s-1}\right)\right|\G_{t}\right)=\left[{E\atop H}\right]\left(T_{s-1}\hat{X}_{s-1|t}+\hat{I}_{s-1|t}\right)\\
-=\left[{E\atop H}\right]\left(T_{t,s-1}X_{t}+\sum_{\theta=t}^{s-1}T_{\theta+1,s-1}\hat{I}_{\theta|t}\right)
+\left[{\hat{X}_{s|t}\atop \hat{Y}_{s|t}}\right]=\E\left(\left.\E\left(\left.\left[{\hat{X}_{s}\atop \hat{Y}_{s}}\right]\right|\F_{s-1}\right)\right|\G_{t}\right)=\left[{E\atop F}\right]\left(T_{s-1}\hat{X}_{s-1|t}+\hat{I}_{s-1|t}\right)\\
+=\left[{E\atop F}\right]\left(T_{t,s-1}X_{t}+\sum_{\theta=t}^{s-1}T_{\theta+1,s-1}\hat{I}_{\theta|t}\right)
 \end{multline*}
 
 \end_inset
@@ -640,339 +1286,22 @@ W_{s|t}\defined\var\left(\left.X_{s}\right|\G_{t}\right)=\var\left(\left.\E\left
 and
 \begin_inset Formula 
 \[
-V_{s|t}\defined\var\left(\left.{X_{s}\atop Y_{s}}\right|\G_{t}\right)=\var\left(\left.{X_{s}\atop HX_{s}+\epsilon_{s}}\right|\G_{t}\right)=\left[{E\atop H}\right]W_{s|t}\left[{E\atop H}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{s-1}\hat{X}_{s-1|t}}\right)}
+V_{s|t}\defined\var\left(\left.{X_{s}\atop Y_{s}}\right|\G_{t}\right)=\var\left(\left.{X_{s}\atop FX_{s}+\epsilon_{s}}\right|\G_{t}\right)=\left[{E\atop F}\right]W_{s|t}\left[{E\atop F}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{s-1}\hat{X}_{s-1|t}}\right)}
 \]
 
 \end_inset
 
-The reproduction number 
-\begin_inset Formula $R_{t}$
-\end_inset
-
-, i.e.
- the conditional expectation (w.r.t.
- 
-\begin_inset Formula $\G_{t-1})$
-\end_inset
-
- of the infections caused by an individual having arrived at 
-\begin_inset Formula $t,$
-\end_inset
-
- at computed as 
-\begin_inset Formula 
-\[
-\sum_{\tau=t}^{\infty}\mathbf{1}^{T}\E(J_{\tau}P_{t,\tau-1}|\G_{t-1})N_{t},
-\]
-
-\end_inset
-
-where 
-\begin_inset Formula $N_{t}$
-\end_inset
-
- is the conditional distribution (with respect to 
-\begin_inset Formula $\G_{t-1}$
-\end_inset
-
-) of states in which the newcomers find themselves at 
-\begin_inset Formula $t$
-\end_inset
-
-.
- To understand the formula, note that, for each newcomer at 
-\begin_inset Formula $t$
-\end_inset
-
-, the expected number of those infected by him at 
-\begin_inset Formula $t+1$
-\end_inset
-
- is given by the sum of components of 
-\begin_inset Formula $J_{t}N_{t}$
-\end_inset
-
-, the number infected at 
-\begin_inset Formula $t+1$
-\end_inset
-
- is given by 
-\begin_inset Formula $J_{t+1}P_{t}N_{t}$
-\end_inset
-
- etc.
- Note and that there could be difficulties when computing 
-\begin_inset Formula $N_{t}$
-\end_inset
-
- – yet there is a straightforward estimate 
-\begin_inset Formula $N_{t}\doteq\nu(J_{t-1}\hat{X}_{t-1|t-1}+I_{t-1})$
-\end_inset
-
- where 
-\begin_inset Formula $\nu$
-\end_inset
-
- stands for normalization, this estimator is generally not unbiased due
- to the normalization.
- This problem, however, vanishes in the case that imports and new infections
- all fall into a single state (typically called exposed), in which case
- 
-\begin_inset Formula $N_{t}=(1,0,\dots,0)^{T}$
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Proposition
-(i) If 
-\begin_inset Formula $T_{t}\leq S$
-\end_inset
-
- component-wise where S is deterministic with 
-\begin_inset Formula $s_{0}\defined\rho(S)<1$
-\end_inset
-
- and if 
-\begin_inset Formula $\E I_{t}=o(t^{-\alpha})$
-\end_inset
-
- for some 
-\begin_inset Formula $\alpha>0$
-\end_inset
-
- then 
-\begin_inset Formula $X_{t}\rightarrow0$
-\end_inset
-
- almost sure.
- 
-\begin_inset Newline newline
-\end_inset
-
-(ii) If 
-\begin_inset Formula $T_{t}\geq R$
-\end_inset
-
- where R is deterministic irreducible with 
-\begin_inset Formula $r_{0}\defined\rho(R)>1$
-\end_inset
-
- and either 
-\begin_inset Formula $\E X_{0}\neq0$
-\end_inset
-
- or 
-\begin_inset Formula $\E I_{\tau}\neq0$
-\end_inset
-
- for some 
-\begin_inset Formula $\tau$
-\end_inset
-
-, then 
-\begin_inset Formula $\|\E X_{t}\|\rightarrow\infty$
-\end_inset
-
-.
-\begin_inset Newline newline
-\end_inset
-
-(iii) If 
-\begin_inset Formula $\E I_{t}\equiv\mu$
-\end_inset
-
- and 
-\begin_inset Formula $R\leq T_{t}\leq S$
-\end_inset
-
- such that 
-\begin_inset Formula $s_{0}<1$
-\end_inset
-
- then 
-\begin_inset Formula 
-\[
-\liminf_{t}\E X_{t}\ge(E-R)^{-1}\mu,\qquad\limsup_{t}\E X_{t}\leq(E-S)^{-1}\mu
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Proof
-(i) We have 
-\begin_inset Formula 
-\begin{multline*}
-\E X_{t}=\E(\E(X_{t}|\G_{0}))=\E(T_{0,\tau-1}X_{0}+\sum_{\theta=0}^{t-1}T_{\theta+1,t-1}\hat{I}_{\theta|0})=\\
-=T_{0,t-1}\E X_{0}+\sum_{\theta=0}^{t-1}T_{\theta+1,t-1}\E I_{\theta}\leq a_{t}+b_{t,}\qquad a_{t}=S^{t}\E X_{0},\qquad b_{t}=\sum_{\theta=0}^{t-1}S^{t-\theta-1}\E I_{\theta}
-\end{multline*}
-
-\end_inset
-
-Thanks to the sub-unit spectral radius of 
-\begin_inset Formula $S$
-\end_inset
-
-, 
-\begin_inset Formula $a_{t}\rightarrow0$
-\end_inset
-
-.
- Further, by the positivity of 
-\begin_inset Formula $I$
-\end_inset
-
- and the properties of convergence, there exists 
-\begin_inset Formula $c\in\R_{+}^{k}$
-\end_inset
-
- such that 
-\begin_inset Formula $\E I_{t}\leq c(t+1)^{-1}.$
-\end_inset
-
- Thus, for any 
-\begin_inset Formula $\varsigma$
-\end_inset
-
- such that 
-\begin_inset Formula $s_{0}<\varsigma<1$
-\end_inset
-
-, re-index and get
-\begin_inset Formula 
-\[
-b_{t}=\sum_{\tau=0}^{t-1}S^{\tau}\E I_{t-\tau-1}\leq\sum_{\tau=0}^{t-1}S^{\tau}c\frac{1}{(t-\tau)^{\alpha}}=\underbrace{\frac{1}{t^{\alpha}}}_{\rightarrow0}\times\underbrace{\sum_{\tau=0}^{t-1}(\varsigma^{-1}S)^{\tau}c}_{\rightarrow(E-\varsigma^{-1}S)^{-1}c}\underbrace{\left(\frac{\varsigma^{\tau/\alpha}}{t-\tau}\right)^{\alpha}}_{\leq d}\rightarrow0
-\]
-
-\end_inset
-
-because 
-\begin_inset Formula $\rho(\varsigma^{-1}S)=\frac{s_{0}}{\varsigma_{t}}<1$
-\end_inset
-
-, and the upper bound exsits as 
-\begin_inset Formula $f(\tau)\defined\frac{t\varsigma^{\tau/\alpha}}{t-\tau}$
-\end_inset
-
- increases in 
-\begin_inset Formula $\tau=t-1$
-\end_inset
-
- and its derivative has only a single root, we have 
-\begin_inset Formula $f(\tau)\leq\max(f(0),f(t-1))=\max(1,\varsigma^{\frac{t-1}{\alpha}}t)\leq d\defined\max(1,\frac{1}{e\varsigma^{1/\alpha}|\alpha^{-1}\ln\varsigma|})$
-\end_inset
-
- on 
-\begin_inset Formula $[0,t-1].$
-\end_inset
-
- Finally, 
-\begin_inset Formula $X\geq0$
-\end_inset
-
-, convergence of 
-\begin_inset Formula $a_{t}+b_{t}$
-\end_inset
-
- suffices for a.s.
- convergence of 
-\begin_inset Formula $X_{t}$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Proof
-(ii) Let 
-\begin_inset Formula $\E X_{0}\neq0$
-\end_inset
-
- and 
-\begin_inset Formula $s_{0}>1$
-\end_inset
-
-.
- As 
-\begin_inset Formula $R$
-\end_inset
-
- is irreducible non-negative, by the Perron-Frobenius Theorem, 
-\begin_inset Formula $s_{0}$
-\end_inset
-
- is its eigenvalue and the corresponding eigenvector 
-\begin_inset Formula $x$
-\end_inset
-
- is positive.
- Further, by the irreducibility of 
-\begin_inset Formula $T$
-\end_inset
-
-, there exists 
-\begin_inset Formula $n$
-\end_inset
-
- such that 
-\begin_inset Formula $y\defined T^{n}\E X_{0}>0$
-\end_inset
-
- component-wise, so there exist 
-\begin_inset Formula $e$
-\end_inset
-
- such that 
-\begin_inset Formula $y\geq ex$
-\end_inset
-
-.
- Thus 
-\begin_inset Formula 
-\[
-\E X_{t}\geq T^{t}\E X_{0}\geq T^{t-n}y\geq eT^{t-n}x
-\]
-
-\end_inset
-
-norm of which converges to infinity.
- The proof for 
-\begin_inset Formula $\E I_{\tau}\neq0$
-\end_inset
-
- is analogous.
-\end_layout
-
-\begin_layout Proof
-(iii) 
-\end_layout
-
-\begin_layout Proof
-\begin_inset Formula $\E X_{t}=\sum_{\tau=0}^{t-1}(\prod_{s=\tau}^{t-2}T_{s})\mu+\prod_{s=0}^{t-1}T_{s}\E X_{0}\leq\sum_{\tau=0}^{t-1}S^{\tau}\mu+S^{t-1}\E X_{0}\rightarrow(\sum_{\tau=0}^{\infty}S^{\tau})\mu=(E-S)^{-1}\mu$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-Estimation
-\end_layout
-
-\begin_layout Standard
 Unfortunately, due to the non-Gaussianity, we do not have analytical formulas
- for 
+ neither for 
 \begin_inset Formula $X_{t|t}$
 \end_inset
 
- and 
+ nor for 
 \begin_inset Formula $\mathrm{W_{t|t}}$
 \end_inset
 
- at our disposal, which fact prevents us from correct estimation because
- we can formulate neither a (quasi) maximum likelihood function nor a least
- square estimate without knowledge of the moments.
+ at our disposal, so we cannot formulate neither maximum likelihood function
+ nor a least square estimate without knowledge of the moments.
  Two, from the computational point of view equivalent, ways to cope with
  this could be using estimates of the conditional expectation and variance,
  or approximating the residuals.
@@ -993,7 +1322,7 @@ noprefix "false"
 ) and 
 \begin_inset Formula 
 \[
-\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop H}\right]\Lambda_{t}(X_{t}\vee0)\left[{E\atop H}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}(X_{t}\vee0)}\right)}
+\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop F}\right]\Lambda_{t}(X_{t}\vee0)\left[{E\atop F}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}(X_{t}\vee0)}\right)}
 \]
 
 \end_inset
@@ -1001,8 +1330,8 @@ noprefix "false"
  Given this assumption we have, by Eatonxxx, 
 \begin_inset Formula 
 \begin{multline*}
-\hat{X}_{t|t}=I_{t-1}+\hat{X}_{t|t-1}+K_{t}\left(Y_{t}-\hat{Y}_{t|t-1}\right)\\
-K_{t}\defined V_{t|t-1}^{XY}(V_{t|-1}^{YY})^{-1}=W_{t|t-1}H^{T}U_{t}^{-1},\qquad U_{t}=HW_{t|t-1}H^{T}+\mathrm{diag}(\Gamma_{t}\hat{X}_{t|t-1})
+\hat{X}_{t|t}=I_{t-1}+\hat{X}_{t|t-1}+L_{t}\left(Y_{t}-\hat{Y}_{t|t-1}\right)\\
+L_{t}\defined V_{t|t-1}^{XY}(V_{t|-1}^{YY})^{-1}=W_{t|t-1}F^{T}D_{t}^{-1},\qquad D_{t}=FW_{t|t-1}F^{T}+\mathrm{diag}(\Gamma_{t}\hat{X}_{t|t-1})
 \end{multline*}
 
 \end_inset
@@ -1013,13 +1342,13 @@ K_{t}\defined V_{t|t-1}^{XY}(V_{t|-1}^{YY})^{-1}=W_{t|t-1}H^{T}U_{t}^{-1},\qquad
 \begin_layout Standard
 \begin_inset Formula 
 \begin{multline*}
-W_{t|t}=V_{t|t-1}^{XX}-V_{t|t-1}^{XY}(V_{t|t-1}^{YY})^{-1}V_{t|t-1}^{YX}=W_{t|t-1}-W_{t|t-1}H^{T}U_{t}^{-1}HW_{t|t-1}
+W_{t|t}=V_{t|t-1}^{XX}-V_{t|t-1}^{XY}(V_{t|t-1}^{YY})^{-1}V_{t|t-1}^{YX}=W_{t|t-1}-W_{t|t-1}F^{T}D_{t}^{-1}FW_{t|t-1}
 \end{multline*}
 
 \end_inset
 
 Note that 
-\begin_inset Formula $K_{t}$
+\begin_inset Formula $L_{t}$
 \end_inset
 
  may be seen as a conditional version of a Kalman gain matrix.
@@ -1027,7 +1356,7 @@ Note that
 
 \begin_layout Standard
 As for the estimation itself, assume that 
-\begin_inset Formula $H=H(\Theta_{0}),$
+\begin_inset Formula $F=F(\Theta_{0}),$
 \end_inset
 
 
@@ -1042,25 +1371,29 @@ As for the estimation itself, assume that
 \begin_inset Formula $\Gamma_{t}=\Gamma_{t}(\Theta_{0})$
 \end_inset
 
+ and 
+\begin_inset Formula $I_{t}=I_{t}(\Theta_{0})$
+\end_inset
+
  where 
 \begin_inset Formula $\Theta_{0}\in\R^{r}$
 \end_inset
 
  is an unknown parameter.
- For its estimation, it is possible to possible to use either nonlinear
- least squares, i.e.
+ For its estimation, it is possible to to use either nonlinear least squares,
+ i.e.
  
 \begin_inset Formula 
 \[
-\hat{\Theta}=\arg\min\sum_{t}(Y_{t}-\hat{Y}_{t|t}(\Theta))^{T}U(\Theta)_{t}^{-1}(Y_{t}-\hat{Y}_{t|t}(\Theta))
+\hat{\Theta}=\arg\min\sum_{t}(Y_{t}-\hat{Y}_{t|t}(\Theta))^{T}D(\Theta)_{t}^{-1}(Y_{t}-\hat{Y}_{t|t}(\Theta))
 \]
 
 \end_inset
 
-or quasi-maximum likelihood 
+or maximum likelihood 
 \begin_inset Formula 
 \[
-\tilde{\Theta}=\arg\min\sum_{t}q((Y_{t}-\hat{Y}_{t|t}(\Theta)),U_{t}(\Theta)),\qquad q(x,v)=-\frac{k\ln2\pi+\ln\mathrm{det}(U(\Theta))+x^{T}U^{-1}x}{2}
+\tilde{\Theta}=\arg\min\sum_{t}\varphi((Y_{t}-\hat{Y}_{t|t}(\Theta)),D_{t}(\Theta)),\qquad\varphi(x,v)=-\frac{k\ln2\pi+\ln\mathrm{det}(v)+x^{T}v^{-1}x}{2}
 \]
 
 \end_inset
@@ -1072,7 +1405,7 @@ Both these estimators are consistent and asymptotically normal under some
 \end_layout
 
 \begin_layout Subsection*
-Application to 
+Application to the First Wave of COVID Pandemics in Czech Republic
 \end_layout
 
 \begin_layout Standard
@@ -3310,7 +3643,7 @@ Denote
 \begin_inset Formula 
 \begin{multline*}
 \E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\G_{t}\right]=\E\left[\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]\G_{t}\right]\\
-=\E\left[\left.\left[{T_{t}\atop HT_{t}}\right]X_{t}\right|\G_{t}\right]=\left[{T_{t}\atop HT_{t}}\right]N_{t},\qquad N_{t}=\E(X_{t}|\G_{t})
+=\E\left[\left.\left[{T_{t}\atop FT_{t}}\right]X_{t}\right|\G_{t}\right]=\left[{T_{t}\atop FT_{t}}\right]N_{t},\qquad N_{t}=\E(X_{t}|\G_{t})
 \end{multline*}
 
 \end_inset
@@ -3319,16 +3652,16 @@ and
 \begin_inset Formula 
 \begin{multline*}
 V_{t+1}=\var\left(\left.\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]\right|\G_{t}\right)+\E\left(\left.\var\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]\right|\G_{t}\right)\\
-=\var\left[\left.\left[{T_{t}\atop HT_{t}}\right]X_{t}\right|\G_{t}\right]+\E\left[\left.\begin{array}{cc}
-\Lambda_{t} & \Lambda_{t}H^{T}\\
-H\Lambda_{t} & H\Lambda_{t}H^{T}+HX_{t}
+=\var\left[\left.\left[{T_{t}\atop FT_{t}}\right]X_{t}\right|\G_{t}\right]+\E\left[\left.\begin{array}{cc}
+\Lambda_{t} & \Lambda_{t}F^{T}\\
+F\Lambda_{t} & F\Lambda_{t}F^{T}+FX_{t}
 \end{array}\right|\G_{t}\right]\\
-=\left[{T_{t}\atop HT_{t}}\right]W_{t}\left[{T_{t}\atop HT_{t}}\right]^{T}+\sum_{i+1}^{k}\left[\begin{array}{cc}
-\Phi_{i} & \Phi_{i}H^{T}\\
-H\Phi_{i} & H\Phi_{i}H^{T}
+=\left[{T_{t}\atop FT_{t}}\right]W_{t}\left[{T_{t}\atop FT_{t}}\right]^{T}+\sum_{i+1}^{k}\left[\begin{array}{cc}
+\Phi_{i} & \Phi_{i}F^{T}\\
+F\Phi_{i} & F\Phi_{i}F^{T}
 \end{array}\right]N_{t}^{i}+\left[\begin{array}{cc}
-J_{t} & J_{t}H^{T}\\
-HJ_{t} & HJ_{t}H^{T}+\Gamma tbdN_{t}
+J_{t} & J_{t}F^{T}\\
+FJ_{t} & FJ_{t}F^{T}+\Gamma tbdN_{t}
 \end{array}\right]
 \end{multline*}
 

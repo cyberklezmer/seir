@@ -16,17 +16,71 @@ struct paramval
 };
 
 
-#define PAPERV1
+//#define PAPERV1
+#define PAPERV2
+
+
+#ifdef PAPERV2
+
+#define SHIFT
+#define FACTORPAQ
+#define MU
+#define FAMILYCONTACTS
+//#define BETAADD
+#define ARATE
+#define ASYMP
+//#define CONSTIOTA
+//#define PIECEWISEIOTA
+#define SETA
+//#define PIECEWISEETA
+#define GAMMAS
+
+#define PIECEWISETHETA
+//#define SCURVE
+
+//#define K
+//#define K2
+
+static constexpr unsigned horizon=120;
+static constexpr unsigned dusekpenalty=50;
+
+
+struct paraminit { string n; double v; bool filtered; };
+
+//filter[egammad]=filter[egammar]=true; //=filter[emu]=true;
+
+const vector<paraminit> initvals = {
+    {"marchimportrate",4.36492,false},
+    {"beta",4.34106,false},
+    {"shift",1.66554,false},
+    {"asymprate",0.594796,false},
+    {"mu",0.00132434,false},
+    {"fcontacts",0.299893,true},
+    {"omega0",0.66391,false},
+    {"omega1",0.9999,false},
+    {"rho0",0.0241073,false},
+    {"rho1",0.0015367,false},
+    {"rho2",0.00180871,false},
+    {"rho3",0.0115143,false},
+    {"rho4",0.021035,false},
+    {"rho5",0.0607982,false},
+    {"rho6",0.1008,false},
+    {"eta",0.0280871,false},
+    {"gammad",0.00049033,false},
+    {"gammar",3.76865,false}
+};
+
+#endif // paperv2
 
 #ifdef PAPERV1
 #define SHIFT
 #define FACTORPAQ
 #define MU
 #define FAMILYCONTACTS
-//#define CONSTIOTA
 //#define BETAADD
-//#define APAR
+#define ARATE
 #define ASYMP
+//#define CONSTIOTA
 //#define PIECEWISEIOTA
 //#define SETA
 #define PIECEWISEETA
@@ -39,7 +93,7 @@ struct paramval
 //#define K2
 
 static constexpr unsigned horizon=120;
-static constexpr unsigned dusekpenalty=60;
+static constexpr unsigned dusekpenalty=5;
 
 
 struct paraminit { string n; double v; bool filtered; };
@@ -47,31 +101,33 @@ struct paraminit { string n; double v; bool filtered; };
 //filter[egammad]=filter[egammar]=true; //=filter[emu]=true;
 
 
+
 const vector<paraminit> initvals = {
-    {"marchimportrate",2.12288,false},
-    {"beta",2.59525,false},
-    {"shift",1.90426,false},
-    {"mu",0.002033,false},
-    {"fcontacts",0.29991,false},
-    {"omega0",0.7687,false},
-    {"omega1",0.999925,false},
-    {"rho0",0.0787273,false},
-    {"rho1",0.00198405,false},
-    {"rho2",0.0117162,false},
-    {"rho3",0.0631143,false},
-    {"rho4",0.0584554,false},
-    {"rho5",0.172388,false},
-    {"rho6",0.180103,false},
-    {"eta0",0.0903929,false},
-    {"eta1",0.0971773,false},
-    {"eta2",0.0646756,false},
-    {"eta3",0.0426767,false},
-    {"eta4",0.0680753,false},
-    {"eta5",0.00169121,false},
-    {"eta6",0.0792487,false},
-    {"gammad",0,true},
-    {"gammar",4.13062,true}
+    {"marchimportrate",3.80019,false},
+    {"beta",2.32485,false},
+    {"shift",4.32206,false},
+    {"mu",0.0010861,false},
+    {"fcontacts",0.299893,true},
+    {"omega0",0.747405,false},
+    {"omega1",1,false},
+    {"rho0",0.0155176,false},
+    {"rho1",0.00167533,false},
+    {"rho2",0.00548675,false},
+    {"rho3",0.034115,false},
+    {"rho4",0.0346221,false},
+    {"rho5",0.119879,false},
+    {"rho6",0.14895,false},
+    {"eta0",0.086352,false},
+    {"eta1",0.099881,false},
+    {"eta2",0.0088856,false},
+    {"eta3",0.0243237,false},
+    {"eta4",0.0229531,false},
+    {"eta5",0.00293755,false},
+    {"eta6",0.0544749,false},
+    {"gammad",0.000874336,true},
+    {"gammar",4.13285,true}
 };
+
 //ll/n=-10.7555
 //additional contrast = -31.1447
 //Duseks survey = 15564.1
@@ -95,7 +151,7 @@ enum eparams {
 #ifdef SHIFT
     eshift,
 #endif
-#ifdef APAR
+#ifdef ARATE
     easymprate,
 #endif
 
@@ -122,7 +178,7 @@ enum eparams {
                erho6, elastrho = erho6,
 #else
 #ifdef SCURVE
-        erhosize, erhomid, erhok,
+        erhoinit, erhosize, erhomid, erhok,
 #else
         erho,
 #endif
@@ -175,7 +231,7 @@ inline string seirstatelabel(unsigned i)
                    "QE",
 
                    "Iada", "Inda",
-                   "Isda", "Jsda","Jnda", "Rda", "Dda"
+                   "Isda", "Jsda","Jnda", "Rda", "Dda",
 
                    "Isds", "Jsds","Rds", "Dds"
     };
@@ -237,7 +293,7 @@ public:
         double asymprate;
         expparams p;
 #ifdef ARATE
-        asymprate = pararams[easymprate];
+        asymprate = params[easymprate];
 #else
         asymprate = p.asymptomatic_rate;
 #endif
@@ -424,12 +480,12 @@ public:
         double preiota;
         unsigned numiotas = elastiota + 1 - eiota0;
         unsigned period = horizon / numiotas;
-        unsigned i = min(t / period, numiotas - 1);
+        unsigned i = min(at / period, numiotas - 1);
         if(i == numiotas - 1)
             preiota = p[eiota0 + i];
         else
         {
-            double w = (t % period) / static_cast<double>(period);
+            double w = (at % period) / static_cast<double>(period);
             preiota = (1-w) * p[eiota0+i] + w * p[eiota0+i+1];
         }
 #else
@@ -515,7 +571,7 @@ public:
         }
 #else
 #ifdef SCURVE
-       rh = params[erhosize] / (1.0 + exp(-params[erhok] * (t -params[erhomid] )));
+       rh = params[erhoinit]+params[erhosize] / (1.0 + exp(-params[erhok] * (t -params[erhomid] )));
 #else
        rh = params[erho];
 #endif
@@ -591,7 +647,7 @@ void seir()
     fillsi(si,c,0);
     assert(horizon <= si.y.size());
     si.y.resize(horizon);
-    si.z.resize(horizon);
+    si.z.resize(horizon+30);
 
     auto siest = si;
 
@@ -602,7 +658,7 @@ void seir()
     vector<paraminfo> params
             = {
                  paraminfo("marchimportrate",3,0,20),
-                 paraminfo("beta",2.08,0,3),
+                 paraminfo("beta",2.08,0,5),
 #ifdef BETAADD
               paraminfo("betaadd",0,0,3),
 #endif
@@ -613,7 +669,7 @@ void seir()
             paraminfo("shift",5,0,7),
     #endif
 
-#ifdef APAR
+#ifdef ARATE
     paraminfo("asymprate", 0.19, 0, 1),
 #endif
 
@@ -655,6 +711,7 @@ void seir()
                 paraminfo("rho6", 0.13, 0, 0.7),
 #else
 #ifdef SCURVE
+            paraminfo("rhoinit", 0, 0, 0.3),
             paraminfo("rhosize", 0.3, 0, 0.7),
             paraminfo("rhomid", 80, 0, 300),
             paraminfo("rhok", 0.03, 0, 1),
@@ -675,8 +732,8 @@ void seir()
                 paraminfo("eta6", 0.5, 0, 0.7),
 #else
 #ifdef SETA
-        paraminfo("etamin", 0, 0, 0.3),
-        paraminfo("etasize", 0.0, -0.7, 0.7),
+        paraminfo("etamin", 0.1, 0, 0.3),
+        paraminfo("etasize", 0.1, 0, 0.7),
         paraminfo("etamid", 100, 0, 300),
         paraminfo("etak", 0.06, 0, 1),
 #else
@@ -718,7 +775,7 @@ assert(params.size()==enumparams);
             if(params[i].name == initvals[j].n)
             {
                 rp[i]=params[i].initial = initvals[j].v;
-                filter[i] = initvals[i].filtered;
+                filter[i] = initvals[j].filtered;
             }
     }
 
@@ -733,7 +790,6 @@ assert(params.size()==enumparams);
                 cout << params[i].name << " ";
                 cout << res.x()[i] << "(" << sqrt(res.var()(i,i)) << ")" << endl;
                 params[i].initial = res.x()[i];
-                filter[i]= true;
             }
             rp = res.x();
         }
@@ -841,8 +897,8 @@ assert(params.size()==enumparams);
 #else
                 "P,predP, predPtrend, res, restrend,,,,,,"
 #endif
-                "D,predD, predDtrend,dres, drestrend, iota, theta, theteq,r,rtrend,"
-                "diota, drho,contrast" << endl;
+                "D,predD, predDtrend, , , iota, eta, theteq,rho,rtrend,"
+                "r0, ,contrast" << endl;
         for(unsigned i=0; i<si.y.size(); i++)
         {
             double D = si.y[i][czseir::eD];
@@ -892,19 +948,11 @@ assert(params.size()==enumparams);
 #endif
             double predD = r.pred[i].x()[eseirnumstates+czseir::eD];
 //            double predPtrend = r2.pred[i].x()[eseirnumstates+czseir::eT];
-            double delta = 0.0001;
 
             double rng = range(r.Ts[i].submatrix(0,0,eseirin+1,eseirin+1));
-            matrix Tiota = r.Ts[i].submatrix(0,0,eseirin+1,eseirin+1);
-            Tiota(eseire,eseiria) += delta;
-            Tiota(eseire,eseirin) += delta;
-            Tiota(eseire,eseiris) += delta;
-            matrix Trho = r.Ts[i].submatrix(0,0,eseirin+1,eseirin+1);
-            Trho(eseire,eseire) -= delta;
-            Trho(eseiria,eseiria) -= delta;
-            Trho(eseirin,eseirin) -= delta;
-            double diota = (range(Tiota)-rng)/delta;
-            double drho = (range(Trho)-rng)/delta;
+
+            double lastval;
+            double rn = s.R(i,r, lastval);
 
             clog
 #ifdef ASYMP
@@ -927,7 +975,7 @@ assert(params.size()==enumparams);
                   << r.Ts[i](eseirqe,eseire) << ","
                  << rng << ","
                 << range(trendm) << ","
-                << diota << "," << drho;
+                << rn << "," << lastval;
             if(i<r.contrasts.size())
                 clog << "," << r.contrasts[i];
             clog << endl;
@@ -967,17 +1015,7 @@ int main()
 
     try
     {
-//        seir();
-//  closure();
-//        graph();
         seir();
-
-/*        if(1)
-            graph();
-        else
-            epi();
-*/        cout << time(0) - startt << " seconds" << endl;
-
     }
     catch (std::exception& e) {
         std::cerr << e.what() << endl;
@@ -1005,118 +1043,3 @@ int main()
     return 0;
 }
 
-/*
-
- *  {"marchimportrate",1.96857},
-{"beta",1.23873},
-{"iota0",4.91185},
-{"iota1",0.376009},
-{"iota2",0.675395},
-{"iota3",0.389865},
-{"iota4",0.117955},
-{"iota5",0.293774},
-{"iota6",0.261307},
-{"iota7",0.200022},
-{"iota8",0.38924},
-{"iota9",0.378618},
-{"iota10",0.206217},
-{"rho",0.134031},
-{"eta",0.306754},
-{"gammad",0.000732256},
-{"gammar",29.9853},
-
-{"marchimportrate",1.27427},
-{"beta",0.911539},
-{"iota0",4.95308},
-{"iota1",0.860558},
-{"iota2",1.19285},
-{"iota3",0.0372259},
-{"iota4",0.0320616},
-{"iota5",0.184131},
-{"iota6",0.200878},
-{"iota7",0.162968},
-{"iota8",0.292281},
-{"iota9",0.498965},
-{"iota10",0.212095},
-{"rho0",0.118594},
-{"rho1",0.0763529},
-{"rho2",0.0379205},
-{"rho3",0.103321},
-{"rho4",0.114799},
-{"rho5",0.116583},
-{"rho6",0.182005},
-{"eta",0.01},
-{"gammad",0.000732256},
-{"gammar",29.9853},
-
-iota parametric
-
-{"marchimportrate",2.06777},
-{"beta",2.49238},
-{"fcontacts",0.204229},
-{"omega",0.960484},
-{"rho0",0.125516},
-{"rho1",0.0086409},
-{"rho2",0.0215428},
-{"rho3",0.0395661},
-{"rho4",0.0609459},
-{"rho5",0.0446668},
-{"rho6",0.13679},
-{"eta",0.01},
-{"gammad",0.000732256},
-{"gammar",29.9853},
-
-ll/n=-7.08418
-additional contrast = -24.4509
-Duseks survey = 20170
-
-Two factors in iota
-
-{"marchimportrate",1.53488},
-{"beta",2.85911},
-{"fcontacts",0.264791},
-{"omega",0.956083},
-{"rho0",0.196437},
-{"rho1",0.0116038},
-{"rho2",0.0235504},
-{"rho3",0.0338362},
-{"rho4",0.0520899},
-{"rho5",0.0342289},
-{"rho6",0.124448},
-{"eta",0.01},
-{"gammad",0.000732256},
-{"gammar",29.9853},
-
-
-
-
-ll/n=-7.06145
-additional contrast = -24.6888
-Duseks survey = 19990.6
-
-A tady pro symp / nesymp celkem sedící
-
-{"marchimportrate",1.47007},
-{"beta",2.46403},
-{"fcontacts",0.299955},
-{"omega",0.887782},
-{"rho0",0.0407861},
-{"rho1",0.00616324},
-{"rho2",0.0112071},
-{"rho3",0.0675719},
-{"rho4",0.060645},
-{"rho5",0.10536},
-{"rho6",0.203019},
-{"eta0",0.117155},
-{"eta1",0.0919247},
-{"eta2",0.108744},
-{"eta3",0.0839009},
-{"eta4",0.0213087},
-{"eta5",0.213317},
-{"eta6",0.191139},
-{"gammad",0.000518772},
-{"gammar",4.13062},
-
-
-
-*/

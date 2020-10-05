@@ -162,10 +162,18 @@ public:
                         o << u.x()[i] << ",";
                     for(unsigned i=0; i<u.dim(); i++)
                         o << sqrt(u.var()(i,i)) << ",";
+                }
+                else
+                {
+                    for(unsigned i=0; i<est[0].dim(); i++)
+                        o << ",,";
+                }
+                if(s < d.y.size() && s < d.z.size())
+                {
                     for(unsigned i=0; i<d.y[s].size(); i++)
-                            o<< d.y[s][i] << ",";
+                        o<< d.y[s][i] << ",";
                     for(unsigned i=0; i<d.z[s].size(); i++)
-                            o<< d.z[s][i] << ",";
+                        o<< d.z[s][i] << ",";
                 }
                 o << endl;
             }
@@ -379,7 +387,7 @@ public:
         o.set_upper_bounds(upper);
 
         o.set_ftol_rel(1e-7);
-        o.set_maxtime(6*60);
+        o.set_maxtime(5*60);
 
         o.set_max_objective(llobj, this);
 
