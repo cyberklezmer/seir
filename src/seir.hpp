@@ -184,10 +184,30 @@ public:
     {
         return range(er.Ts[t].submatrix(0,0,i,i));
     }
-    double Rcp(unsigned t, const evalresult& er) const
+    double Rcp(unsigned t, const evalresult& er, unsigned m) const
     {
-        return 0;
+        const matrix& K = er.Js[t].submatrix(0,0,m,m);
+        for(unsigned i=0; i<K.r(); i++)
+        {
+            for(unsigned j=1; j<K.c(); j++)
+                assert(K(i,j)==0);
+        }
+        matrix p(m,1,0);
+        p(0,0) = 1;
+
+        // create identity matrix (to orpp;
+        matrix E(m,m,0);
+        for(unsigned i=0; i< m; i++)
+            E(i,i)=1;
+
+
+        auto r = K.transpose() * ((E - er.Ps[t].submatrix(0,0,m,m).transpose()).inverse())*p;
+        double s = 0;
+        for(unsigned i=0;i< m; i++)
+            s += r(i,0);
+        return s;
     }
+
     double R(unsigned t, const evalresult& er) const
     {
 //clog << "Computing R from at " << t << endl;
@@ -204,7 +224,7 @@ public:
         p(0,0) = 1;
         double res = 0;
         double thistau = HUGE_VAL;
-        for(unsigned tau = t; thistau > 0.00001 ; tau++)
+        for(unsigned tau = t; tau < inf || thistau > 0.00001 ; tau++)
         {
             auto lasttau = min(tau,inf-1);
             matrix r = er.Js[lasttau].transpose() * p;

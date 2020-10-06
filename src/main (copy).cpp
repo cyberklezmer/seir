@@ -22,7 +22,7 @@ struct paramval
 
 #ifdef PAPERV2
 
-#define SHIFT
+//#define SHIFT
 #define FACTORPAQ
 #define MU
 //#define FAMILYCONTACTS
@@ -31,7 +31,7 @@ struct paramval
 #define ASYMP
 //#define CONSTIOTA
 //#define PIECEWISEIOTA
-#define SETA
+//#define SETA
 //#define PIECEWISEETA
 #define GAMMAS
 
@@ -39,38 +39,35 @@ struct paramval
 //#define SCURVE
 
 //#define K
+//#define KACTIVE
 //#define K2
 
 static constexpr unsigned horizon=120;
-static constexpr unsigned dusekpenalty=5;
+static constexpr unsigned dusekpenalty=60;
 
 
 struct paraminit { string n; double v; bool filtered; };
 
-//filter[egammad]=filter[egammar]=true; //=filter[emu]=true;
 
 const vector<paraminit> initvals = {
-    {"marchimportrate",2.88297,false},
-    {"beta",4.92524,false},
-    {"shift",0.946462,false},
-    {"asymprate",0.844967,false},
-    {"mu",0.00460519,false},
-    {"omega0",0.647706,false},
-    {"omegas",0.997753,false},
-    {"omegag",0.999018,false},
-    {"rho0",0.046329,false},
-    {"rho1",0.00256723,false},
-    {"rho2",0.00144009,false},
-    {"rho3",0.00804512,false},
-    {"rho4",0.0120519,false},
-    {"rho5",0.0400626,false},
-    {"rho6",0.0624704,false},
-    {"etamin",0.256594,false},
-    {"etasize",0.161409,false},
-    {"etamid",151.465,false},
-    {"etak",0.0766934,false},
-    {"gammad",0.000858648,false},
-    {"gammar",7.95009,false},
+    {"marchimportrate",2.88663,false},
+    {"beta",4.92,false},
+    {"constiota",0.000284081,false},
+    {"asymprate",0.850609,false},
+    {"mu",0.00449675,false},
+    {"omega0",0.645948,false},
+    {"omegas",0.997491,false},
+    {"omegag",0.998957,false},
+    {"rho0",0.046631,false},
+    {"rho1",0.00193295,false},
+    {"rho2",0.00148717,false},
+    {"rho3",0.00912594,false},
+    {"rho4",0.0116636,false},
+    {"rho5",0.034452,false},
+    {"rho6",0.0521621,false},
+    {"eta",0.282773,false},
+    {"gammad",0.000554287,false},
+    {"gammar",7.95,false}
 };
 
 #endif // paperv2
@@ -244,8 +241,9 @@ inline string seirstatelabel(unsigned i)
     return l[i];
 }
 
-inline double zofunction(double x, double c = 0.05)
+inline double zofunction(double x)
 {
+    double c = 0.05;
     if(x < c)
         return c* exp((x-c) / c);
     else if(x > 1-c)
@@ -566,7 +564,7 @@ public:
 #endif
         rh = getthetaa(t,params,g) + eta;
 #endif
-        return  zofunction(rh / 0.7,0.000001) *0.7;// max(0.0, min(0.7, rh));//
+        return zofunction(rh / 0.65) *0.65;
     }
 
 
@@ -608,7 +606,7 @@ public:
       double numrep = weekave(t,g);
       c = numrep < k ? rh : rh * k / numrep ;
 #endif
-        return zofunction(c/0.7,0.000001) * 0.7; // max(0.0, min(0.7, c));
+        return zofunction(c / 0.65) * 0.65;
     }
 };
 
@@ -1065,3 +1063,4 @@ int main()
 
     return 0;
 }
+

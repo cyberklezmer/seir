@@ -1117,11 +1117,11 @@ Say that
 \begin_inset Formula 
 \[
 P_{t}=\left[\begin{array}{ccccc}
-\dots & 0 & 0 & 0 & 0\\
-p_{EA} & \dots & 0 & 0 & 0\\
-p_{EP} & 0 & \dots & 0 & 0\\
-0 & 0 & p_{PS} & \dots & 0\\
-\theta_{t}+p_{ER} & \theta_{t}+p_{AR} & \theta_{t}+p_{PR} & \theta_{t}+\eta+p_{SR} & 1
+1-\sigma-\varrho_{E}-\theta_{t} & 0 & 0 & 0 & 0\\
+\alpha\sigma & 1-\varrho_{a}-\theta_{t} & 0 & 0 & 0\\
+(1-\alpha)\sigma & 0 & 1-\varsigma-\varrho_{p}-\theta_{t} & 0 & 0\\
+0 & 0 & \varsigma & 1-\varrho_{s}-\eta-\theta_{t} & 0\\
+\theta_{t}+\varrho_{E} & \theta_{t}+\varrho_{a} & \theta_{t}+\varrho_{p} & \theta_{t}+\eta+\varrho_{s} & 1
 \end{array}\right],\qquad J_{t}=\left[\begin{array}{ccccc}
 0 & \iota_{t} & \iota_{t} & \iota_{t} & 0\\
 0 & 0 & 0 & 0 & 0\\
@@ -1141,10 +1141,10 @@ Clearly, we can put
 \begin_inset Formula 
 \[
 U_{t}=B(\iota_{t})-\theta_{t}E,\qquad B(\iota)=\left[\begin{array}{cccc}
-q_{E} & \iota & \iota & \iota\\
-p_{EA} & q_{A} & 0 & 0\\
-p_{EP} & 0 & q_{P} & 0\\
-0 & 0 & p_{PS} & q_{S}-\eta
+1-\sigma-\varrho_{E} & \iota_{t} & \iota_{t} & \iota_{t}\\
+\alpha\sigma & 1-\varrho_{a} & 0 & 0\\
+(1-\alpha)\sigma & 0 & 1-\varsigma-\varrho_{p} & 0\\
+0 & 0 & \varsigma & 1-\varrho_{s}-\eta
 \end{array}\right].
 \]
 
