@@ -17,12 +17,13 @@ struct paramval
 
 
 //#define PAPERV1
-#define PAPERV2
+//#define PAPERV2
+#define PAPERV3
 
+#ifdef PAPERV3
 
-#ifdef PAPERV2
-
-#define SHIFT
+#define TEMPER
+//#define SHIFT
 #define FACTORPAQ
 #define MU
 //#define FAMILYCONTACTS
@@ -31,18 +32,70 @@ struct paramval
 #define ASYMP
 //#define CONSTIOTA
 //#define PIECEWISEIOTA
-#define SETA
+//#define SETA
 //#define PIECEWISEETA
 #define GAMMAS
 
-#define PIECEWISETHETA
-//#define SCURVE
+//#define PIECEWISETHETA
+#define SCURVE
 
-//#define K
+#define K
 //#define K2
 
 static constexpr unsigned horizon=120;
-static constexpr unsigned dusekpenalty=5;
+static constexpr unsigned dusekpenalty=60;
+
+
+struct paraminit { string n;	double v;	bool filtered; };
+
+
+
+const vector<paraminit> initvals = {
+{"marchimportrate",	3.6568,	false},
+{"beta"	,3.14032,	false},
+{"phi",	0.135031,	false},
+{"asymprate",	0.882246,	false},
+{"mu",	0.0048041,	false},
+{"omega0",	0.659548,	false},
+{"omegas",	0.932578,	false},
+{"omegag",	0.980158,	false},
+{"rhoinit",	2.04E-05,	false},
+{"rhosize",	0.0315574,	false},
+{"rhomid",	68.4254,	false},
+{"rhok",	0.073768,	false},
+{"eta",	0.357101,	false},
+{"k",	259.995,	false},
+{"gammad",	0.000372472,	true},
+{"gammar",	10.9834,	true}
+};
+
+
+#endif
+
+#ifdef PAPERV2
+
+#define TEMPER
+//#define SHIFT
+#define FACTORPAQ
+#define MU
+//#define FAMILYCONTACTS
+//#define BETAADD
+#define ARATE
+#define ASYMP
+//#define CONSTIOTA
+//#define PIECEWISEIOTA
+//#define SETA
+//#define PIECEWISEETA
+#define GAMMAS
+
+//#define PIECEWISETHETA
+#define SCURVE
+
+#define K
+//#define K2
+
+static constexpr unsigned horizon=180;
+static constexpr unsigned dusekpenalty=6;
 
 
 struct paraminit { string n; double v; bool filtered; };
@@ -50,27 +103,22 @@ struct paraminit { string n; double v; bool filtered; };
 //filter[egammad]=filter[egammar]=true; //=filter[emu]=true;
 
 const vector<paraminit> initvals = {
-    {"marchimportrate",2.88297,false},
-    {"beta",4.92524,false},
-    {"shift",0.946462,false},
-    {"asymprate",0.844967,false},
-    {"mu",0.00460519,false},
-    {"omega0",0.647706,false},
-    {"omegas",0.997753,false},
-    {"omegag",0.999018,false},
-    {"rho0",0.046329,false},
-    {"rho1",0.00256723,false},
-    {"rho2",0.00144009,false},
-    {"rho3",0.00804512,false},
-    {"rho4",0.0120519,false},
-    {"rho5",0.0400626,false},
-    {"rho6",0.0624704,false},
-    {"etamin",0.256594,false},
-    {"etasize",0.161409,false},
-    {"etamid",151.465,false},
-    {"etak",0.0766934,false},
-    {"gammad",0.000858648,false},
-    {"gammar",7.95009,false},
+    {"marchimportrate",3.6568,false},
+    {"beta",3.14032,false},
+    {"phi",0.135031,false},
+    {"asymprate",0.882246,false},
+    {"mu",0.0048041,false},
+    {"omega0",0.659548,false},
+    {"omegas",0.932578,false},
+    {"omegag",0.980158,false},
+    {"rhoinit",2.03999e-05,false},
+    {"rhosize",0.20,false},
+    {"rhomid",130.4254,false},
+    {"rhok",0.073768,false},
+    {"eta",0.357101,false},
+    {"k",259.995,false},
+    {"gammad",0.000372472,true},
+    {"gammar",10.9834,true},
 };
 
 #endif // paperv2
@@ -151,6 +199,10 @@ enum eparams {
 #ifdef CONSTIOTA
     eiotaconst,
 #endif
+#ifdef TEMPER
+    ephi,
+#endif
+
 #ifdef SHIFT
     eshift,
 #endif
@@ -505,7 +557,9 @@ public:
         }
 #else
 #ifdef FACTORPAQ
-        double preiota =zofunction(1.0-p[eomegas]*(w* g.z[t1][esred] + (1-w)* g.z[t2][esred]))
+double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]*g.z[t1][esred]);
+
+                zofunction(1.0-p[eomegas]*(w* g.z[t1][esred] + (1-w)* g.z[t2][esred]))
                 * zofunction(p[eomega0] -p[eomegag]*(w* g.z[t1][egammared] + (1-w)* g.z[t2][egammared]));
 #else
         double c = w*g.z[t1][econtacts]+(1-w)*g.z[t2][econtacts];
@@ -513,16 +567,23 @@ public:
         c -= p[efcontacts];
 #endif
         //double preiota =c*(1-0.6*g.z[t][emasks])*(1-p[eomega] *g.z[t][ehygiene]);
-        double preiota =c*(1-p[eomega]*(w*g.z[t1][emasks]+(1-w)*g.z[t2][emasks]));
+        double preiota =c*(1-p[eomega]*(w*g.z[t1][egammared]+(1-w)*g.z[t2][egammared]));
 #endif
 #endif // PIECEWISEIOTA
 #ifdef CONSTIOTA
         preiota += p[eiotaconst];
 #endif
+        double d;
+#ifdef TEMPER
+        const unsigned t0 = -30;
+        d = (1 - p[ephi] * cos(-t0 / 365.0 * 2* 3.141592)) + p[ephi] * cos((at-t0) / 365.0 * 2 * 3.141592 );
+#else
+        d = 1;
+#endif
         assert(preiota >= 0);
         vector<double> iota(eseirnumstates,0);
-        iota[eseiria] = iota[eseiris] = (p[ebeta]+ba)*preiota;
-        iota[eseirin] = (p[ebeta]+ba)*preiota;
+        iota[eseiria] = iota[eseiris] = (p[ebeta]+ba)*d * preiota;
+        iota[eseirin] = (p[ebeta]+ba)* d *preiota;
         return iota;
     }
 
@@ -665,7 +726,7 @@ void seir()
     fillsi(si,c,0);
     assert(horizon <= si.y.size());
     si.y.resize(horizon);
-    si.z.resize(horizon+30);
+    si.z.resize(min(40UL+horizon,si.z.size()));
 
     auto siest = si;
 
@@ -683,6 +744,9 @@ void seir()
 #ifdef CONSTIOTA
         paraminfo("constiota",0,0,0.2),
 #endif
+    #ifdef TEMPER
+        paraminfo("phi",0,0,1),
+    #endif
     #ifdef SHIFT
             paraminfo("shift",5,0,7),
     #endif
@@ -709,9 +773,9 @@ void seir()
         paraminfo("iota10",0.7,0,5),
 #else
 #ifdef FACTORPAQ
-        paraminfo("omega0", 0.7, 0, 1),
+        paraminfo("omega0", 1, 0, 1),
         paraminfo("omegas", 1, 0, 1),
-        paraminfo("omegag", 0.99, 0, 1),
+        paraminfo("omegag", 1, 0, 1),
 #else
     #ifdef FAMILYCONTACTS
                     paraminfo("fcontacts",0.16,0,0.3),
@@ -722,16 +786,16 @@ void seir()
 
 #ifdef PIECEWISETHETA
                 paraminfo("rho0", 0, 0, 0.7),
-                paraminfo("rho1", 0.13, 0, 0.7),
-                paraminfo("rho2", 0.13, 0, 0.7),
-                paraminfo("rho3", 0.13, 0, 0.7),
-                paraminfo("rho4", 0.13, 0, 0.7),
-                paraminfo("rho5", 0.13, 0, 0.7),
-                paraminfo("rho6", 0.13, 0, 0.7),
+                paraminfo("rho1", 0.1, 0, 0.7),
+                paraminfo("rho2", 0.1, 0, 0.7),
+                paraminfo("rho3", 0.2, 0, 0.7),
+                paraminfo("rho4", 0.2, 0, 0.7),
+                paraminfo("rho5", 0.3, 0, 0.7),
+                paraminfo("rho6", 0.3, 0, 0.7),
 #else
 #ifdef SCURVE
             paraminfo("rhoinit", 0, 0, 0.3),
-            paraminfo("rhosize", 0.3, 0, 0.7),
+            paraminfo("rhosize", 0.10, 0, 0.7),
             paraminfo("rhomid", 80, 0, 300),
             paraminfo("rhok", 0.03, 0, 1),
 #else
@@ -740,10 +804,8 @@ void seir()
 #endif
 
 #ifdef PIECEWISEETA
-                paraminfo("eta0", 0, 0,
-0.1),
-                paraminfo("eta1", 0.05, 0,
-0.1),        // 0.7),
+                paraminfo("eta0", 0, 0, 0.7),
+                paraminfo("eta1", 0.05, 0,0.7),
                 paraminfo("eta2", 0.05, 0, 0.7),
                 paraminfo("eta3", 0.06, 0, 0.7),
                 paraminfo("eta4", 0.20, 0, 0.7),
@@ -756,12 +818,12 @@ void seir()
         paraminfo("etamid", 100, 0, 300),
         paraminfo("etak", 0.06, 0, 1),
 #else
-        paraminfo("eta", 0.1, 0, 0.4),
+        paraminfo("eta", 0.3, 0, 0.4),
 #endif
 #endif
 
 #if defined(K)
-             paraminfo("k", 50, 0, 260),
+             paraminfo("k", 100, 0, 260),
 #else
 #ifdef KACTIVE
                     paraminfo("kactive", 50, 0, 20000),
@@ -804,7 +866,7 @@ assert(params.size()==enumparams);
 
     if(1)
     {
-        if(1)
+        if(0)
         {
             uncertain res;
             cout << "ll= " << s.estimate(params,siest,res,filter) << endl;
@@ -815,6 +877,12 @@ assert(params.size()==enumparams);
                 params[i].initial = res.x()[i];
             }
             rp = res.x();
+            for(unsigned i=0; i<params.size(); i++)
+            {
+                cout << "{\"" << params[i].name << "\","
+                    << rp[i] << "," << (filter[i] ? "true" : "false") << "},";
+                cout << endl;
+            }
         }
 
         csvout<double,','>(clog, rp);

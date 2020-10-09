@@ -1140,8 +1140,8 @@ Clearly, we can put
  having 
 \begin_inset Formula 
 \[
-U_{t}=B(\iota_{t})-\theta_{t}E,\qquad B(\iota)=\left[\begin{array}{cccc}
-1-\sigma-\varrho_{E} & \iota_{t} & \iota_{t} & \iota_{t}\\
+U_{t}=B(\iota_{t})-\theta_{t}E,\qquad B(\gamma)=\left[\begin{array}{cccc}
+1-\sigma-\varrho_{E} & \gamma & \gamma & \gamma\iota\\
 \alpha\sigma & 1-\varrho_{a} & 0 & 0\\
 (1-\alpha)\sigma & 0 & 1-\varsigma-\varrho_{p} & 0\\
 0 & 0 & \varsigma & 1-\varrho_{s}-\eta
@@ -1154,10 +1154,7 @@ By the well known rule, we have
 \begin_inset Formula $\rho(U_{t})=\rho(B(\iota_{t}))-\theta_{t}$
 \end_inset
 
-, 
-\begin_inset Formula $ $
-\end_inset
-
+.
  So, once 
 \begin_inset Formula $\rho(U_{t})\geq1$
 \end_inset
@@ -1167,7 +1164,7 @@ By the well known rule, we have
 \begin_inset Formula $\iota_{t}$
 \end_inset
 
- (typically by some conter-epidemiologic measures) or to increase the isolation
+ (typically by some counter-epidemic measures) or to increase the isolation
  rate 
 \begin_inset Formula $\theta_{t}$
 \end_inset
@@ -1217,13 +1214,6 @@ marginal rate of substitiution
  saying, how much we have to increase the isolation speed when wanting to
  release the restrictions.
  
-\begin_inset Formula 
-\[
-\]
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Section
@@ -1404,15 +1394,12 @@ Both these estimators are consistent and asymptotically normal under some
  of this short research letter and remains as a future research.
 \end_layout
 
-\begin_layout Subsection*
-Application to the First Wave of COVID Pandemics in Czech Republic
+\begin_layout Standard
+TBD proof not valide
 \end_layout
 
-\begin_layout Standard
-\begin_inset Formula $ $
-\end_inset
-
-
+\begin_layout Subsection*
+Application to the First Wave of COVID Pandemics in Czech Republic
 \end_layout
 
 \begin_layout Standard
