@@ -1,4 +1,3 @@
-
 #include <vector>
 #include "emodel.hpp"
 #include "orpp.hpp"
@@ -8,7 +7,6 @@
 using namespace std;
 using namespace orpp;
 
-
 struct paramval
 {
     string n;
@@ -16,11 +14,7 @@ struct paramval
 };
 
 
-//#define PAPERV1
-//#define PAPERV2
-#define PAPERV3
 
-#ifdef PAPERV3
 
 #define TEMPER
 //#define SHIFT
@@ -40,154 +34,45 @@ struct paramval
 #define SCURVE
 
 #define K
-//#define K2
+//#define KACTIVE
+#define K2
 
-static constexpr unsigned horizon=120;
-static constexpr unsigned dusekpenalty=60;
+static constexpr unsigned horizon=233;
+static constexpr unsigned dusekpenalty=30;
 
 
 struct paraminit { string n;	double v;	bool filtered; };
 
-
-
-const vector<paraminit> initvals = {
-{"marchimportrate",	3.6568,	false},
-{"beta"	,3.14032,	false},
-{"phi",	0.135031,	false},
-{"asymprate",	0.882246,	false},
-{"mu",	0.0048041,	false},
-{"omega0",	0.659548,	false},
-{"omegas",	0.932578,	false},
-{"omegag",	0.980158,	false},
-{"rhoinit",	2.04E-05,	false},
-{"rhosize",	0.0315574,	false},
-{"rhomid",	68.4254,	false},
-{"rhok",	0.073768,	false},
-{"eta",	0.357101,	false},
-{"k",	259.995,	false},
-{"gammad",	0.000372472,	true},
-{"gammar",	10.9834,	true}
-};
-
-
-#endif
-
-#ifdef PAPERV2
-
-#define TEMPER
-//#define SHIFT
-#define FACTORPAQ
-#define MU
-//#define FAMILYCONTACTS
-//#define BETAADD
-#define ARATE
-#define ASYMP
-//#define CONSTIOTA
-//#define PIECEWISEIOTA
-//#define SETA
-//#define PIECEWISEETA
-#define GAMMAS
-
-//#define PIECEWISETHETA
-#define SCURVE
-
-#define K
-//#define K2
-
-static constexpr unsigned horizon=180;
-static constexpr unsigned dusekpenalty=6;
-
-
-struct paraminit { string n; double v; bool filtered; };
-
-//filter[egammad]=filter[egammar]=true; //=filter[emu]=true;
-
-const vector<paraminit> initvals = {
-    {"marchimportrate",3.6568,false},
-    {"beta",3.14032,false},
-    {"phi",0.135031,false},
-    {"asymprate",0.882246,false},
-    {"mu",0.0048041,false},
-    {"omega0",0.659548,false},
-    {"omegas",0.932578,false},
-    {"omegag",0.980158,false},
-    {"rhoinit",2.03999e-05,false},
-    {"rhosize",0.20,false},
-    {"rhomid",130.4254,false},
-    {"rhok",0.073768,false},
-    {"eta",0.357101,false},
-    {"k",259.995,false},
-    {"gammad",0.000372472,true},
-    {"gammar",10.9834,true},
-};
-
-#endif // paperv2
-
-#ifdef PAPERV1
-#define SHIFT
-#define FACTORPAQ
-#define MU
-#define FAMILYCONTACTS
-//#define BETAADD
-#define ARATE
-#define ASYMP
-//#define CONSTIOTA
-//#define PIECEWISEIOTA
-//#define SETA
-//#define PIECEWISEETA
-#define GAMMAS
-
-#define PIECEWISETHETA
-//#define SCURVE
-
-//#define K
-//#define K2
-
-static constexpr unsigned horizon=120;
-static constexpr unsigned dusekpenalty=5;
-
-
-struct paraminit { string n; double v; bool filtered; };
-
-//filter[egammad]=filter[egammar]=true; //=filter[emu]=true;
+vector<unsigned> thetafrns({20,40,70,horizon-45,horizon-30,horizon});
 
 
 
 const vector<paraminit> initvals = {
-    {"marchimportrate",3.80019,false},
-    {"beta",2.32485,false},
-    {"shift",4.32206,false},
-    {"mu",0.0010861,false},
-    {"fcontacts",0.299893,false},
-    {"omega0",0.747405,false},
-    {"omega1",1,false},
-    {"rho0",0.0155176,false},
-    {"rho1",0.00167533,false},
-    {"rho2",0.00548675,false},
-    {"rho3",0.034115,false},
-    {"rho4",0.0346221,false},
-    {"rho5",0.119879,false},
-    {"rho6",0.14895,false},
-    {"eta0",0.086352,false},
-    {"eta1",0.099881,false},
-    {"eta2",0.0088856,false},
-    {"eta3",0.0243237,false},
-    {"eta4",0.0229531,false},
-    {"eta5",0.00293755,false},
-    {"eta6",0.0544749,false},
-    {"gammad",0.000874336,true},
-    {"gammar",4.13285,true}
+    {"marchimportrate",3.01214,false},
+    {"beta",4.3656,false},
+    {"phi",0.132065,false},
+    {"asymprate",0.799954,false},
+    {"mu",0.00300784,false},
+    {"omega0",0.641881,false},
+    {"omegas",0.911567,false},
+    {"omegag",0.974584,false},
+    {"rhoinit",3.6157e-05,false},
+    {"rhosize",0.0209727,false},
+    {"rhomid",53.4337,false},
+    {"rhok",0.0845581,false},
+    {"eta",0.394282,false},
+    {"k",240.14,false},
+    {"k2",661.061,false},
+    {"gammad",0.00122961,false},
+    {"gammar",20.3254,false},
+
 };
 
-//ll/n=-10.7555
-//additional contrast = -31.1447
-//Duseks survey = 15564.1
 
-//ll/n=-10.7892
-//additional contrast = -27.729
-//Duseks survey = 17809.7
 
-#endif // PAPERV1
+
+
+
 
 enum eparams {
     emarchimportrate,
@@ -280,6 +165,47 @@ enum eseirstates {eseire,
 
                   eseirnumstates
                  };
+
+class pwfn
+{
+    vector<unsigned> frs;
+    vector<unsigned> trsf;
+public:
+    pwfn(const vector<unsigned>& frontiers, int numpars=-1)
+        : frs(frontiers),
+          trsf(frs.size() == 0 ? 1 : frontiers[frontiers.size()-1]+1)
+    {
+        assert(numpars == -1 || frontiers.size()+1 == numpars);
+        unsigned j=0;
+        unsigned i=0;
+        for(; i<frontiers.size(); i++)
+        {
+            assert(frontiers[i] > j);
+            for(;j<frontiers[i];j++)
+                trsf[j]=i;
+        }
+        trsf[j] = i;
+    }
+    double operator () (unsigned t, const vector<double>& p, unsigned offset=0)
+    {
+        unsigned numfrs = trsf[trsf.size()-1];
+        assert(offset + numfrs < p.size());
+
+        if(t>=trsf.size())
+            return p[offset+numfrs];
+        unsigned i1 = trsf[t];
+        double t1 = i1 ? frs[i1-1] : 0;
+        double t2 = frs[i1];
+        double w = (t2 - t) / (t2-t1);
+        return p[offset + i1] * w + p[offset + i1+1] * (1-w);
+    }
+};
+
+
+
+#ifdef PIECEWISETHETA
+    pwfn thetafn(thetafrns, elastrho-erho0+1);
+#endif
 
 inline string seirstatelabel(unsigned i)
 {
@@ -608,6 +534,7 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
     {
         double rh;
 #ifdef PIECEWISEETA
+/*
         unsigned numetas = elasteta + 1 - eeta0;
         unsigned period = horizon / numetas;
         unsigned i = min(t / period, numetas - 1);
@@ -618,6 +545,8 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
             double w = (t % period) / static_cast<double>(period);
             rh = (1-w) * params[eeta0+i] + w * params[eeta0+i+1];
         }
+*/
+        rh = thetafn(t,params, eeta0);
 #else // PIECEWISEETA
 #ifdef SETA
         double eta = params[eetamin]
@@ -635,7 +564,7 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
     {
         double rh;
 #ifdef PIECEWISETHETA
-        unsigned numrhos = elastrho + 1 - erho0;
+/*        unsigned numrhos = elastrho + 1 - erho0;
         unsigned period = horizon / numrhos;
         unsigned i = min(t / period ,numrhos - 1);
         if(i == numrhos - 1)
@@ -644,7 +573,8 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
         {
             double w = (t % period) / static_cast<double>(period);
             rh = (1-w) * params[erho0+i] + w * params[erho0+i+1];
-        }
+        }*/
+        rh = thetafn(t,params, erho0);
 #else
 #ifdef SCURVE
        rh = params[erhoinit]+params[erhosize] / (1.0 + exp(-params[erhok] * (t -params[erhomid] )));
@@ -726,7 +656,7 @@ void seir()
     fillsi(si,c,0);
     assert(horizon <= si.y.size());
     si.y.resize(horizon);
-    si.z.resize(min(40UL+horizon,si.z.size()));
+    si.z.resize(min(100UL+horizon,si.z.size()));
 
     auto siest = si;
 
@@ -830,7 +760,7 @@ void seir()
 #endif
 #endif
 #ifdef K2
-               paraminfo("k2", 50, 0, 325),
+               paraminfo("k2", 500, 0, 2000),
 #endif
 
 #ifdef GAMMAS
@@ -866,7 +796,7 @@ assert(params.size()==enumparams);
 
     if(1)
     {
-        if(0)
+        if(1)
         {
             uncertain res;
             cout << "ll= " << s.estimate(params,siest,res,filter) << endl;

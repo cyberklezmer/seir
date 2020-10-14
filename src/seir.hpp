@@ -413,7 +413,7 @@ public:
         o.set_upper_bounds(upper);
 
         o.set_ftol_rel(1e-7);
-        o.set_maxtime(3*60);
+        o.set_maxtime(5*60);
 
         o.set_max_objective(llobj, this);
 

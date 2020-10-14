@@ -357,42 +357,51 @@ theorems-ams
 Model G – a SEIR filter
 \end_layout
 
-\begin_layout Itemize
-Estimating parameters in stochastic compartmental models using Markov chain
- methods GAVIN J GIBSON (continuous Markov chain, Bayesian inference) 
-\end_layout
-
 \begin_layout Standard
 Assume an infinite population, each individual of which finds himself in
- one of the states 
+ one of the compartments 
 \begin_inset Formula $S_{0},\dots,S_{k}$
 \end_inset
 
-, For any 
+.
+ Let 
+\begin_inset Formula $I_{t}\in\N_{0}^{k},$
+\end_inset
+
+ 
+\begin_inset Formula $t\in\N_{0}^{+},$
+\end_inset
+
+ be the external inflow (import) of individuals into the compartments and
+ let 
+\begin_inset Formula $Z_{t}\in\R^{n},$
+\end_inset
+
+ 
+\begin_inset Formula $t\in\N_{0}^{+}$
+\end_inset
+
+, be an observed exogenous process.
+\end_layout
+
+\begin_layout Standard
+For any 
 \begin_inset Formula $t\in\N_{0}$
 \end_inset
 
 , let 
-\begin_inset Formula $X_{t}=(X_{t}^{1},\dots,X_{t}^{k})\in\N_{0}^{k}$
+\begin_inset Formula $X_{t}=(X_{t}^{1},\dots,X_{t}^{k})\in\N_{0}^{k},t\in\N_{0},$
 \end_inset
 
- be a possibly hidden stochastic process amounts of individuals finding
- themselves in states (compartments) 
-\begin_inset Formula $\{1,\dots,k\}$
+ be a possibly hidden stochastic process of the sizes of compartments 
+\begin_inset Formula $1,\dots,k$
 \end_inset
 
- at time 
-\begin_inset Formula $t$
-\end_inset
-
- such that 
-\begin_inset Formula $\|X_{t}\|<\infty$
-\end_inset
-
- and let 
+.
+ Let 
 \begin_inset Formula 
 \[
-Y_{t}=FX_{t}+\epsilon_{t},\qquad t\geq0,
+Y_{t}=FX_{t}+\epsilon_{t},\qquad t\in\N_{0},
 \]
 
 \end_inset
@@ -414,15 +423,6 @@ be a process of observations where
 \end_inset
 
  is a random vector.
- Finally, let 
-\begin_inset Formula $Z_{t}\in\R^{n},$
-\end_inset
-
- 
-\begin_inset Formula $t\geq0$
-\end_inset
-
-, is a observed exogenous process.
  Denote 
 \begin_inset Formula $\F_{t}$
 \end_inset
@@ -432,14 +432,26 @@ be a process of observations where
 \end_inset
 
  the filtrations induced by 
-\begin_inset Formula $(X,Y,Z)$
+\begin_inset Formula $(X,Y,I,Z)$
 \end_inset
 
 , by 
-\begin_inset Formula $(Y,Z)$
+\begin_inset Formula $(Y,I,Z)$
 \end_inset
 
 , respectively.
+\end_layout
+
+\begin_layout Standard
+We define 
+\begin_inset Formula $X$
+\end_inset
+
+ (and consequently 
+\begin_inset Formula $Y$
+\end_inset
+
+) recursively.
 \end_layout
 
 \begin_layout Standard
@@ -448,63 +460,84 @@ Let
 \end_inset
 
  be possibly random.
- From time 
-\begin_inset Formula $t$
+ For any 
+\begin_inset Formula $t\in\N$
 \end_inset
 
- to 
-\begin_inset Formula $t+1$
+, let 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $N_{t+1}\in$
 \end_inset
 
-, 
-\begin_inset Formula $t\in\N_{0}$
-\end_inset
 
- let there be inflow 
-\begin_inset Formula $I_{t}\in\G_{t}$
-\end_inset
-
- of individuals into the states 
-\begin_inset Formula $\{1,\dots,k\}$
-\end_inset
-
- and let there be conditionally Poisson inflows from 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ from 
 \begin_inset Formula $S_{0}$
 \end_inset
 
- into each of the remaining states having intensities 
-\begin_inset Formula $J_{t}X_{t}$
+ into each of the remaining compartments be 
+\begin_inset Formula $N_{t+1}|\F_{t}\text{\ensuremath{\sim\Po(J_{t}X_{t})}}$
 \end_inset
 
-, where 
-\begin_inset Formula $J_{t}=(\iota_{t}^{ij})_{i,j}\in\G_{t}$
+ where 
+\begin_inset Formula $J_{t}=(\iota_{t}^{ij})_{1\leq i,j\leq k}\in\G_{t}$
 \end_inset
 
- and let each individual change her state according to transition matrix
- 
-\begin_inset Formula $P_{t}=(p_{t}^{ij})_{i,j}\in\G_{t}$
+ and, for any vector 
+\begin_inset Formula $x$
 \end_inset
 
-.
- Let all the inflows and the inter-state jumps be conditionally independent
- given 
-\begin_inset Formula $\F_{t}$
+, 
+\begin_inset Formula $\Po(x)$
 \end_inset
 
-
-\begin_inset Formula $.$
+ stands for a vector of independent Poisson variables with corresponding
+ intensities.
+ Let each individual change her state according to transition matrix 
+\begin_inset Formula $P_{t}=(p_{t}^{ij})_{1\leq i,j\leq k}\in\G_{t}$
 \end_inset
 
- This implies that
-\begin_inset Formula 
-\[
-\left.X_{t+1}\right|\F_{t}=\bigcirc_{1\leq i\leq k}\mathrm{Mult}(X_{t}^{i},P_{t}^{i})\circ\Po(J_{t}X_{t})\circ\delta(I_{t}),
-\]
-
+ and let these individual processes be conditionally independent given 
+\begin_inset Formula $\F_{t},$
 \end_inset
 
-Here, 
-\begin_inset Formula $\circ$
+which implies that the compartment vector 
+\begin_inset Formula $M_{t+1}$
+\end_inset
+
+ of those, who were previously in compartments 
+\begin_inset Formula $\{1,\dots,t\},$
+\end_inset
+
+ satisfies 
+\begin_inset Formula $M_{t+1}|\F_{t}\sim\bigcirc_{1\leq i\leq k}\mathrm{Mult}(X_{t}^{i},P_{t}^{i})$
+\end_inset
+
+ where 
+\begin_inset Formula $\bigcirc$
 \end_inset
 
  stands for convolution, 
@@ -516,39 +549,93 @@ Here,
 \end_inset
 
 -th column of 
-\begin_inset Formula $P_{t};$
+\begin_inset Formula $P_{t},$
 \end_inset
 
- and, for any vector, 
-\begin_inset Formula $\Po(x)$
+ and 
+\begin_inset Formula $\mathrm{Mult}$
 \end_inset
 
- is a vector of independent Poisson variables with corresponding intensities.
- Further we assume that 
-\begin_inset Formula $X_{t+1}\indep{_{\F_{t}}\epsilon_{t+1}}$
-\end_inset
-
- with 
+ stands for the multinomial distribution.
+ Let 
 \begin_inset Formula 
 \[
-\E(\epsilon_{t+1}|\F_{t})=0,\qquad\var(\epsilon_{t+1}|\F_{t})=\mathrm{diag(}\Gamma_{t}X_{t}),
+\E(\epsilon_{t+1}|\F_{t})=0,\qquad\var(\epsilon_{t+1}|\F_{t})=\mathrm{diag(}\Gamma_{t}X_{t})
 \]
 
 \end_inset
 
-where 
-\begin_inset Formula $\Gamma_{t}\in\G_{t}$
+and assume that 
+\begin_inset Formula $N_{t+1},M_{t+1}$
 \end_inset
 
- is a 
-\begin_inset Formula $m\times k$
+ and 
+\begin_inset Formula $\epsilon_{t+1}$
 \end_inset
 
- matrix.
+are mutually conditionally independent given 
+\begin_inset Formula $\F_{t}$
+\end_inset
+
+.
+ Finally, put 
+\begin_inset Formula 
+\[
+X_{t+1}=I_{t}+M_{t+1}+N_{t+1}
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-By probability calculus we get that 
+and let 
+\begin_inset Formula 
+\[
+Y_{t}=FX_{t}+\epsilon_{t},\qquad t\in\N_{0},
+\]
+
+\end_inset
+
+be a process of observations where 
+\begin_inset Formula $F$
+\end_inset
+
+ is a deterministic 
+\begin_inset Formula $m\times k$
+\end_inset
+
+ matrix with rank 
+\begin_inset Formula $m$
+\end_inset
+
+ and 
+\begin_inset Formula $\epsilon_{t}$
+\end_inset
+
+ is a random vector.
+ Denote 
+\begin_inset Formula $\F_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $\G_{t}$
+\end_inset
+
+ the filtrations induced by 
+\begin_inset Formula $(X,Y,I,Z)$
+\end_inset
+
+, by 
+\begin_inset Formula $(Y,I,Z)$
+\end_inset
+
+, respectively.
+\end_layout
+
+\begin_layout Standard
+By probability calculus, we get that 
 \begin_inset Formula 
 \begin{equation}
 \E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]=\left[{E\atop F}\right](T_{t}X_{t}+I_{t}),\qquad\label{eq:moments}
@@ -565,16 +652,35 @@ By probability calculus we get that
 \end_inset
 
 where 
+\begin_inset Formula $E$
+\end_inset
+
+ is the identity matrix and
 \begin_inset Formula 
-\begin{multline*}
-T_{t}\defined P_{t}+J_{t},\\
-\Lambda_{t}(X_{t})\defined\sum_{i=1}^{k}\mathrm{[diag}(P_{t}^{i})-P_{t}^{i}(P_{t}^{i}){}^{T}]X_{t}^{i}+\mathrm{diag}(J_{t}X_{t})=\sum_{i=1}^{k}\Phi_{t,i}X_{t}^{i}\\
-\Phi_{t,i}\defined\mathrm{diag}(J_{t}^{i}+P_{t}^{i})-P_{t}^{i}(P_{t}^{i})^{T}.
-\end{multline*}
+\[
+T_{t}\defined P_{t}+J_{t},\qquad\Lambda_{t}(X_{t})\defined\sum_{i=1}^{k}\mathrm{[diag}(P_{t}^{i})-P_{t}^{i}(P_{t}^{i}){}^{T}]X_{t}^{i}+\mathrm{diag}(J_{t}X_{t})
+\]
 
 \end_inset
 
+Note that 
+\begin_inset Formula 
+\[
+\Lambda_{t}(x)=\sum_{i=1}^{k}\Phi_{t,i}x^{i},\qquad\Phi_{t,i}\defined\mathrm{diag}(J_{t}^{i}+P_{t}^{i})-P_{t}^{i}(P_{t}^{i})^{T}
+\]
 
+\end_inset
+
+i.e.
+ 
+\begin_inset Formula $\Lambda_{t}$
+\end_inset
+
+ is linear in 
+\begin_inset Formula $x$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Section*
@@ -582,10 +688,35 @@ Reproduction number
 \end_layout
 
 \begin_layout Standard
-Let 
-\begin_inset Formula $\text{\ensuremath{m}}$
+The subset of states 
+\begin_inset Formula $F=\{s_{1},\dots,s_{m}\}$
 \end_inset
 
+ is called 
+\emph on
+self-sufficient
+\emph default
+, for any 
+\begin_inset Formula $t$
+\end_inset
+
+ and any 
+\begin_inset Formula $1\leq i\leq m$
+\end_inset
+
+, both the 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+-th row and the 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+-th column of 
+\begin_inset Formula $J_{t}$
+\end_inset
+
+ are identically zero (i.e.
  
 \family roman
 \series medium
@@ -599,57 +730,44 @@ Let
 \uwave off
 \noun off
 \color none
-be the number of (pre-)infection states, i.e.
- such that, for any 
-\begin_inset Formula $t$
+the compartments does not increase through direct infection and the infection
+ does not depend on the compartment), and 
+\begin_inset Formula $s_{i}$
 \end_inset
 
-, all non-zero elements of 
-\begin_inset Formula $J_{t}$
+ is not accessible outside 
+\begin_inset Formula $F$
 \end_inset
 
- find themselves in 
-\begin_inset Formula $K_{t}$
+ in 
+\begin_inset Formula $P_{t}.$
 \end_inset
 
- is the restriction of 
-\begin_inset Formula $J_{t}$
+ 
+\end_layout
+
+\begin_layout Standard
+From now, assume that 
+\begin_inset Formula $\{1,\dots,m\}$
 \end_inset
 
- to 
-\begin_inset Formula $(1,\dots,m)\times(1,\dots,m)$
+ are self-sufficient for some 
+\begin_inset Formula $m\in\N_{0}$
 \end_inset
 
- (the compartments 
-\begin_inset Formula $>m$
-\end_inset
-
- do not increase through direct infection and the infection does not depend
- on the compartments 
-\begin_inset Formula $>m$
-\end_inset
-
-) and that 
-\begin_inset Formula $p_{t}^{i,j}\equiv0$
-\end_inset
-
- whenever 
-\begin_inset Formula $i\leq m$
-\end_inset
-
- and 
-\begin_inset Formula $j>m$
-\end_inset
-
- (individuals do not transit from states 
-\begin_inset Formula $>m$
-\end_inset
-
- into states 
-\begin_inset Formula $\leq m$
-\end_inset
-
-).
+,
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
  
 \family default
 \series default
@@ -682,7 +800,7 @@ Denote
  follows its own version of our model, namely 
 \begin_inset Formula 
 \[
-\left.\xi_{t+1}\right|\F_{t}=\bigcirc_{1\leq i\leq k}\mathrm{Mult}(\xi_{t}^{i},Q_{t}^{i})\circ\Po(K_{t}\xi_{t})\circ\delta(H_{t}),
+\left.\xi_{t+1}\right|\F_{t}=\bigcirc_{1\leq i\leq m}\mathrm{Mult}(\xi_{t}^{i},Q_{t}^{i})\circ\Po(K_{t}\xi_{t})\circ\delta(H_{t}),
 \]
 
 \end_inset
@@ -691,11 +809,19 @@ where
 \begin_inset Formula $Q_{t}$
 \end_inset
 
- is the restriction of 
+ and 
+\begin_inset Formula $K_{t}$
+\end_inset
+
+ are the restrictions of 
 \begin_inset Formula $P_{t}$
 \end_inset
 
- to 
+, 
+\begin_inset Formula $J_{t}$
+\end_inset
+
+, respectively, to 
 \begin_inset Formula $(1,\dots,m)\times(1,\dots,m)$
 \end_inset
 
@@ -729,10 +855,10 @@ The reproduction number
 \begin_inset Formula $t,$
 \end_inset
 
- at computed as 
+ is computed as 
 \begin_inset Formula 
 \[
-r_{t}\defined\sum_{\tau=t}^{\infty}\mathbf{1}^{T}\E(K_{\tau}Q_{t,\tau-1}N_{t}|\F_{t-1})=K_{t}N_{t}+\sum_{\tau=t+1}^{\infty}\mathbf{1}^{T}\E(K_{\tau}Q_{t+1,\tau-1}|\F_{t-1})Q_{t}N_{t},\qquad N_{t}=\nu(K_{t-1}\xi_{t-1}+H_{t-1})
+r_{t}\defined\sum_{\tau=t}^{\infty}\mathbf{1}^{T}\E(K_{\tau}Q_{t,\tau-1}\pi_{t}|\F_{t-1}),\qquad\pi_{t}=\E\left\{ \left.\nu\left(O_{t}+H_{t-1}\right)\right|\F_{t-1}\right\} 
 \]
 
 \end_inset
@@ -741,18 +867,45 @@ where
 \begin_inset Formula $\nu$
 \end_inset
 
- stands for normalization.
- To understand the formula, note that 
+ stands for unit normalization, 
+\begin_inset Formula $O_{t}$
+\end_inset
+
+ is the restriction of 
 \begin_inset Formula $N_{t}$
 \end_inset
 
- is the conditional distribution of the state in which the newcomers find
- himself at 
+ to 
+\begin_inset Formula $m$
+\end_inset
+
+ components and, for any matrix process 
+\begin_inset Formula $A_{t}$
+\end_inset
+
+, 
+\begin_inset Formula $A_{t,s}\defined\prod_{\theta=t}^{s}A_{\theta}$
+\end_inset
+
+ with 
+\begin_inset Formula $M_{t,t-1}=E$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+To understand the formula, note that 
+\begin_inset Formula $\pi_{t}$
+\end_inset
+
+ is the conditional distribution of the state in which a randomly chosen
+ newcomer finds himself at 
 \begin_inset Formula $t$
 \end_inset
 
 .
- Further, for each newcomer at 
+ For each newcomer at 
 \begin_inset Formula $t$
 \end_inset
 
@@ -760,8 +913,8 @@ where
 \begin_inset Formula $t+1$
 \end_inset
 
- is given by the sum of components of 
-\begin_inset Formula $K_{t}N_{t}$
+ is given by the sum of the components of 
+\begin_inset Formula $K_{t}\pi_{t}$
 \end_inset
 
 , the number infected at 
@@ -769,7 +922,7 @@ where
 \end_inset
 
  is given by 
-\begin_inset Formula $K_{t+1}Q_{t}N_{t}$
+\begin_inset Formula $K_{t+1}Q_{t}\pi_{t}$
 \end_inset
 
  etc.
@@ -784,16 +937,12 @@ In practice, not knowing
 , the reproduction number will be estimated by 
 \begin_inset Formula 
 \[
-\tilde{r}_{t}\defined\sum_{\tau=t}^{\infty}\mathbf{1}^{T}\E(K_{\tau}Q_{t,\tau-1}N_{t}|\G_{t-1})
+\tilde{r}_{t}\defined\sum_{\tau=t}^{\infty}\mathbf{1}^{T}\E(K_{\tau}Q_{t,\tau-1}\pi_{t}|\G_{t-1})
 \]
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Standard
-In the special case of 
+and, in the special case of 
 \begin_inset Formula $K_{\tau}\equiv K,$
 \end_inset
 
@@ -821,10 +970,10 @@ In the special case of
 \begin_inset Formula $\rho$
 \end_inset
 
- is the spectral radius , the formula simplifies to
+ is the spectral radius, the formula simplifies to
 \begin_inset Formula 
 \[
-\tilde{r}_{t}=\mathbf{1}^{T}K\left(\sum_{i=0}^{\infty}Q^{i}\right)\E(N_{t}|\G_{t-1})=\mathbf{1}^{T}K(E-Q)^{-1}\E(N_{t}|\G_{t-1})
+\tilde{r}_{t}=\mathbf{1}^{T}K\left(\sum_{i=0}^{\infty}Q^{i}\right)\E(\pi_{t}|\G_{t-1})=\mathbf{1}^{T}K(E-Q)^{-1}\E(\pi_{t}|\G_{t-1})
 \]
 
 \end_inset
@@ -834,18 +983,17 @@ In the special case of
 
 \begin_layout Standard
 Note and that there could be difficulties computing 
-\begin_inset Formula $N_{t}$
+\begin_inset Formula $\pi_{t}$
 \end_inset
 
  even in this special case – yet there is a straightforward estimate 
-\begin_inset Formula $N_{t}\doteq\nu(J_{t-1}\hat{X}_{t-1|t-1}+I_{t-1})$
+\begin_inset Formula $\pi_{t}\doteq\nu(K_{t-1}\hat{X}_{t-1|t-1}+H_{t-1})$
 \end_inset
 
 , this estimator is generally not unbiased due to the normalization.
- This problem, however, vanishes in the case that imports and new infections
- all fall into a single state (typically called exposed), in which case
- 
-\begin_inset Formula $N_{t}=(1,0,\dots,0)^{T}$
+ This problem, however, vanishes if imports and new infections all fall
+ into a single state (typically called exposed), in which case 
+\begin_inset Formula $\pi_{t}=(1,0,\dots,0)^{T}$
 \end_inset
 
 .
@@ -869,8 +1017,8 @@ Denote
 \begin_inset Formula $U_{t}\leq S$
 \end_inset
 
- component-wise where S is deterministic with 
-\begin_inset Formula $\sigma\defined\rho(S)<1$
+ component-wise, where S is deterministic with 
+\begin_inset Formula $\sigma\defined\rho(S)<1,$
 \end_inset
 
  and if 
@@ -927,7 +1075,7 @@ Denote
 \end_inset
 
  such that 
-\begin_inset Formula $s_{0}<1$
+\begin_inset Formula $\sigma<1$
 \end_inset
 
  then 
@@ -1108,7 +1256,7 @@ Say that
 \begin_inset Formula $k=5$
 \end_inset
 
- and label the stated the states 
+ and agree to label the stated the states 
 \begin_inset Formula $E,I_{a},I_{p},I_{s},R$
 \end_inset
 
@@ -1123,7 +1271,7 @@ P_{t}=\left[\begin{array}{ccccc}
 0 & 0 & \varsigma & 1-\varrho_{s}-\eta-\theta_{t} & 0\\
 \theta_{t}+\varrho_{E} & \theta_{t}+\varrho_{a} & \theta_{t}+\varrho_{p} & \theta_{t}+\eta+\varrho_{s} & 1
 \end{array}\right],\qquad J_{t}=\left[\begin{array}{ccccc}
-0 & \iota_{t} & \iota_{t} & \iota_{t} & 0\\
+0 & \gamma_{t} & \gamma_{t} & \gamma_{t} & 0\\
 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0\\
 0 & 0 & 0 & 0 & 0\\
@@ -1140,7 +1288,7 @@ Clearly, we can put
  having 
 \begin_inset Formula 
 \[
-U_{t}=B(\iota_{t})-\theta_{t}E,\qquad B(\gamma)=\left[\begin{array}{cccc}
+U_{t}=B(\gamma_{t})-\theta_{t}E,\qquad B(\gamma)=\left[\begin{array}{cccc}
 1-\sigma-\varrho_{E} & \gamma & \gamma & \gamma\iota\\
 \alpha\sigma & 1-\varrho_{a} & 0 & 0\\
 (1-\alpha)\sigma & 0 & 1-\varsigma-\varrho_{p} & 0\\
@@ -1151,7 +1299,7 @@ U_{t}=B(\iota_{t})-\theta_{t}E,\qquad B(\gamma)=\left[\begin{array}{cccc}
 \end_inset
 
 By the well known rule, we have 
-\begin_inset Formula $\rho(U_{t})=\rho(B(\iota_{t}))-\theta_{t}$
+\begin_inset Formula $\rho(U_{t})=\rho(B(\gamma_{t}))-\theta_{t}$
 \end_inset
 
 .
@@ -1161,7 +1309,7 @@ By the well known rule, we have
 
 , there are two ways to decrease the spectral radius: to decrease the infection
  rate 
-\begin_inset Formula $\iota_{t}$
+\begin_inset Formula $\gamma_{t}$
 \end_inset
 
  (typically by some counter-epidemic measures) or to increase the isolation
@@ -1184,10 +1332,10 @@ target
 \end_inset
 
 all the combinations of 
-\begin_inset Formula $\iota$
+\begin_inset Formula $\gamma$
 \end_inset
 
- and 
+and 
 \begin_inset Formula $\theta(\iota)$
 \end_inset
 
@@ -1211,9 +1359,210 @@ marginal rate of substitiution
 \begin_inset Formula $\theta(\iota)'=-g'(\iota)$
 \end_inset
 
- saying, how much we have to increase the isolation speed when wanting to
- release the restrictions.
+ saying, how much we have to increase the isolation speed when releasing
+ the restrictions.
  
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+Assume the fraction 
+\begin_inset Formula $\nu$
+\end_inset
+
+ of the population is non-compliant, which means that, once a restriction
+ on social contacts is imposed, the non-compliant part applies it only partially.
+ In particular, we assume that, without restrictions, the contacts proportion
+ of contacts of each individual towards the parts is proportional to their
+ sizes, i.e.
+ each individual, compliant or not, has, up to a constant, 
+\begin_inset Formula $(1-\nu)$
+\end_inset
+
+ contacts with the compliant individuals and 
+\begin_inset Formula $\nu$
+\end_inset
+
+ contacts with the non-compliant ones , while, given a restriction, the
+ compliant individuals restrict their opportunities to contacts by 
+\begin_inset Formula $\phi$
+\end_inset
+
+ while the non-compliant ones only to 
+\begin_inset Formula $f(\phi)>\phi$
+\end_inset
+
+ .
+ As a result, the compliant ones will have, up to a constant, 
+\begin_inset Formula $\phi^{2}(1-\nu)$
+\end_inset
+
+ contacts with the compliant ones, 
+\begin_inset Formula $\phi f(\phi)\nu$
+\end_inset
+
+ contacts with the non-compliant ones, while the non-compliant will have
+ 
+\begin_inset Formula $\phi f(\phi)(1-\nu)$
+\end_inset
+
+ and 
+\begin_inset Formula $f(\phi)^{2}\nu$
+\end_inset
+
+ contacts with the compliant, non-compliant, respectively.
+ 
+\end_layout
+
+\begin_layout Example
+Assuming a simple model with compartments 
+\begin_inset Formula $I_{c}$
+\end_inset
+
+ - infected compliant, 
+\begin_inset Formula $I_{n}$
+\end_inset
+
+ - infected non-compliant, and 
+\begin_inset Formula $R$
+\end_inset
+
+ - removed, with identical medical parameters for both the compartments,
+ this gives 
+\begin_inset Formula 
+\[
+P_{t}=\left[\begin{array}{ccc}
+1-\varrho & 0 & 0\\
+0 & 1-\varrho & 0\\
+\varrho & \varrho & 1
+\end{array}\right],\qquad J_{t}=\left[\begin{array}{ccc}
+\beta\phi^{2}(1-\nu) & \,\beta\phi f(\phi)\nu\, & 0\\
+\beta\phi f(\phi)(1-\nu) & \,\beta f(\phi)^{2}\nu\, & 0\\
+0 & 0 & 1
+\end{array}\right]
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\varrho$
+\end_inset
+
+ is a removal rate (perhaps consisting of an artificial and a natural part)
+ and 
+\begin_inset Formula $\beta$
+\end_inset
+
+ is a constant.
+ This gives 
+\begin_inset Formula 
+\[
+U_{t}=\beta C+(1-\varrho)E,\qquad C=\left[\begin{array}{cc}
+\phi^{2}(1-\nu) & \,\phi f(\phi)\nu\\
+\phi f(\phi)(1-\nu) & \,f(\phi)^{2}\nu
+\end{array}\right]
+\]
+
+\end_inset
+
+with 
+\begin_inset Formula 
+\[
+\varrho(U_{t})=\beta\rho(C)+(1-\varrho),
+\]
+
+\end_inset
+
+where the characteristic polynomial of 
+\begin_inset Formula $C$
+\end_inset
+
+ is 
+\begin_inset Formula 
+\[
+\lambda^{2}-\lambda g,\qquad g=g(\phi,\nu)=\phi^{2}(1-\nu)+f(\phi)^{2}\nu
+\]
+
+\end_inset
+
+giving 
+\begin_inset Formula $\rho(C)=g.$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Example
+Now say that our goal is to decrease 
+\begin_inset Formula $\rho(U_{t})$
+\end_inset
+
+ to 
+\begin_inset Formula $r$
+\end_inset
+
+ by finding appropriate 
+\begin_inset Formula $\phi(\nu)$
+\end_inset
+
+, i.e.
+ we want 
+\begin_inset Formula 
+\[
+\beta[\phi^{2}(\nu)(1-\nu)+f(\phi(\nu))^{2}\nu]+(1-\varrho)=r
+\]
+
+\end_inset
+
+Given the absolute compliance, clearly 
+\begin_inset Formula $\phi^{2}=\frac{r-(1-\rho)}{\beta}$
+\end_inset
+
+.
+ By the Implicit function theorem, we have 
+\begin_inset Formula 
+\[
+\frac{\partial}{\partial\nu}\phi=\frac{f(\phi(\nu))^{2}-\phi(\nu)^{2}}{2\phi(\nu)(1-\nu)+2f(\phi(\nu))f'(\phi(\nu))\nu}.
+\]
+
+\end_inset
+
+Note that the derivative does not depend either on 
+\begin_inset Formula $r$
+\end_inset
+
+ or on 
+\begin_inset Formula $\varrho$
+\end_inset
+
+.
+ By imposing 
+\begin_inset Formula $\nu=0$
+\end_inset
+
+, we get the rate of necessary adjustment of 
+\begin_inset Formula $\phi$
+\end_inset
+
+ for small portions of 
+\begin_inset Formula $\nu:$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\phi(\nu)\doteq\phi(0)+a\nu,\qquad a=\frac{f(\phi(0))^{2}-\phi^{2}(0)}{2\phi(0)}.
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -1254,16 +1603,7 @@ For any stochastic process
 
 \end_inset
 
-where 
-\begin_inset Formula $T_{t,s}\defined\prod_{\theta=t}^{s}T_{\theta}$
-\end_inset
-
- with 
-\begin_inset Formula $T_{t,t-1}=E$
-\end_inset
-
-.
- Further,
+Further,
 \begin_inset Formula 
 \begin{multline*}
 W_{s|t}\defined\var\left(\left.X_{s}\right|\G_{t}\right)=\var\left(\left.\E\left(\left.X_{s}\right|\F_{s-1}\right)\right|\G_{t}\right)+\E\left(\left.\var\left(\left.X_{s}\right|\F_{s-1}\right)\right|\G_{t}\right)\\
@@ -1395,7 +1735,40 @@ Both these estimators are consistent and asymptotically normal under some
 \end_layout
 
 \begin_layout Standard
-TBD proof not valide
+TBD proof not valid
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/home/martin/Documents/s/smid"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Estimating parameters in stochastic compartmental models using Markov chain
+ methods GAVIN J GIBSON (continuous Markov chain, Bayesian inference) 
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{document}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection*
@@ -1424,19 +1797,6 @@ A question arises what
 \end_inset
 
 .
- 
-\end_layout
-
-\begin_layout Proposition*
-If 
-\begin_inset Formula $\rho(Q_{t})<1-\epsilon$
-\end_inset
-
- then 
-\begin_inset Formula $Z_{t}\rightarrow0$
-\end_inset
-
- in probability.
  
 \end_layout
 
@@ -1486,7 +1846,7 @@ p^{Ea} & p^{aa}-\lambda & 0\\
 p^{En} & 0 & 0
 \end{array}\right|\\
 =(p^{E}-\lambda)(p^{nn}-\lambda)(p^{aa}-\lambda)(p^{ss}-\lambda)\\
--\iota p^{Ea}(p^{nn}-\lambda)(p^{ss}-\lambda)+\iota(p^{nn}-\lambda)p^{Ea}p^{as}-\iota p^{En}(p^{ss}-\lambda)(p^{aa}-\lambda)
+-\gamma(p^{nn}-\lambda)(p^{ss}-\lambda)+\iota(p^{nn}-\lambda)p^{Ea}p^{as}-\gamma(p^{ss}-\lambda)(p^{aa}-\lambda)
 \end{multline*}
 
 \end_inset
@@ -1502,7 +1862,7 @@ p^{En} & 0 & 0
 
 \begin_inset Formula 
 \[
-\frac{\partial f}{\partial p^{ss}}=(p^{E}-\lambda)(p^{nn}-\lambda)(p^{aa}-\lambda)-\iota p^{Ea}(p^{nn}-\lambda)-\iota p^{En}(p^{aa}-\lambda)
+\frac{\partial f}{\partial p^{ss}}=(p^{E}-\lambda)(p^{nn}-\lambda)(p^{aa}-\lambda)-\gamma(p^{nn}-\lambda)-\gamma(p^{aa}-\lambda)
 \]
 
 \end_inset
@@ -2559,7 +2919,7 @@ A_{t} & =(1-\iota-\pi_{A}-\rho_{A})A_{t-1}+\alpha E_{t-1}+\eta_{t,A}
 
 \begin_inset Formula 
 \begin{align*}
-I_{t} & =(\pi_{A}+\rho_{A})I_{t-1}+\iota A_{t-1}+\eta_{t,I}
+I_{t} & =(\pi_{A}+\rho_{A})I_{t-1}+\gamma+\eta_{t,I}
 \end{align*}
 
 \end_inset
@@ -2786,7 +3146,7 @@ Z_{0}=\alpha_{0},Z_{1}=\theta_{1}\alpha_{0}+\nu I_{0},Z_{2}=\theta_{2}\theta_{1}
 This gives 
 \begin_inset Formula 
 \[
-\Delta I_{t}=\iota Z_{t-1}+e_{t},\qquad e_{t}=\iota\epsilon_{t-1}+\eta_{I,t}
+\Delta I_{t}=\gamma+e_{t},\qquad e_{t}=\iota\epsilon_{t-1}+\eta_{I,t}
 \]
 
 \end_inset
@@ -3147,7 +3507,7 @@ C-\frac{1}{2w}\sum_{i=1}^{T}(Y_{t}-\Delta I_{t})^{2}
 
 \begin_inset Formula 
 \[
-Y_{t}=\iota Z_{t-1}=\iota\alpha_{0}\theta^{s\vee}\theta_{1}^{(t-1-s)\vee0}+\iota\nu\sum_{\tau=1}^{t-2}\theta^{(s-(\tau+1))\wedge0}\theta_{1}^{t-1-(s\vee\tau+1)}
+Y_{t}=\gamma=\iota\alpha_{0}\theta^{s\vee}\theta_{1}^{(t-1-s)\vee0}+\iota\nu\sum_{\tau=1}^{t-2}\theta^{(s-(\tau+1))\wedge0}\theta_{1}^{t-1-(s\vee\tau+1)}
 \]
 
 \end_inset
