@@ -114,7 +114,7 @@ public:
     struct evalresult
     {
         evalresult(unsigned t, unsigned s, const seirmodel& am) :
-            pred(s+1), est(t+1),Ts(s+1),Js(s+1),Ps(s+1),yVs(t+1),
+            pred(s+1), est(t+1),Ts(s+1),Js(s+1),Ps(s+1),
             contrasts(t,0), contrast(0), sm(am)
            { assert(s>=t); }
         vector<uncertain> pred;
@@ -122,7 +122,6 @@ public:
         vector<matrix> Ts;
         vector<matrix> Js;
         vector<matrix> Ps;
-        vector<matrix> yVs;
         vector<double> contrasts;
         double contrast;
         const seirmodel& sm;
@@ -321,7 +320,6 @@ public:
                     if(contrasts && det(Vyy) != 0)
                     {
                         double ll = contrast(o,My,Vyy,Vinv);
-                        res.yVs[i] = Vinv;
     //                    assert(ll <= 0);
                         res.contrasts[i-1] = ll;
                         res.contrast += ll;
@@ -413,7 +411,7 @@ public:
         o.set_upper_bounds(upper);
 
         o.set_ftol_rel(1e-7);
-        o.set_maxtime(5*60);
+        o.set_maxtime(10*60);
 
         o.set_max_objective(llobj, this);
 

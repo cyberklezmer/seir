@@ -13,13 +13,15 @@ struct paramval
     double v;
 };
 
-
-
-
+//#define POSITIVITY
+#define EXPAPPROX
+#define DONOTSUM
+//#define QUARANTINERATIO
+//#define VACATIONDUMMY
 #define TEMPER
 //#define SHIFT
-#define FACTORPAQ
-#define MU
+//#define FACTORPAQ
+//#define MU
 //#define FAMILYCONTACTS
 //#define BETAADD
 #define ARATE
@@ -30,48 +32,39 @@ struct paramval
 //#define PIECEWISEETA
 #define GAMMAS
 
-//#define PIECEWISETHETA
-#define SCURVE
+#define PIECEWISETHETA
+//#define SCURVE
 
-#define K
+//#define K
 //#define KACTIVE
-#define K2
+//#define K2
 
-static constexpr unsigned horizon=233;
-static constexpr unsigned dusekpenalty=30;
+static constexpr unsigned horizon=246;
+static constexpr unsigned dusekpenalty=00;
 
+vector<unsigned> thetafrns({20,60,130,160,180,220});
 
 struct paraminit { string n;	double v;	bool filtered; };
 
-vector<unsigned> thetafrns({20,40,70,horizon-45,horizon-30,horizon});
-
-
-
-const vector<paraminit> initvals = {
-    {"marchimportrate",3.01214,false},
-    {"beta",4.3656,false},
-    {"phi",0.132065,false},
-    {"asymprate",0.799954,false},
-    {"mu",0.00300784,false},
-    {"omega0",0.641881,false},
-    {"omegas",0.911567,false},
-    {"omegag",0.974584,false},
-    {"rhoinit",3.6157e-05,false},
-    {"rhosize",0.0209727,false},
-    {"rhomid",53.4337,false},
-    {"rhok",0.0845581,false},
-    {"eta",0.394282,false},
-    {"k",240.14,false},
-    {"k2",661.061,false},
-    {"gammad",0.00122961,false},
-    {"gammar",20.3254,false},
-
+vector<paraminit> initvals = {
+    {"marchimportrate",9.97028,true},
+    {"beta",0.659874,true},
+    {"phi",1.21973e-20,false},
+    {"asymprate",0.545619,true},
+    {"omega1",1.10711,false},
+    {"omega2",0.782054,false},
+    {"rho0",0.0106261,true},
+    {"rho1",0.00453292,true},
+    {"rho2",0.0195615,true},
+    {"rho3",0.0272741,true},
+    {"rho4",0.0273509,true},
+    {"rho5",0.010006,true},
+    {"rho6",0.0193714,true},
+    {"eta",0.682174,false},
+    {"gammaa",77,true},
+    {"gammas",60,true},
+    {"gammad",0,true},
 };
-
-
-
-
-
 
 
 enum eparams {
@@ -88,6 +81,10 @@ enum eparams {
     ephi,
 #endif
 
+#ifdef VACATIONDUMMY
+    evdummy,
+#endif
+
 #ifdef SHIFT
     eshift,
 #endif
@@ -97,6 +94,9 @@ enum eparams {
 
 #ifdef MU
     emu,
+#endif
+#ifdef QUARANTINERATIO
+    eqratio,
 #endif
 
 #ifdef PIECEWISEIOTA
@@ -109,7 +109,7 @@ enum eparams {
 #ifdef FAMILYCONTACTS
     efcontacts,
 #endif
-    eomega,
+    eomega1,  eomega2,
 #endif
 #endif // PIECEWISEIOTA
 
@@ -122,6 +122,9 @@ enum eparams {
 #else
         erho,
 #endif
+#endif
+#ifdef POSITIVITY
+    ethetaposcoef,eetaposcoef,
 #endif
 
 #ifdef PIECEWISEETA
@@ -148,7 +151,7 @@ enum eparams {
 #endif
 
 #ifdef GAMMAS
-               egammad, egammar,
+               egammaa,egammas,egammad,
 #endif
 
       enumparams};
@@ -207,6 +210,11 @@ public:
     pwfn thetafn(thetafrns, elastrho-erho0+1);
 #endif
 
+#ifdef PIECEWISEETA
+    pwfn etafn(thetafrns, elasteta-eeta0+1);
+#endif
+
+
 inline string seirstatelabel(unsigned i)
 {
     static const string l[] = {
@@ -246,16 +254,16 @@ public:
         eH, eHC,
 #endif
         enumobs};
-    enum eexp { eI, econtacts, emasks, ehygiene, egammared, esred, etests, edayadjust,
+    enum eexp { eI, econtacts, egammared, esred, etests, edayadjust,
                 enumexp};
 private:
     static matrix getH()
     {
         matrix ret(czseir::enumobs,eseirnumstates,0);
-#ifdef ASYMP
+#ifdef ASYMP       
         for(unsigned i=eseiriada; i<=eseirdda; i++)
             ret(eRA,i) = 1;
-        for(unsigned i=eseiriada; i<=eseirdds; i++)
+        for(unsigned i=eseirisds; i<=eseirdds; i++)
             ret(eRS,i) = 1;
         ret(eRS,eseird)=1;
 #else
@@ -404,6 +412,7 @@ public:
     matrix J(unsigned t, const vector<double>& params, const G& g) const
     {
         vector<double> iot = getiota(t,params,g);
+
         matrix ret(k(),k(),0);
         for(unsigned i=0; i<eseirnumstates; i++)
         {
@@ -421,21 +430,25 @@ public:
     virtual matrix Gamma(unsigned /* t */, const vector<double>& params, const G& ) const
     {
         double gammad;
-        double gammar;
+        double gammaa;
+        double gammas;
 #ifdef GAMMAS
+        gammaa = params[egammaa];
+        gammas = params[egammas];
         gammad = params[egammad];
-        gammar = params[egammar];
 #else
-        gammad = 0.01;
-        gammar = 0.0000001;
+        gammaa = 0;
+        gammas = 0;
+        gammad = 0;
 #endif
 
         matrix ret = matrix(m(),k(),0);
 #ifdef ASYMP
-        ret(eRS,eseiris) = gammar;
-        ret(eRA,eseire+eseiria) = gammar;
+        ret(eRS,eseiris) = gammas;
+        ret(eRA,eseire)=ret(eRA,eseiria)=
+                ret(eRA,eseirqe)=ret(eRA,eseirin)=gammaa;
 #else
-        ret(eR,eseiris) = gammar;
+        ret(eR,eseiris) = gammas;
 #endif
         ret(eD,eseirjsda) = gammad;
         ret(eD,eseirjsds) = gammad;
@@ -484,7 +497,6 @@ public:
 #else
 #ifdef FACTORPAQ
 double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]*g.z[t1][esred]);
-
                 zofunction(1.0-p[eomegas]*(w* g.z[t1][esred] + (1-w)* g.z[t2][esred]))
                 * zofunction(p[eomega0] -p[eomegag]*(w* g.z[t1][egammared] + (1-w)* g.z[t2][egammared]));
 #else
@@ -492,8 +504,20 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
 #ifdef FAMILYCONTACTS
         c -= p[efcontacts];
 #endif
-        //double preiota =c*(1-0.6*g.z[t][emasks])*(1-p[eomega] *g.z[t][ehygiene]);
-        double preiota =c*(1-p[eomega]*(w*g.z[t1][egammared]+(1-w)*g.z[t2][egammared]));
+#ifdef VACATIONDUMMY
+        if(t1>128 && t1 < 189)
+            c *= p[evdummy];
+#endif
+
+        double gammared = w*g.z[t1][egammared]+(1-w)*g.z[t2][egammared];
+#ifdef EXPAPPROX
+        double preiota =c * exp(-p[eomega1]*gammared - p[eomega2]*gammared*gammared);
+#else
+        double preiota =c * pow(1-p[eomega1]*gammared, p[eomega2]);
+#endif
+        if(preiota  > 1.5)
+            throw("preiota");
+
 #endif
 #endif // PIECEWISEIOTA
 #ifdef CONSTIOTA
@@ -501,7 +525,7 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
 #endif
         double d;
 #ifdef TEMPER
-        const unsigned t0 = -30;
+        const unsigned t0 = -24;
         d = (1 - p[ephi] * cos(-t0 / 365.0 * 2* 3.141592)) + p[ephi] * cos((at-t0) / 365.0 * 2 * 3.141592 );
 #else
         d = 1;
@@ -510,6 +534,9 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
         vector<double> iota(eseirnumstates,0);
         iota[eseiria] = iota[eseiris] = (p[ebeta]+ba)*d * preiota;
         iota[eseirin] = (p[ebeta]+ba)* d *preiota;
+        assert(iota[eseiria] >= 0);
+        assert(iota[eseirin] >= 0);
+        assert(iota[eseiris] >= 0);
         return iota;
     }
 
@@ -546,7 +573,7 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
             rh = (1-w) * params[eeta0+i] + w * params[eeta0+i+1];
         }
 */
-        rh = thetafn(t,params, eeta0);
+        rh = etafn(t,params, eeta0);
 #else // PIECEWISEETA
 #ifdef SETA
         double eta = params[eetamin]
@@ -554,14 +581,30 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
 #else
         double eta = params[eeta];
 #endif
+#ifdef DONOTSUM
+        rh = eta;
+#else
         rh = getthetaa(t,params,g) + eta;
 #endif
-        return  zofunction(rh / 0.7,0.000001) *0.7;// max(0.0, min(0.7, rh));//
+#endif
+#ifdef POSITIVITY
+      double positivity = g.z[t][etests] ? weekave(t,g) / g.z[t][etests] : 0;
+      rh *= 1-params[eetaposcoef] * positivity;
+#endif
+
+        return  zofunction(rh / 0.7,0.000001) *0.7;
     }
 
 
     virtual double getthetaa(unsigned t, const vector<double>& params, const G& g) const
     {
+        double qratio;
+   #ifdef QUARANTINERATIO
+        qratio = params[eqratio];
+   #else
+        qratio = 1;
+   #endif
+
         double rh;
 #ifdef PIECEWISETHETA
 /*        unsigned numrhos = elastrho + 1 - erho0;
@@ -590,14 +633,21 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
 #ifdef K2
        if(t >= 100)
           k = params[ek2];
+
 #endif
        double c;
 #ifdef KACTIVE
      double na= numactive(g,t);
-     c = na < params[ekactive] ? rh : rh * params[ekactive] / na;
+     c = na < params[ekactive] ? rh : params[ekactive] / na * rh
+                                 + (na - params[ekactive]) / na * rh * qratio;
 #else
       double numrep = weekave(t,g);
-      c = numrep < k ? rh : rh * k / numrep ;
+
+      c = numrep < k ? rh : ((1-qratio) * rh + qratio * rh * k / numrep);
+#endif
+#ifdef POSITIVITY
+      double positivity = g.z[t][etests] ? weekave(t,g) / g.z[t][etests] : 0;
+      c *= 1-params[ethetaposcoef] * positivity;
 #endif
         return zofunction(c/0.7,0.000001) * 0.7; // max(0.0, min(0.7, c));
     }
@@ -666,8 +716,8 @@ void seir()
 
     vector<paraminfo> params
             = {
-                 paraminfo("marchimportrate",3,0,20),
-                 paraminfo("beta",2.08,0,5),
+                 paraminfo("marchimportrate",3,0,10),
+                 paraminfo("beta",2.08,0,8),
 #ifdef BETAADD
               paraminfo("betaadd",0,0,3),
 #endif
@@ -675,18 +725,26 @@ void seir()
         paraminfo("constiota",0,0,0.2),
 #endif
     #ifdef TEMPER
-        paraminfo("phi",0,0,1),
+        paraminfo("phi",0,0,0.45),
     #endif
+    #ifdef VACATIONDUMMY
+        paraminfo("vdummy",1,0,1),
+    #endif
+
     #ifdef SHIFT
             paraminfo("shift",5,0,7),
     #endif
 
 #ifdef ARATE
-    paraminfo("asymprate", 0.8, 0, 1),
+    paraminfo("asymprate", 0.4, 0.15, 0.55),
 #endif
 
 #ifdef MU
     paraminfo("mu", 0.00131326350277332, 0, 0.02),
+#endif
+
+#ifdef QUARANTINERATIO
+        paraminfo("qratio", 0.1, 0, 1),
 #endif
 
 #ifdef PIECEWISEIOTA
@@ -703,14 +761,16 @@ void seir()
         paraminfo("iota10",0.7,0,5),
 #else
 #ifdef FACTORPAQ
-        paraminfo("omega0", 1, 0, 1),
+        paraminfo("omega0", 1, 0, 0.5),
         paraminfo("omegas", 1, 0, 1),
         paraminfo("omegag", 1, 0, 1),
 #else
     #ifdef FAMILYCONTACTS
-                    paraminfo("fcontacts",0.16,0,0.3),
+                    paraminfo("fcontacts",0.0,0,0.3),
     #endif
-                paraminfo("omega", 0.828601, 0.2, 1),
+                paraminfo("omega1", 2, 0, 10),
+                paraminfo("omega2", 0, 0, 10),
+
 #endif
 #endif // PIECEWISEIOTA
 
@@ -733,22 +793,27 @@ void seir()
 #endif
 #endif
 
+#ifdef POSITIVITY
+        paraminfo("thetaposcoef", 1, 0, 2),
+        paraminfo("etaposcoef", 1, 0, 2),
+#endif
+
 #ifdef PIECEWISEETA
-                paraminfo("eta0", 0, 0, 0.7),
-                paraminfo("eta1", 0.05, 0,0.7),
-                paraminfo("eta2", 0.05, 0, 0.7),
-                paraminfo("eta3", 0.06, 0, 0.7),
-                paraminfo("eta4", 0.20, 0, 0.7),
-                paraminfo("eta5", 0.50, 0, 0.7),
-                paraminfo("eta6", 0.5, 0, 0.7),
+                paraminfo("eta0", 0.032575, 0, 0.7),
+                paraminfo("eta1", 0.032575, 0,0.7),
+                paraminfo("eta2", 0.032575, 0, 0.7),
+                paraminfo("eta3", 0.032575, 0, 0.7),
+                paraminfo("eta4", 0.032575, 0, 0.7),
+                paraminfo("eta5", 0.032575, 0, 0.7),
+                paraminfo("eta6", 0.032575, 0, 0.7),
 #else
 #ifdef SETA
-        paraminfo("etamin", 0.1, 0, 0.3),
-        paraminfo("etasize", 0.1, 0, 0.7),
+        paraminfo("etamin", 0.1, 0, 0.5),
+        paraminfo("etasize", 0.1, 0, 0.3),
         paraminfo("etamid", 100, 0, 300),
         paraminfo("etak", 0.06, 0, 1),
 #else
-        paraminfo("eta", 0.3, 0, 0.4),
+        paraminfo("eta", 0.3, 0, 0.7),
 #endif
 #endif
 
@@ -756,7 +821,7 @@ void seir()
              paraminfo("k", 100, 0, 260),
 #else
 #ifdef KACTIVE
-                    paraminfo("kactive", 50, 0, 20000),
+                    paraminfo("kactive", 5000, 0, 100000),
 #endif
 #endif
 #ifdef K2
@@ -764,8 +829,9 @@ void seir()
 #endif
 
 #ifdef GAMMAS
-                paraminfo("gammad",0.000802503,0, 100),
-                paraminfo("gammar",18.35, 0 , 100 ),
+                paraminfo("gammaa",0, 0 , 100 ),
+                paraminfo("gammas",0, 0 , 100 ),
+                paraminfo("gammad",0,0, 100),
 #endif
 
               };
@@ -791,12 +857,13 @@ assert(params.size()==enumparams);
             {
                 rp[i]=params[i].initial = initvals[j].v;
                 filter[i] = initvals[j].filtered;
+                cout << params[i].name << " set filter to " << filter[i] << endl;
             }
     }
 
     if(1)
     {
-        if(1)
+        if(0)
         {
             uncertain res;
             cout << "ll= " << s.estimate(params,siest,res,filter) << endl;
@@ -823,11 +890,23 @@ assert(params.size()==enumparams);
              << "additional contrast = " << s.contrastaddition(r) << endl
              << "Duseks survey = " << s.numantibodies(r,70) << endl
              << endl << endl;
+        if(1) // confidence of reported
+        {
+            cout << "stddevs R" << endl;
+            for(unsigned i=0; i<r.pred.size(); i++)
+            {
+                matrix v = r.pred[i].var();
+                cout << sqrt(v(eseirnumstates+czseir::eRA,eseirnumstates+czseir::eRA)
+                        + v(eseirnumstates+czseir::eRS,eseirnumstates+czseir::eRS)
+                        + 2 * v(eseirnumstates+czseir::eRA,eseirnumstates+czseir::eRS)) << endl; ;
+            }
+            throw;
+        }
 
         if(0) // R
         {
             clog << "rho, R,lastval" << endl;
-            for(unsigned t=0; t<si.y.size(); t++)
+             for(unsigned t=0; t<si.y.size(); t++)
             {
                 double R = s.R(t,r);
                 double Rcp = s.Rcp(t,r,4);
@@ -836,80 +915,25 @@ assert(params.size()==enumparams);
             throw;
         }
 
-        if(0) // zkroceni
+        if(0) // calculator
         {
             matrix T(eseirin+1,eseirin+1,0);
             for(unsigned i=0; i<7; i++)
                 T = T + r.Ts[si.y.size()-1-i].submatrix(0,0,eseirin+1,eseirin+1);
             T = (1.0 / 7.0) * T;
-
-            clog << "T" << endl <<  T << endl;
-            clog << "rho(T)=" << range(T) << endl << endl;
-
-
+            double gamma = T(0,1);
             double c=si.z[si.z.size()-1][czseir::econtacts];
-#if defined(FAMILYCONTACTS) && !defined(PIECEWISEIOTA)
-            double c0=rp[efcontacts];
-#else
-            double c0=0;
-#endif
-            clog << "c=" << c << endl;
-
-            double delta = 0.01;
-            clog << "theta,rho,iota98" << endl;
-
-            matrix I(4,4,0);
-            I(0,0)=I(1,1)=I(2,2)=I(3,3)=1;
-
-            vector<double> m(4,0);
-            m[0] = 30;
-
-            double required = 0.98;
-            double theta = 0;
-            for(unsigned i=0; i<7; i++)
-                theta += r.Ts[si.y.size()-1-i](eseirqe,eseire);
-            theta /= 7.0;
-            bool firsttime = true;
-
-
-            for(; theta<0.30; theta+= delta)
+            cout << "C,rho" << endl;
+            for(unsigned i=30; i<100; i++)
             {
-
-                double kappa=T(0,1);
-                double origkappa = kappa;
-                double factor = origkappa / (c-c0);
-
-                if(range(T) > required)
-                {
-                    auto Tt =T;
-                    for(unsigned i=0; i<100000; i++)
-                    {
-                        kappa -= 0.001;
-                        Tt(0,1)=Tt(0,2)=Tt(0,3)=kappa;
-                        double cc = kappa / factor + c0;
-                        if(firsttime && cc - floor(cc*100)/100 < 0.005)
-                            clog << "," << cc << "," << range(Tt) << endl;
-
-                        if(range(Tt) < 0.98)
-                            break;
-                    }
-                    clog << theta << "," << range(T) << ",";
-                    clog << kappa / factor + c0;
-                }
-
-                auto bound = ((I - T).inverse())*m;
-                double s=0;
-                for(unsigned i=0; i<4; i++)
-                    s+=bound(i,0);
-                clog << "," << s << endl;
-
-                T(0,0) -= delta;
-                T(1,1) -= delta;
-                T(2,2) -= delta;
-                T(3,3) -= delta;
-                firsttime = false;
+                double factor = (i/100.0) / c;
+                T(0,1)=T(0,2)=T(0,3)=gamma*factor;
+                cout << i/100.0 << "," << range(T) << endl;
             }
+            throw;
         }
+
+
 
         clog <<
 #ifdef ASYMP
