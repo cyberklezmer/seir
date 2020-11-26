@@ -1,0 +1,32 @@
+marchimportrate set filter to 1
+beta set filter to 0
+asymprate set filter to 1
+mu set filter to 0
+omega set filter to 0
+rho0 set filter to 0
+rho1 set filter to 0
+rho2 set filter to 0
+rho3 set filter to 0
+thetaposcoef set filter to 0
+etaposcoef set filter to 0
+eta set filter to 0
+daktela set filter to 0
+ll= -35553.2
+-47139
+-35453.1
+-63980.5
+-35458.7
+-35704.9
+-35669.5
+-77626.5
+-34286.6
+-34417.2
+-34101.1
+-37627.6
+-26180.9
+-3.09426e+06
+-29568.1
+-42336
+-25402
+-25168.7
+-25115.4
