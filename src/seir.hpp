@@ -3,55 +3,86 @@
 
 #include "orpp.hpp"
 #include "orpp/matrices.hpp"
+#include "orpp/estimation.hpp"
 
 using namespace orpp;
+using namespace std;
 
-inline bool isVar(const matrix& W, const string& label, unsigned t,
-                  vector<double> params)
+inline bool isVar(const dmatrix& W, const string& label, unsigned t,
+                  dvector params)
 {
-    for(unsigned j=0; j<W.c();j++)
+    for(unsigned j=0; j<W.cols();j++)
     {
-        if(W(j,j) < -1e-10)
+        if(W(j,j) < -1e-5)
         {
             cerr << label << "("<<j<<","<<j<<")=" << W(j,j) << endl;
             cerr << label << endl;
             cerr << W << endl;
             cerr << "t=" << t << endl;
             cerr << "pars" << endl;
-            csvout<double,','>(cerr,params);
+            cerr << params;
             return false;
         }
-
+        for(unsigned i=j+1; i<W.rows(); i++)
+        {
+            if(fabs(W(i,j)-W(j,i))>0.001)
+            {
+                cerr << label << "("<<j<<","<<i<<")=" << W(i,j)
+                     << " != " << W(j,i) << endl;
+                cerr << label << endl;
+                cerr << W << endl;
+                cerr << "t=" << t << endl;
+                cerr << "pars" << endl;
+                cerr << params;
+                return false;
+            }
+            if(0 && W(i,j) > sqrt(W(i,i)*sqrt(W(j,j))))
+            {
+                cerr << label << "("<<i<<","<<j<<")=" << W(i,j)
+                     << " > " << sqrt(W(i,i)*W(j,j)) << endl;
+                cerr << label << endl;
+                cerr << W << endl;
+                cerr << "t=" << t << endl;
+                cerr << "pars" << endl;
+                cerr << params;
+                return false;
+            }
+        }
     }
     return true;
 }
 
-class seirmodel : public object
+class seirmodel
 {
+public:
+    struct history { vector<dvector> y; vector<dvector> z; };
 protected:
-    struct history { vector<vector<double>> y; vector<vector<double>> z; };
     struct G: public history
     {
-        vector<vector<double>> est;
+        vector<dvector> est;
     };
 
 public:
+
+    enum contrasttype {ectll, ectwls};
     struct data: public history
     {
         vector<string> dates;
         vector<string> ylabels;
         vector<string> zlabels;
+        vector<vector<double>> w;
     };
 protected:
-    matrix T(unsigned t, const vector<double>& pars, const G& g) const
+    dmatrix T(unsigned t, const vector<double>& pars, const G& g) const
     {
         return P(t,pars,g).transpose()+J(t,pars,g).transpose();
     }
-    matrix Phi(unsigned t, const vector<double>& pars, unsigned s, const G& g) const
+    dmatrix Phi(unsigned t, const vector<double>& pars, unsigned s, const G& g) const
     {
-        matrix P = this->P(t,pars,g);
+        dmatrix P = this->P(t,pars,g);
         unsigned k = this->k();
-        matrix ret(k,k,0);
+        dmatrix ret(k,k);
+        ret.setZero();
         for(unsigned i=0; i<k; i++)
             for(unsigned j=0; j<k; j++)
             {
@@ -62,50 +93,50 @@ protected:
         return ret;
     }
 
-    matrix bigPhi(unsigned t, const vector<double>& pars, unsigned s,const G& g) const
+    dmatrix bigPhi(unsigned t, const vector<double>& pars, unsigned s,const G& g) const
     {
-        matrix phi = Phi(t,pars,s,g);
+        dmatrix phi = varfactor(pars) * Phi(t,pars,s,g);
         return block(phi,phi*H.transpose(),H*phi,H*phi*H.transpose());
     }
 
 
-    matrix bigIwGamma(unsigned t, const vector<double>& pars,
-                const vector<double>& N, const G& g ) const
+    dmatrix bigIwGamma(unsigned t, const vector<double>& pars,
+                const dvector& N, const G& g ) const
     {
-        vector<double> n(N.size());
+        dvector n(N.size());
         for(unsigned i=0; i<N.size(); i++)
             n[i] = max(N[i],0.0);
 
-        matrix ret(k()+m(),k()+m(),0);
-        vector<double> Jx = vec(J(t,pars,g).transpose() * n);
+        dmatrix ret(k()+m(),k()+m());
+        ret.setZero();
+        dvector Jx = J(t,pars,g).transpose() * n;
         for(unsigned i=0; i<Jx.size(); i++)
             if(Jx[i]<0.0)
                 throw "negative J";
-        matrix D= diag(Jx);
+        dmatrix D= varfactor(pars) * diag(Jx);
         return block( D, D*H.transpose(), H*D, H*D*H.transpose()
-                      + diag(vec(Gamma(t,pars, g)*n)));
+                      + diag(Gamma(t,pars, g)*n));
     }
 
-    virtual double contrast(const vector<double>& o,const vector<double>& My,
-                            const matrix& Vyy, const matrix& Vinv) const
+    virtual double contrast(contrasttype act, const dvector& o,
+                            const dvector& My,
+                            const dmatrix& Vyy, const dmatrix& Vinv, vector<double> w) const
     {
-/*        cout << Vyy(0,0) << ", " << vec(o-My)[0] << ", "
-             << Vyy(1,1) << ", " << vec(o-My)[1] << ", "
-             << ::log(det(Vyy)) << ", " << (transpose(o-My)*Vinv*(o-My))(0,0) << ","
-             << 0.5 * ::log(Vyy(0,0)) + 0.5 * vec(o-My)[0] * vec(o-My)[0] / Vyy(0,0) << ","
-             << 0.5 * ::log(Vyy(1,1)) + 0.5 * vec(o-My)[1] * vec(o-My)[1] / Vyy(1,1) << ","
-             << -(o.size()/2.0) * ::log(2*3.1415926)
-                -0.5 * ::log(det(Vyy))
-                -0.5 * (transpose(o-My)*Vinv*(o-My))(0,0)
-             << endl;*/
-//auto oo=o;
-//oo[1]=My[1];
-//        return -(oo.size()/2.0) * ::log(2*3.1415926)
-//            -0.5 * ::log(det(Vyy))
-//            -0.5 * (transpose(oo-My)*Vinv*(oo-My))(0,0);
-        return -(o.size()/2.0) * ::log(2*3.1415926)
-            -0.5 * ::log(det(Vyy))
-            -0.5 * (transpose(o-My)*Vinv*(o-My))(0,0);
+        if(act == ectll)
+            return -(o.size()/2.0) * ::log(2*3.1415926)
+            -0.5 * ::log(Vyy.determinant())
+            -0.5 * ((o-My).transpose()*Vinv*(o-My))(0,0);
+        else if(act == ectwls)
+        {
+            double res = 0;
+            for(unsigned i=0; i<My.size(); i++)
+            {
+                double x = o[i]-My[i];
+                res += w[i] * x * x;
+            }
+            return -res;
+        }
+        throw "unknown contrast method";
     }
 
 
@@ -119,9 +150,9 @@ public:
            { assert(s>=t); }
         vector<uncertain> pred;
         vector<uncertain> est;
-        vector<matrix> Ts;
-        vector<matrix> Js;
-        vector<matrix> Ps;
+        vector<dmatrix> Ts;
+        vector<dmatrix> Js;
+        vector<dmatrix> Ps;
         vector<double> contrasts;
         double contrast;
         const seirmodel& sm;
@@ -181,26 +212,28 @@ public:
 
     double rho(unsigned t, const evalresult& er,unsigned i) const
     {
-        return range(er.Ts[t].submatrix(0,0,i,i));
+        return radius(er.Ts[t].block(0,0,i,i));
     }
     double Rcp(unsigned t, const evalresult& er, unsigned m) const
     {
-        const matrix& K = er.Js[t].submatrix(0,0,m,m);
-        for(unsigned i=0; i<K.r(); i++)
+        const dmatrix& K = er.Js[t].block(0,0,m,m);
+        for(unsigned i=0; i<K.rows(); i++)
         {
-            for(unsigned j=1; j<K.c(); j++)
+            for(unsigned j=1; j<K.cols(); j++)
                 assert(K(i,j)==0);
         }
-        matrix p(m,1,0);
+        dmatrix p(m,1);
+        p.setZero();
         p(0,0) = 1;
 
-        // create identity matrix (to orpp;
-        matrix E(m,m,0);
+        // create identity dmatrix (to orpp;
+        dmatrix E(m,m);
+        E.setZero();
         for(unsigned i=0; i< m; i++)
             E(i,i)=1;
 
 
-        auto r = K.transpose() * ((E - er.Ps[t].submatrix(0,0,m,m).transpose()).inverse())*p;
+        auto r = K.transpose() * ((E - er.Ps[t].block(0,0,m,m).transpose()).inverse())*p;
         double s = 0;
         for(unsigned i=0;i< m; i++)
             s += r(i,0);
@@ -213,20 +246,21 @@ public:
         unsigned inf = er.Ps.size();
         assert(t<inf);
 
-        const matrix& J = er.Js[t];
-        for(unsigned i=0; i<J.r(); i++)
+        const dmatrix& J = er.Js[t];
+        for(unsigned i=0; i<J.rows(); i++)
         {
-            for(unsigned j=1; j<J.c(); j++)
+            for(unsigned j=1; j<J.cols(); j++)
                 assert(J(i,j)==0);
         }
-        matrix p(k(),1,0);
+        dmatrix p(k(),1);
+        p.setZero();
         p(0,0) = 1;
         double res = 0;
         double thistau = HUGE_VAL;
         for(unsigned tau = t; tau < inf || thistau > 0.00001 ; tau++)
         {
             auto lasttau = min(tau,inf-1);
-            matrix r = er.Js[lasttau].transpose() * p;
+            dmatrix r = er.Js[lasttau].transpose() * p;
             thistau = 0;
             for(unsigned i=0; i<k(); i++)
                 thistau += r(i,0);
@@ -242,9 +276,12 @@ public:
         return res;
     }
 
+    virtual void adjust(unsigned /*t*/, dvector&  /* N */) const
+    {}
+
     template <bool contrasts=true>
     evalresult eval(const vector<double>& pars,
-                    const data& d, unsigned ds=0) const
+                    const data& d, unsigned ds=0, contrasttype act = ectll) const
     {
         assert(d.y.size());
         unsigned t = d.y.size()-1;
@@ -254,8 +291,8 @@ public:
         G g;
         g.y = {d.y[0]};
         g.z = {d.z[0]};
-        vector<double> x0 = X0(pars,g);
-        res.pred[0]=stackv(x0, vec(H*x0));
+        dvector x0 = dv(X0(pars,g));
+        res.pred[0]=stackv(x0, H*x0);
         g.est = {x0};
         res.est[0]=x0;
         res.Ts[0]=this->T(0, pars, g);
@@ -264,62 +301,69 @@ public:
         unsigned i=1;
         for(; i<= t+ds; i++)
         {
-            matrix& T = res.Ts[i-1];
-            matrix THT = stackv(T,H*T);
+            dmatrix& T = res.Ts[i-1];
+            dmatrix THT = stackm(T,H*T);
 
-            vector<double> N;
-            matrix W;
+            dvector N;
+            dmatrix W;
             if(i<=t+1)
             {
                 N = res.est[i-1].x();
                 W = res.est[i-1].var();
-                assert(isVar(W,"W1",i-1,pars));
+                assert(isVar(W,"W1",i-1,dv(pars)));
             }
             else
             {
                 N = res.pred[i-1].x();
+                adjust(i,N);
                 N.resize(k());
-                W = res.pred[i-1].var().submatrix(0,0,k(),k());
-                assert(isVar(W,"W2",i-1,pars));
+                W = res.pred[i-1].var().block(0,0,k(),k());
+                assert(isVar(W,"W2",i-1,dv(pars)));
             }
-            vector<double> Mx = vec(T * N + I(i-1,pars,g));
-            vector<double> My = vec(H * Mx);
+            dvector Mx = T * N + dv(I(i-1,pars,g));
+            dvector My = H * Mx;
 
-            matrix V = THT * W * THT.transpose();
-            assert(isVar(V,"V2",i-1,pars));
+            dmatrix V = THT * W * THT.transpose();
+
+//cerr << "W" << endl << W << endl;
+//cerr << "THT" << endl << THT << endl;
+//cerr << "THTT" << endl << THT.transpose() << endl;
+
+            assert(isVar(V,"V2",i-1,dv(pars)));
             for(unsigned j=0; j<k(); j++)
                 V = V + max(N[j],0.0) * bigPhi(i-1,pars,j,g);
-            assert(isVar(V,"V3",i-1,pars));
+            assert(isVar(V,"V3",i-1,dv(pars)));
 
             V = V + bigIwGamma(i-1, pars, N,g);
-            assert(isVar(V,"V4",i-1,pars));
+            assert(isVar(V,"V4",i-1,dv(pars)));
 
             res.pred[i] = uncertain(stackv(Mx, My),V);
             if(i<=t)
             {
-                matrix Vxx = V.submatrix(0,0,k(),k());
-                matrix Vxy = V.submatrix(0,k(),k(),m());
-                matrix Vyx = V.submatrix(k(),0,m(),k());
-                matrix Vyy = V.submatrix(k(),k(),m(),m());
+                dmatrix Vxx = V.block(0,0,k(),k());
+                dmatrix Vxy = V.block(0,k(),k(),m());
+                dmatrix Vyx = V.block(k(),0,m(),k());
+                dmatrix Vyy = V.block(k(),k(),m(),m());
 
-                vector<double> o = d.y[i];
+                dvector o = d.y[i];
 
-                if(Vyy.iszero())
+                if(Vyy.isZero())
                 {
                     res.est[i] = uncertain(Mx, Vxx);
                     res.contrasts[i-1]=0;
                 }
                 else
                 {
-                    matrix Vinv = pseudoinverse(Vyy); // Vyy.inverse();
-                    vector<double> N = vec(Mx + Vxy * Vinv * (o-My));
-                    matrix W =Vxx + ((-1) * Vxy) * Vinv * Vyx;
-                    assert(isVar(W,"W",i-1,pars));
+                    dmatrix Vinv = pseudoinverse(Vyy); // Vyy.inverse();
+                    dvector N = Mx + Vxy * Vinv * (o-My);
+                    dmatrix W =Vxx + ((-1) * Vxy) * Vinv * Vyx;
+                    assert(isVar(W,"W",i-1,dv(pars)));
                     res.est[i] = uncertain(N,W);
 
-                    if(contrasts && det(Vyy) != 0)
+                    if(contrasts && Vyy.determinant() != 0)
                     {
-                        double ll = contrast(o,My,Vyy,Vinv);
+                        vector<double> w = act==ectwls ? d.w[i] : vector<double>();
+                        double ll = contrast(act,o,My,Vyy,Vinv, w);
     //                    assert(ll <= 0);
                         res.contrasts[i-1] = ll;
                         res.contrast += ll;
@@ -342,9 +386,9 @@ public:
     }
 private:
     double contrast(const std::vector<double> &v,
-                  const data& d) const
+                  const data& d, contrasttype act = ectll) const
     {
-        evalresult r = eval(v,d);        
+        evalresult r = eval(v,d,0,ct);
         return r.contrast + contrastaddition(r);
     }
     static double llobj(const std::vector<double> &v, std::vector<double> &, void* f_data)
@@ -359,7 +403,7 @@ private:
             else
                 x[j]=v[i++];
         }
-        double ret = f.contrast(x,f.d);
+        double ret = f.contrast(x,f.d,f.ct);
         clog << ret << endl;
 
         return ret;
@@ -368,19 +412,23 @@ private:
 
 
 
-
     // state variables
     vector<double> prs;
     vector<bool> filter;
     data d;
+    contrasttype ct;
+
 public:
 
 
     double estimate(const vector<paraminfo>& params,
                     const data& ad,
                     uncertain& res,
-                    vector<bool> omit = vector<bool>())
+                    contrasttype act,
+                    vector<bool> omit = vector<bool>(),
+                    double timest = 5*60)
     {
+        ct = act;
         using namespace nlopt;
         vector<double> upper;
         vector<double> lower;
@@ -411,7 +459,7 @@ public:
         o.set_upper_bounds(upper);
 
         o.set_ftol_rel(1e-7);
-        o.set_maxtime(10*60);
+        o.set_maxtime(timest);
 
         o.set_max_objective(llobj, this);
 
@@ -442,7 +490,7 @@ public:
         }
 
         try {
-            res = uncertain(r, paramvar(r,ad));
+            res = uncertain(dv(r), paramvar(r,ad));
         } catch (...) {
             res = uncertain(r); // tbd nan
         }
@@ -451,51 +499,82 @@ public:
     }
 
 
-    template <bool negative = false>
-    vector<double> grad(const vector<double>& pars,
-                        const data& d) const
-    {
-        evalresult f0 = eval(pars,d);
 
-        vector<double> h = sqrt(std::numeric_limits<double>::epsilon()) * pars;
-        vector<double> xph = negative ? pars-h : pars+h;
-        vector<double> dx = negative ? pars-xph : xph - pars;
+    pair<vector<vector<double>>,vector<vector<double>>>
+      sensitivity(const vector<double>& pars,
+                        const data& d, contrasttype act ) const
+    {
+        int numvals = 4;
+
+        dvector dx = 0.001 * dv(pars);
+        vector<vector<double>> ret(pars.size(),vector<double>(2 * numvals + 1));
+        vector<vector<double>> retx(pars.size(),vector<double>(2 * numvals + 1));
+        for(unsigned i=0; i<pars.size(); i++)
+        {
+            for(int j = -numvals; j <= numvals; j++)
+            {
+                vector<double> p = pars;
+                p[i] += j * dx[i];
+                retx[i][j+numvals] = p[i];
+                try {
+                   evalresult fh = eval(p,d,0,act);
+                   ret[i][j+numvals]=fh.contrast;
+                } catch (...)
+                {
+                   ret[i][j+numvals]= std::numeric_limits<double>::quiet_NaN();
+                }
+            }
+        }
+        return {retx,ret};
+    }
+
+
+
+
+
+    vector<double> grad(const vector<double>& pars,
+                        const data& d, contrasttype act ) const
+    {
+        evalresult f0 = eval(pars,d,0,act);
+
+        dvector dx =
+                sqrt(std::numeric_limits<double>::epsilon()) * dv(pars);
         vector<double> ret(pars.size());
         for(unsigned i=0; i<pars.size(); i++)
         {
             vector<double> p = pars;
-            p[i] = xph[i];
-            evalresult fh = eval(p,d);
+            p[i] += dx[i];
+            evalresult fh = eval(p,d,0,act);
             ret[i]=(fh.contrast-f0.contrast) / dx[i];
         }
         return ret;
     }
 
-    matrix paramvar(const vector<double>& pars,
+    dmatrix paramvar(const vector<double>& pars,
                     const data& d) const
     {
         evalresult fixed = eval(pars,d);
         vector<evalresult> perturbed;
-        vector<double> h = sqrt(std::numeric_limits<double>::epsilon()) * pars;
+        dvector h = sqrt(std::numeric_limits<double>::epsilon()) * dv(pars);
         for(unsigned i=0; i<h.size(); i++)
             if(h[i] < 1e-10)
                 h[i] = 1e-10;
-        vector<double> xph = pars+h;
-        vector<double> dx = xph - pars;
+        dvector xph = dv(pars)+h;
+        dvector dx = xph - dv(pars);
         for(unsigned i=0; i<pars.size(); i++)
         {
             vector<double> p = pars;
             p[i] = xph[i];
             perturbed.push_back(eval(p,d));
         }
-        matrix res(pars.size(),pars.size());
+        dmatrix res(pars.size(),pars.size());
         unsigned t = fixed.contrasts.size();
         for(unsigned i=0; i<t; i++)
         {
-            vector<double> g(perturbed.size());
+            dvector g(perturbed.size());
             for(unsigned j=0; j<perturbed.size(); j++)
                 g[j] = (perturbed[j].contrasts[i] - fixed.contrasts[i]) / dx[j];
-            res = res + g * transpose(g);
+            res = res + g * g.transpose();
         }
         try
         {
@@ -503,29 +582,30 @@ public:
         }
         catch(...)
         {
-            cerr << "Cannot invert matrix" << endl;
+            cerr << "Cannot invert dmatrix" << endl;
             cerr << 1.0 / t * res;
             throw;
         }
     }
 
-    virtual matrix P(unsigned t, const vector<double>& params, const G& g) const = 0;
-    virtual matrix J(unsigned t, const vector<double>& params, const G& g) const = 0;
+    virtual dmatrix P(unsigned t, const vector<double>& params, const G& g) const = 0;
+    virtual dmatrix J(unsigned t, const vector<double>& params, const G& g) const = 0;
     virtual vector<double> I(unsigned t, const vector<double>& params, const G& g) const = 0;
-    virtual matrix Gamma(unsigned /* t */, const vector<double>& /* params */, const G& /*g*/) const
-        { return matrix(m(),k(),0); }
+    virtual dmatrix Gamma(unsigned /* t */, const vector<double>& /* params */, const G& /*g*/) const
+        { dmatrix ret(m(),k()); ret.setZero(); return ret;; }
 
     virtual double contrastaddition(const evalresult& r) const { return 0; }
+    virtual double varfactor(const vector<double>&/* params */) const { return 1; }
     virtual string statelabel(unsigned i) const = 0;
     virtual vector<double> X0(const vector<double>& params, const G& g) const = 0;
 
-    seirmodel(const matrix& aH) :  H(aH) {}
+    seirmodel(const dmatrix& aH) :  H(aH) {}
 
-    unsigned k() const { return H.c(); }
-    unsigned m() const { return H.r(); }
+    unsigned k() const { return H.cols(); }
+    unsigned m() const { return H.rows(); }
 
 protected:
-    const matrix H;
+    const dmatrix H;
 };
 
 #endif // SEIR_HPP
