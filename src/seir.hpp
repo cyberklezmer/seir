@@ -302,6 +302,11 @@ public:
         for(; i<= t+ds; i++)
         {
             dmatrix& T = res.Ts[i-1];
+
+Eigen::IOFormat f(Eigen::StreamPrecision, Eigen::DontAlignCols,",");
+cerr << "time " << i << endl << T.format(f) << endl << endl << endl;
+if(i>300)
+    throw;
             dmatrix THT = stackm(T,H*T);
 
             dvector N;
