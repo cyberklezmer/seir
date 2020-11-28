@@ -613,7 +613,7 @@ double muinis;
                 ret(i,i) = 1.0-s;
         }
 
-if(t==274)
+if(t==2274)
     clog << "t=274, eta," << thetas << ",theta," << thetaa
          << ",StoD," << ret(eseiris,eseirisds) << endl;
 
@@ -1034,7 +1034,7 @@ rh = max(0.0, varrhos / x);
 #ifdef PDETTHETA
       c += params[epdettheta] * g.z[t][epdet];
 #endif
-      if(t == 274)
+      if(t == 2274)
           clog << "a,t=" << t << ",rho," << params[erho]
                << ",wa," << wa
                << ",calls," << g.z[t][ecalls]
@@ -1338,6 +1338,7 @@ assert(params.size()==enumparams);
              << "additional contrast = " << s.contrastaddition(r) << endl
              << "Duseks survey = " << s.numantibodies(r,70) << endl
              << endl << endl;
+throw;
         if(1)
         {
             clog << "Sensitivity analysis" << endl;

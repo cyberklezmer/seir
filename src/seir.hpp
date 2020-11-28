@@ -321,13 +321,28 @@ cerr << "time " << i << endl << T.format(f) << endl << endl << endl;
             else
             {
                 N = res.pred[i-1].x();
+clog << "i=" << i << endl;
+clog << " Nbefore" << endl;
+clog << N << endl<< endl;
+
                 adjust(i,N);
-                N.resize(k());
+
+                N.conservativeResize(k());
+clog << " Nafter" << endl;
+clog << N << endl<< endl;
                 W = res.pred[i-1].var().block(0,0,k(),k());
                 assert(isVar(W,"W2",i-1,dv(pars)));
             }
             dvector Mx = T * N + dv(I(i-1,pars,g));
             dvector My = H * Mx;
+if(i > 260 && Mx[1] < 20000)
+{
+    clog << "i=" << i << " M" << endl;
+    clog << Mx << endl<< endl;
+    clog << " N" << endl;
+    clog << N << endl<< endl;
+    clog << endl;
+}
 
             dmatrix V = THT * W * THT.transpose();
 
