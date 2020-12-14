@@ -32,22 +32,26 @@ struct paraminit { string n;	double v;	bool filtered; };
 
 
 
-static constexpr seirmodel::contrasttype ct = seirmodel::ectwls; //ectll; // ectwls; // ;:;
-static constexpr bool nopred = false;
-static constexpr bool estimate = false;
-static constexpr double timest = 80*60;
+static constexpr seirmodel::contrasttype ct = seirmodel::ectll; // // ectwls; // ;:;
+static constexpr bool nopred = true;
+static constexpr bool estimate = false  ;
+static constexpr bool sensanal = true;
 
-static constexpr unsigned horizon=269;
-static constexpr unsigned dusekpenalty=00;
+static constexpr double timest = 20*60;
+
+static constexpr unsigned horizon=290;
+static constexpr unsigned dusekpenalty=0;
 
 #define NOEXTRAMIMPORT
 #define DEADFROMIS
 #define PDETTHETA
 #define PDET
+#define PDETCOEF
+#define PDETONLYETA
 //#define PARKS
 #define IMUNITY
 #define DAKTELA
-//#define VARFACTOR
+#define VARFACTOR
 //#define POSITIVITY
 #define EXPAPPROX
 //#define LINAPPROX
@@ -66,7 +70,7 @@ static constexpr unsigned dusekpenalty=00;
 //#define PIECEWISEIOTA
 //#define SETA
 //#define PIECEWISEETA
-//#define GAMMAS
+#define GAMMAS
 
 //#define PIECEWISETHETA
 //#define THREEPIECETHETA
@@ -78,28 +82,30 @@ static constexpr unsigned dusekpenalty=00;
 //#define WEIGHTVACCATION
 
 vector<paraminit> initvals = {
-    {"beta",1.14889,true},// (0.0292941) 3648.74
-    {"pdettheta",0.0219801,false},// (0.00134828) -11.174
-    {"imunity",1,true},// (0.217432) 511.591
-    {"shift",6.68105,false},// (0.155078) 0.00701611
-    {"mu",0.000582576,false},// (5.89788e-05) 69.5657
-    {"omega1",3.29735,true},// (0.236283) -2388.59
-    {"omega2",0,true},// (0.443779) -nan
-    {"rho",0.00623149,false},// (0.000372049) 24.0556
-    {"daktela",0.00135562,false},// (0.000105343) -645.099
-    };
+    {"beta",0.591317,false},// (0.0283431) -789.527
+    {"pdettheta",0.0336908,true},// (0.00126119) -11093.1
+    {"pdetcoef",1.88995,false},// (0.015602) -235.408
+    {"imunity",1,true},// (0.0527796) 1229.67
+    {"shift",9.35726,true},// (0.228449) -0.343254
+    {"mu",0.000607467,true},// (2.60937e-05) -1.98427e+06
+    {"omega1",2.1391,false},// (0.0930169) -2.61957
+    {"omega2",0,true},// (0.0518558) -nan
+    {"rho",0.00438512,true},// (0.000339618) -108260
+    {"daktela",0.00100247,true},// (6.57788e-05) -45552.5
+    {"varfactor",14.2139,false},// (0.108913) 177.927
+};
 #endif
 #ifdef WORKING
 
-static constexpr seirmodel::contrasttype ct = seirmodel::ectwls; //ectll; // ectwls; // ;:;
+static constexpr seirmodel::contrasttype ct = seirmodel::ectll;  //// ectwls; // ;:;ectll;
 static constexpr bool nopred = false;
 static constexpr bool estimate = true;
-static constexpr double timest = 5*60;
+static constexpr double timest = 10*60;
 
 static constexpr unsigned horizon=269;
-static constexpr unsigned dusekpenalty=00;
+static constexpr unsigned dusekpenalty=1000;
 
-#define DEADFROMIS
+//#define DEADFROMIS
 #define NOEXTRAMIMPORT
 //#define PARKS
 #define IMUNITY
@@ -134,22 +140,16 @@ static constexpr unsigned dusekpenalty=00;
 //#define K2
 //#define WEIGHTVACCATION
 
-#ifdef THREEPIECETHETA
-vector<unsigned> thetafrns({70,100,130});
-#else
-vector<unsigned> thetafrns({1,2,3,20,40,128});
-#endif
-
 vector<paraminit> initvals = {
-{"beta",0.617657,true},// (0.0307855) -99.0101
-{"imunity",5.46147,true},// (0.315915) 185.509
-{"shift",11.10,false},// (0.297542) -46.7305
-{"mu",0.00173991,true},// (0.000131926) 92023.9
-{"omega1",0.898348,true},// (0.312815) -724.125
-{"omega2",0,true},// (0.517207) -nan
-{"rho",0.0279986,true},// (0.000569438) 4849.77
-{"eta",0.75178,true},// (0.00382635) 2327.63
-{"daktela",0.00249017,false},// (0.00025831) 179.515
+{"beta",0.641435 / 4,false},
+{"imunity",1,true},
+{"shift",8.36995,false},
+{"mu",0.00160774 / 2,false},
+{"omega1",1.29349,false},
+{"omega2",0,true},
+{"rho",0.0316952 / 4,false},
+{"eta",0.770684 / 4,false},
+{"daktela",0.00127326,false}
 };
 
 
@@ -284,6 +284,12 @@ enum eparams {
 #ifdef PDETTHETA
     epdettheta,
 #endif
+#ifdef PDETETA
+    epdeteta,
+#endif
+#ifdef PDETCOEF
+    epdetcoef,
+#endif
 #ifdef IMUNITY
     eimunity,
 #endif
@@ -381,6 +387,7 @@ enum eparams {
       enumparams};
 
 
+
 enum eseirstates {eseire,
                   eseiria, eseiris, eseirin, eseirjs, eseirjn, eseirr, eseird,
                   eseirqe,
@@ -437,6 +444,7 @@ public:
 #ifdef PIECEWISEETA
     pwfn etafn(thetafrns, elasteta-eeta0+1);
 #endif
+
 
 
 inline string seirstatelabel(unsigned i)
@@ -518,7 +526,6 @@ public:
         ret.setZero();
         ret(eseire,eseirin) = sigma * asymprate;
         ret(eseire,eseiria) = sigma * (1-asymprate);
-
         double thetas = min(1.0,getthetas(t,params,g) * g.z[t][czseir::edayadjust]);
         double thetaa = getthetaa(t,params,g) * g.z[t][czseir::edayadjust];
         ret(eseire,eseirqe) = thetaa;
@@ -569,7 +576,7 @@ double muinis;
         else if(thetas + muinis>1)
         {
             ret(eseiris,eseirisds) = thetas;
-            ret(eseiris,eseirdds) = 1-thetas-muinis;
+            ret(eseiris,eseirdds) = 1-thetas;
             ret(eseiris,eseirjs) = 0;
         }
         else
@@ -603,8 +610,7 @@ double muinis;
             {
                 if(s > 1)
                 {
-                    Eigen::IOFormat f(Eigen::StreamPrecision, Eigen::DontAlignCols,",");
-                    cerr << ret.format(f) << endl;
+                    cerr << m2csv(ret) << endl;
                     throw orpp::exception("s > 1!");
                 }
                 ret(i,i) = 0;
@@ -613,9 +619,6 @@ double muinis;
                 ret(i,i) = 1.0-s;
         }
 
-if(t==2274)
-    clog << "t=274, eta," << thetas << ",theta," << thetaa
-         << ",StoD," << ret(eseiris,eseirisds) << endl;
 
         return ret;
     }
@@ -638,6 +641,38 @@ private:
     virtual double getthetaa(unsigned t, const vector<double>& params, const G& g) const = 0;
     virtual string statelabel(unsigned i) const { return seirstatelabel(i); }
 public:
+    double numagpositive(const dvector& v) const
+    {
+        double s=0;
+
+        for(unsigned i=0; i< eseirnumstates; i++)
+        {
+            switch(i)
+            {
+            case eseiriada:
+            case eseirinda:
+            case eseirisda:
+            case eseiria:
+            case eseiris:
+            case eseirin:
+            case eseirisds:
+                s += v[i];
+                break;
+
+            case eseirjs:
+            case eseirjn:
+            case eseirjsda:
+            case eseirjnda:
+            case eseirjsds:
+                s += v[i] / 2.0;
+                break;
+
+            }
+
+        }
+        return s;
+    }
+
     double numantibodiesv(const dvector& v) const
     {
         double s=0;
@@ -658,6 +693,12 @@ public:
         }
         return s;
     }
+
+    double numagpositive(const evalresult& r, unsigned t) const
+    {
+        return numagpositive(r.est[t].x());
+    }
+
 
     double numantibodies(const evalresult& r, unsigned t) const
     {
@@ -798,6 +839,9 @@ public:
 #ifdef IMUNITY
         ba -= p[eimunity]
                 * max(numantibodiesv(g.est[at]) / 10693000.00,0.0);
+//clog << at << "->" << p[eimunity] << "*"
+//     << numantibodiesv(g.est[at]) / 10693000.00 << "="
+//     << p[eimunity] * numantibodiesv(g.est[at]) / 10693000.00 << endl;
 #endif
 
 
@@ -847,7 +891,7 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
         double d;
   #ifdef TEMPER
         const unsigned t0 = -24;
-        d = (1 - p[ephi] * cos(-t0 / 365.0 * 2* 3.141592)) + p[ephi] * cos((at-t0) / 365.0 * 2 * 3.141592 );
+        d = (1 - p[ephi]) + p[ephi]* cos((at-t0) / 365.0 * 2 * 3.141592 ) / cos((-t0) / 365.0 * 2 * 3.141592 ) ;
   #else
         d = 1;
 #endif
@@ -948,26 +992,39 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
       double positivity = g.z[t][epositivity];
       rh *= 1-params[eetaposcoef] * positivity;
 #endif
-#ifdef PDET
-//      rh *=g.z[t][epdet];
-           // w * g.z[t1][epdet] + (1-w) * g.z[t2][epdet];
-expparams p;
-double varrhos = p.delta_s + params[emu];
-double varrhoa = p.delta_n;
-double theta = getthetaa(t,params,g);
-double alpha = p.asymptomatic_rate;
-double varsigma = p.symptoms_manifest_rate;
-double p1 = alpha * theta / (theta + varrhoa);
-double p2 = (1-alpha) * theta / (theta+ varsigma);
-double q =  (1-alpha) * varsigma / (theta + varsigma);
-double x = q / (g.z[t][epdet]
-* 3
-                - p1 - p2);
-rh = max(0.0, varrhos / x);     
-        //varrhos * g.z[t][epdet] / (1-g.z[t][epdet]);
-        //max(0.0, varrhos / ( (1-alpha) / (g.z[t][epdet] - alpha * theta / (theta + varrhoa)) - 1) - theta);
-//cout << rh << endl;
+       expparams p;
+       double varrhos = p.delta_s + params[emu];
+       double pdet = g.z[t][epdet];
+       assert(pdet <=1.0);
+#ifdef PDETETA
+       rh += params[epdeteta] * pdet;
 #endif
+#ifdef PDET
+
+#ifdef PDETCOEF
+                 pdet*=params[epdetcoef];
+#endif
+       assert(pdet <=1.0);
+       assert(pdet >= 0.0);
+
+
+#ifdef PDETONLYETA
+       rh = pdet * varrhos / (1-pdet);
+#else
+        double varrhos = p.delta_s + params[emu];
+        double varrhoa = p.delta_n;
+        double theta = getthetaa(t,params,g);
+        double alpha = p.asymptomatic_rate;
+        double varsigma = p.symptoms_manifest_rate;
+        double p1 = alpha * theta / (theta + varrhoa);
+        double p2 = (1-alpha) * theta / (theta+ varsigma);
+        double q =  (1-´alpha) * varsigma / (theta + varsigma);
+        double x = q / (pdet
+                        - p1 - p2);
+        rh = max(0.0, varrhos / x);
+#endif
+#endif
+        assert(rh >= 0);
         return zofunction(rh,0.000001);
     }
 
@@ -1034,15 +1091,6 @@ rh = max(0.0, varrhos / x);
 #ifdef PDETTHETA
       c += params[epdettheta] * g.z[t][epdet];
 #endif
-      if(t == 2274)
-          clog << "a,t=" << t << ",rho," << params[erho]
-               << ",wa," << wa
-               << ",calls," << g.z[t][ecalls]
-               << ",pdet," << g.z[t][epdet]
-               << ",daktela," << params[edaktela]
-               << ",dettheta," << params[epdettheta]
-               << ",result," << c
-                  << endl;
       return zofunction(c/0.7,0.000001) * 0.7; // max(0.0, min(0.7, c));
     }
 };
@@ -1117,8 +1165,8 @@ void seir()
         else
             wd = 1 / d;
 #ifdef WEIGHTVACCATION
-        if(i>128 && i < 160)
-            w /=2;
+        if(i < 200)
+            w /=3;
 #endif
         si.w.push_back({w,w,wd});
     }
@@ -1147,6 +1195,12 @@ void seir()
 #endif
 #ifdef PDETTHETA
         paraminfo("pdettheta",0,0,1),
+#endif
+#ifdef PDETETA
+        paraminfo("pdeteta",0,0,1),
+#endif
+#ifdef PDETCOEF
+        paraminfo("pdetcoef",1,0,2.5),
 #endif
 
 #ifdef IMUNITY
@@ -1281,7 +1335,7 @@ void seir()
                 paraminfo("gammad",0,0, 100),
 #endif
 #ifdef VARFACTOR
-        paraminfo("varfactor",1,1,20),
+        paraminfo("varfactor",1,1,50),
 #endif
 
               };
@@ -1331,26 +1385,63 @@ assert(params.size()==enumparams);
 
         clog << dv(rp).transpose() << endl;
 
-        czseir::evalresult r = s.eval<true>(rp,si, si.z.size()-si.y.size());
+        czseir::evalresult r = s.eval<true>(rp,si, si.z.size()-si.y.size(),ct);
         ofstream o("output.csv");
         r.output(o,si);
-        clog << "ll/n=" << r.contrast / r.contrasts.size() << endl
+        clog <<  "ll=" << r.contrast  << endl
+             <<  "ll/n=" << r.contrast / r.contrasts.size() << endl
              << "additional contrast = " << s.contrastaddition(r) << endl
              << "Duseks survey = " << s.numantibodies(r,70) << endl
+             << "Teachars survey = " << s.numagpositive(r,280) << endl
              << endl << endl;
-throw;
-        if(1)
+
+        if(0) // difference
+        {
+            auto rrr = rp;
+/*            for(unsigned i=0; i<20; i++)
+            {
+               czseir::evalresult rr = s.eval<true>(rrr,si, si.z.size()-si.y.size(),ct);
+               cout << rrr[epdeteta] << "->" << rr.contrast << endl;
+               rrr[epdeteta] += 0.000001;
+            }
+            throw;*/
+//            rrr[epdeteta] += 0.000001;
+            czseir::evalresult rr = s.eval<true>(rrr,si, si.z.size()-si.y.size(),ct);
+            for(unsigned i=0; i<rr.contrasts.size(); i++)
+            {
+                clog << i << ","
+                     << r.contrasts[i] << "," << rr.contrasts[i]
+                     << "," << r.contrasts[i]-rr.contrasts[i] << endl;
+            }
+            throw;
+        }
+        if(sensanal)
         {
             clog << "Sensitivity analysis" << endl;
             auto r = s.sensitivity(rp,si,ct);
             for(unsigned i=0; i<r.first.size(); i++)
             {
                 double m = r.second[i][r.second[i].size()/2];
-                clog << params[i].name << ",";
+                clog << params[i].name;
+                unsigned h = r.first[i].size() / 2;
+                double s1=0;
+                double s2=0;
                 for(unsigned j=0; j<r.first[i].size(); j++)
-                    clog << r.second[i][j]-m<< ",";
-                clog << r.first[i][0] << ","
+                {
+                    if(j<h)
+                        s1+=r.second[i][j]-m;
+                    else if(j>h)
+                        s2+=r.second[i][j]-m;
+                    clog << "," << r.second[i][j]-m;
+                }
+                clog << ",," << r.first[i][0] << ","
                      << r.first[i][r.first[i].size()-1] << ",";
+                if(s1<0 && s2<0)
+                    clog << "OK";
+                else if(s1>0)
+                    clog << "<-";
+                else
+                    clog << "->";
                 clog << endl;
             }
         }

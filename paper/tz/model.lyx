@@ -1,0 +1,6543 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\begin_modules
+theorems-ams
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset FormulaMacro
+\newcommand{\G}{\mathcal{G}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\F}{\mathcal{F}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\var}{\mathcal{\mathrm{var}}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\E}{\mathbb{E}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\defined}{\stackrel{\text{def}}{=}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\Bi}{\mathcal{\mathrm{Bi}}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\indep}[1]{{\perp\hspace{-2mm}\perp}#1}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\P}{\mathbb{P}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\N}{\mathbb{N}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\U}{\mathbb{U}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\renewcommand{\E}{\mathbb{E}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\R}{\mathbb{R}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\renewcommand{\G}{\mathcal{G}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\g}{\mathbb{\Pi}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\renewcommand{\F}{\mathcal{F}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\S}{\mathcal{S}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\Q}{\mathcal{Q}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\B}{\mathcal{B}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\ND}{\mathcal{N}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\XX}{\mathcal{X}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\renewcommand{\indep}[1]{{\perp\hspace{-2mm}\perp}#1}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\L}{\mathcal{L}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\renewcommand{\var}{\mathrm{var}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\cov}{\mathrm{cov}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\charf}{\mathbf{1}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\d}{\mathrm{d}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\M}{\mathcal{M}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\T}{\mathcal{T}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\Exp}{\mathrm{Exp}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\Uniform}{\mathrm{U}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\eqd}{{d\atop =}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\A}{\mathcal{A}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\I}{\mathcal{I}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\X}{\mathcal{X}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\supp}{\mathrm{support}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\H}{\mathcal{H}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\Z}{\mathcal{Z}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\as}{\qquad a.s.}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\on}{\qquad\text{on }}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\C}{\mathcal{C}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\barxi}{\overline{\xi}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\Po}{\mathrm{Po}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\barvs}{\overline{\varsigma}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\bareps}{\overline{\varepsilon}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\bari}{\overline{\iota}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\barx}{\overline{x}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\baru}{\overline{u}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\bars}{\overline{s}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\renewcommand{\Bi}{\mathrm{Bi}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\renewcommand{\defined}{\stackrel{\text{def }}{=}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\renewcommand{\d}{\mathbf{d}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\dw}{\mathrm{d}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\bary}{\overline{y}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\cvar}{\mathrm{CVaR}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\barP}{P}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\barX}{\overline{X}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\renewcommand{\barP}{\overline{P}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\barT}{\overline{T}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\barB}{\overline{B}}
+\end_inset
+
+
+\begin_inset FormulaMacro
+\newcommand{\barI}{\overline{I}}
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+SEIR Filter – Stochastic Model of Pandemics
+\end_layout
+
+\begin_layout Author
+Martin Šmíd, Aleš Antonín Kuběna, Jan Trnka, Vít Tuček, Milan Zajíček,
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Standard
+There are lots of epidemiological models at hand, most of them working well,
+ simply because is not difficult to fit (nearly) exponential growth/decline
+ and it is not difficult to make the growth factor dependent on various
+ factors.
+ What is difficult, however, is to distinguish the impact of the factors
+ from random fluctuations.
+ Moreover, as many counter-measures as well as their release come hand in
+ hand, it is hard to distinguish their impact.
+ In statistics, the former phenomenon is called insignificance, the latter
+ either non-idetifiability (if the data do not allow to distinguish two
+ parameters) or co-linearity (if the parameters cannot be distinguished
+ with sufficient certainty).
+ Last but not least, the epidemics is observed only indirectly through noisy
+ and/or delayed data, which obstacle cannot be handled only by adding noise
+ to the observations.
+ Needless to say that, once these phenomenons are not taken into account
+ or are handled insufficiently, wrong policy recommendations stem from the
+ models.
+\end_layout
+
+\begin_layout Standard
+Mathematical statistics disposes of tools to handle all significance, co-lineari
+ty and partial observability; however, to our best knowledge, there is no
+ work is systematically doing so for compartment epidemiological models.
+ The goal of the present paper is to start filling this gap by proposing
+ a general stochastic epidemiological model, which we call SEIR Filter.
+\end_layout
+
+\begin_layout Standard
+Our model is a discrete time discrete space one.
+ Next we argue that this is the best choice for practical use.
+\end_layout
+
+\begin_layout Standard
+There is a large literature on continuous time diffusion models, see e.g.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "farnoosh2017stochastic"
+literal "false"
+
+\end_inset
+
+ and the references therein.
+ Yet these models are able to capture global properties of an epidemics
+ and handle noise, their practical usage is limited as it is difficult to
+ incorporate heterogeneity, caused by non-pharmaceutical intervention, into
+ these models.
+ Moreover, given discrete time data, discretization of these models is needed
+ which does not inherit their favorable properties.
+\end_layout
+
+\begin_layout Standard
+Another wide class of models are those with continuous time and discrete
+ state space.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "gibson1998estimating"
+literal "false"
+
+\end_inset
+
+, for instance, even an estimation procedure is developed for such a model.
+ Yet these models are realistic, respecting integer sizes of the compartments,
+ again there is a problem with their application in practice.
+ When schools are closed, for instance, which time exactly should we change
+ the transition matrix?
+\end_layout
+
+\begin_layout Standard
+As we have premised, we regard discrete-time discrete-space stochastic models
+ as the most practical.
+ One of the models closest to our one is that by 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "kucharski2020early"
+literal "false"
+
+\end_inset
+
+ (or 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "prem2020effect"
+literal "false"
+
+\end_inset
+
+).
+ When estimating its parameters, the authors use Monte Carlo simulation
+ to evaluate likelihood functions.
+ We argue and demonstrate that parameters of these models can be estimated
+ more straightforward way, as the likelihood (or other estimating) function
+ can be computed exactly, which allows for quicker and more reliable estimation.
+\end_layout
+
+\begin_layout Standard
+In addition to the tractability of the estimating functions, our model allows
+ for closed form formulas for expected future compartment sizes and for
+ reproduction number.
+ We also give simple criteria for vanishing and explosion of the epidemics,
+ as well as bounds of limiting expected sizes given stationary imports.
+ All this allows various applications of the model, e.g.
+ in optimal control of the pandemics.
+\end_layout
+
+\begin_layout Standard
+After a rigorous probabilistic formulation of the model (Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Model-Definition"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), we discuss its basic probabilistic properties (Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Model-Properties"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+), its autonomous sub-models and reproduction number (Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Sub-models-and-Replication"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) and asymptotic properties (Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Asymptotic-behavior"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ Next, we discuss estimation of the model (Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Estimation"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) and demonstrate its usage by its application to the COVID pandemics in
+ Czech Republic 2020 (Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Application-to-The"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ Finally, we conclude the paper (Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Conclusion"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Section
+Model Definition
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Model-Definition"
+
+\end_inset
+
+Assume an infinite population, each individual of which is either susceptible,
+ or finds himself in one of the compartments 
+\begin_inset Formula $S_{1},\dots,S_{k}$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $I_{t}\in\N_{0}^{k},$
+\end_inset
+
+ 
+\begin_inset Formula $t\in\N_{0}^{+},$
+\end_inset
+
+ be an observable external inflow (import) of individuals into the compartments
+ and let 
+\begin_inset Formula $Z_{t}\in\R^{n},$
+\end_inset
+
+ 
+\begin_inset Formula $t\in\N_{0}^{+}$
+\end_inset
+
+, be an observed exogenous process.
+\end_layout
+
+\begin_layout Standard
+For any 
+\begin_inset Formula $t\in\N_{0}$
+\end_inset
+
+, let 
+\begin_inset Formula $X_{t}=(X_{t}^{1},\dots,X_{t}^{k})\in\N_{0}^{k},t\in\N_{0},$
+\end_inset
+
+ be a possibly hidden stochastic process of the sizes of the compartments
+ 
+\begin_inset Formula $(1,\dots,k)$
+\end_inset
+
+ which we define later.
+ Let 
+\begin_inset Formula 
+\[
+Y_{t}\in\R^{n},\qquad Y_{t}=FX_{t}+\epsilon_{t},\qquad t\in\N_{0},
+\]
+
+\end_inset
+
+be a process of observations where 
+\begin_inset Formula $F$
+\end_inset
+
+ is a deterministic 
+\begin_inset Formula $n\times k$
+\end_inset
+
+ matrix with rank 
+\begin_inset Formula $n$
+\end_inset
+
+, and 
+\begin_inset Formula $\epsilon_{t}$
+\end_inset
+
+ is a random vector.
+ Denote 
+\begin_inset Formula $(\F_{t})_{t\geq0}$
+\end_inset
+
+ and 
+\begin_inset Formula $(\G_{t})_{t\geq0}$
+\end_inset
+
+ the filtrations induced by 
+\begin_inset Formula $(X,Y,I,Z)$
+\end_inset
+
+, by 
+\begin_inset Formula $(Y,I,Z)$
+\end_inset
+
+, respectively.
+ The filtrations may be seen as information flows; in particular, 
+\begin_inset Formula $(\F_{t})$
+\end_inset
+
+ represents all the information while 
+\begin_inset Formula $(\G_{t})$
+\end_inset
+
+ the observable one.
+ We assume that 
+\begin_inset Formula 
+\[
+\E(\epsilon_{t+1}|\F_{t})=0,\qquad\var(\epsilon_{t+1}|\F_{t})=\mathrm{diag(}\Gamma_{t}X_{t}),\qquad t\in\N_{0},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\Gamma_{t}\in\G_{t}$
+\end_inset
+
+ is a random matrix.
+\end_layout
+
+\begin_layout Standard
+We define 
+\begin_inset Formula $X$
+\end_inset
+
+ recursively: We let 
+\begin_inset Formula $X_{0}$
+\end_inset
+
+ to be a possibly random vector and, for any 
+\begin_inset Formula $t\in\N$
+\end_inset
+
+, we put 
+\begin_inset Formula 
+\[
+X_{t+1}=I_{t}+N_{t+1}+M_{1,t+1}+\dots+M_{k,t+1}.
+\]
+
+\end_inset
+
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+Here, 
+\begin_inset Formula $N_{t+1}\in\N_{0}^{k}$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ is the inflow of domestically infected indivuduals (different from 
+\begin_inset Formula $I_{t}$
+\end_inset
+
+) such that 
+\begin_inset Formula $N_{t+1}|\F_{t}\text{\ensuremath{\sim\Po(B_{t}X_{t})}}$
+\end_inset
+
+ where 
+\begin_inset Formula $B_{t}=(\beta_{t}^{ij})_{1\leq i,j\leq k}$
+\end_inset
+
+, 
+\begin_inset Formula $B_{t}\in\G_{t}$
+\end_inset
+
+ (meaning that 
+\begin_inset Formula $B$
+\end_inset
+
+ is a 
+\begin_inset Formula $(\G_{t})$
+\end_inset
+
+-adapted process) is a random matrix and, for any vector 
+\begin_inset Formula $x$
+\end_inset
+
+, 
+\begin_inset Formula $\Po(x)$
+\end_inset
+
+ stands for a vector of independent Poisson variables with the intensities
+ given by 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ Further, for any 
+\begin_inset Formula $i$
+\end_inset
+
+, 
+\begin_inset Formula $M_{i,t+1}\in\N_{0}^{k}$
+\end_inset
+
+ is the distribution (not a probability one) of those, who found themselves
+ in compartment 
+\begin_inset Formula $i$
+\end_inset
+
+ at 
+\begin_inset Formula $t$
+\end_inset
+
+, between the compartments at 
+\begin_inset Formula $t+1$
+\end_inset
+
+.
+ In particular, 
+\begin_inset Formula $M_{i,t+1}^{j}$
+\end_inset
+
+ (the 
+\begin_inset Formula $j$
+\end_inset
+
+-th component of 
+\begin_inset Formula $M_{i,t+1}$
+\end_inset
+
+) is the number of the individuals who transited from compartment 
+\begin_inset Formula $j$
+\end_inset
+
+ to compartment 
+\begin_inset Formula $i$
+\end_inset
+
+ from 
+\begin_inset Formula $t$
+\end_inset
+
+ to 
+\begin_inset Formula $t+1$
+\end_inset
+
+.
+ Assuming the individuals to change their state according to a common transition
+ matrix 
+\begin_inset Formula $P_{t}=(p_{t}^{ij})_{1\leq i,j\leq k}\in\G_{t}$
+\end_inset
+
+ with the transitions being conditionally independent given 
+\begin_inset Formula $\F_{t},$
+\end_inset
+
+ we get that 
+\begin_inset Formula $M_{i,t+1}$
+\end_inset
+
+ has a multinomial conditional probability distribution with parameters
+ 
+\begin_inset Formula $X_{t}^{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $P_{t}^{(i)}$
+\end_inset
+
+ where, for any matrix 
+\begin_inset Formula $A$
+\end_inset
+
+, 
+\begin_inset Formula $A^{(i)}$
+\end_inset
+
+ is the 
+\begin_inset Formula $i$
+\end_inset
+
+-th column of 
+\begin_inset Formula $A$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The assumed flows of individuals are illustrated by the following chart.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename schema.eps
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, we assume 
+\begin_inset Formula $N_{t+1},M_{1,t+1},\dots,M_{k,t+1},\epsilon_{t+1}$
+\end_inset
+
+ to be mutually conditionally independent given 
+\begin_inset Formula $\F_{t}$
+\end_inset
+
+ (which, in words, means that all the dependence between the inflows, the
+ transitions and the observation can be explained by the state of the system
+ at 
+\begin_inset Formula $t$
+\end_inset
+
+).
+ Consequently,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left.X_{t+1}\right|\F_{t}\sim\bigcirc_{1\leq i\leq m}\mathrm{Multinomial}(X_{t}^{i},P_{t}^{(i)})\circ\Po(B_{t}X_{t})\circ\delta(\barI_{t}),
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\bigcirc$
+\end_inset
+
+ and 
+\begin_inset Formula $\circ$
+\end_inset
+
+ stand for the summation of (mutually) independent random vectors.
+\end_layout
+
+\begin_layout Section
+Model Properties
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Model-Properties"
+
+\end_inset
+
+By probability calculus, we get that 
+\begin_inset Formula 
+\begin{equation}
+\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]=\left[{E\atop F}\right](T_{t}X_{t}+I_{t}),\label{eq:moments}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop F}\right]\Lambda_{t}(X_{t})\left[{E\atop F}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}X_{t}}\right),\qquad}t\geq0,
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $E$
+\end_inset
+
+ is the identity matrix and
+\begin_inset Formula 
+\[
+T_{t}\defined P_{t}+B_{t},\qquad\Lambda_{t}(X_{t})\defined\sum_{i=1}^{k}\mathrm{[diag}(P_{t}^{(i)})-P_{t}^{(i)}(P_{t}^{(i)}){}^{T}]X_{t}^{i}+\mathrm{diag}(B_{t}X_{t}),\qquad t\geq0.
+\]
+
+\end_inset
+
+Note that 
+\begin_inset Formula 
+\[
+\Lambda_{t}(x)=\sum_{i=1}^{k}\Phi_{t,i}x^{i},\qquad\Phi_{t,i}\defined\mathrm{diag}(B_{t}^{(i)}+P_{t}^{(i)})-P_{t}^{(i)}(P_{t}^{(i)})^{T},\qquad t\geq0,x\in\R_{+}^{k},
+\]
+
+\end_inset
+
+i.e.
+ 
+\begin_inset Formula $\Lambda_{t}$
+\end_inset
+
+ is linear in 
+\begin_inset Formula $x$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Consequently, for any 
+\begin_inset Formula $t,s\in\N_{0},t>s$
+\end_inset
+
+, 
+\begin_inset Formula 
+\begin{multline*}
+\E(X_{t}|\F_{s})=\E(T_{s,t-1}X_{s}+\sum_{\theta=s}^{t-1}T_{\theta+1,t-1}I_{\theta}|\F_{s})=\E(T_{s,t-1}|\F_{s})X_{s}+\sum_{\theta=s}^{t-1}\E(T_{\theta+1,t-1}I_{\theta}|\F_{s}),
+\end{multline*}
+
+\end_inset
+
+where, for any matrix process 
+\begin_inset Formula $A$
+\end_inset
+
+, 
+\begin_inset Formula $A_{s,t}\defined A_{t}\times\dots\times A_{s}$
+\end_inset
+
+ with 
+\begin_inset Formula $A_{s,s-1}\defined E$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In the special case that 
+\begin_inset Formula 
+\begin{equation}
+B_{\tau}\equiv B_{s},\qquad P_{\tau}\equiv P_{s},\qquad s\leq\tau\leq t,\label{eq:speck}
+\end{equation}
+
+\end_inset
+
+ we have 
+\begin_inset Formula 
+\[
+\E(X_{t}|\F_{s})=T_{s}^{t-s}X_{s}+\sum_{\tau=s}^{t-1}T_{s}^{t-\tau-1}\E(I_{\tau}|\F_{s}),
+\]
+
+\end_inset
+
+and 
+\begin_inset Formula 
+\[
+\E(X_{t}|\G_{s})=T_{s}^{t-s}\E(X_{s}|\G_{s})+\sum_{\tau=s}^{t-1}T_{s}^{t-\tau-1}\E(I_{\theta}|\G_{s})
+\]
+
+\end_inset
+
+If, in addition, 
+\begin_inset Formula $\E(I_{\theta}|\G_{s})\equiv\mu$
+\end_inset
+
+ for some 
+\begin_inset Formula $\mu\in\G_{s}$
+\end_inset
+
+ and 
+\begin_inset Formula $(E-T_{s})$
+\end_inset
+
+ is invertible, the latter formula simplifies to
+\begin_inset Formula 
+\[
+\E(X_{t}|\G_{s})=T_{s}^{t-s}\E(X_{s}|\G_{s})+(E-T_{s})^{-1}(E-T_{s}^{t-s})\mu.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Sub-epidemics and Reproduction Number
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Sub-models-and-Replication"
+
+\end_inset
+
+We say that the subset of compartments 
+\begin_inset Formula $D=\{s_{1},\dots,s_{m}\}$
+\end_inset
+
+ is 
+\begin_inset Formula $subepidemic$
+\end_inset
+
+ if, for any 
+\begin_inset Formula $t$
+\end_inset
+
+ and any 
+\begin_inset Formula $i\in D$
+\end_inset
+
+ and 
+\begin_inset Formula $j\notin D$
+\end_inset
+
+, 
+\begin_inset Formula $\beta_{t}^{ij}\equiv\beta^{ji}\equiv0$
+\end_inset
+
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+, and 
+\begin_inset Formula $p_{t}^{ij}\equiv0$
+\end_inset
+
+.
+ In words this means that, for any 
+\begin_inset Formula $i\in D$
+\end_inset
+
+,
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+the 
+\begin_inset Formula $i$
+\end_inset
+
+-th compartment does not increase through direct infection, the infection
+ does not depend on the compartment, and it is impossible to get to the
+ state 
+\begin_inset Formula $i$
+\end_inset
+
+ once being outside 
+\begin_inset Formula $D$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Let, after a possible re-ordering, 
+\begin_inset Formula $m\in\N$
+\end_inset
+
+ be such that 
+\begin_inset Formula $\{1,\dots,m\}$
+\end_inset
+
+ is subepidemic (such 
+\begin_inset Formula $m$
+\end_inset
+
+ always exists because it can be always put to 
+\begin_inset Formula $k$
+\end_inset
+
+).
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ For any vector 
+\begin_inset Formula $x\in\R^{k}$
+\end_inset
+
+, denote 
+\begin_inset Formula $\overline{x}$
+\end_inset
+
+ its restriction to 
+\begin_inset Formula $(1,\dots,m)$
+\end_inset
+
+ and, for any matrix 
+\begin_inset Formula $A\in\R^{k\times k}$
+\end_inset
+
+, denote 
+\begin_inset Formula $\overline{A}$
+\end_inset
+
+ its restriction to 
+\begin_inset Formula $(1,\dots,m)\times(1,\dots,m)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Observe that 
+\begin_inset Formula $\barX$
+\end_inset
+
+ follows its own version of our model, namely that 
+\begin_inset Formula 
+\[
+\left.\barX_{t+1}\right|\F_{t}\sim\bigcirc_{1\leq i\leq m}\mathrm{Multinomial}(\barX_{t}^{i},\barP_{t}^{(i)})\circ\Po(\barB_{t}\barX_{t})\circ\delta(\barI_{t}).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For any 
+\begin_inset Formula $t$
+\end_inset
+
+, we define the reproduction number 
+\begin_inset Formula $r_{t}$
+\end_inset
+
+ (of a subepidemic 
+\begin_inset Formula $\{1,\dots,m\}$
+\end_inset
+
+) as 
+\begin_inset Formula 
+\[
+r_{t}\defined\sum_{\tau=t}^{\infty}\mathbf{1}^{T}\E(B_{\tau}\barP_{t,\tau-1}|\F_{t-1})\pi_{t},\qquad\pi_{t}=\E\left\{ \left.\nu\left(\overline{N}_{t}+\overline{I}_{t-1}\right)\right|\F_{t-1}\right\} .
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\nu$
+\end_inset
+
+ is unit normalization of a vector.
+ Observe that 
+\begin_inset Formula $r_{t}$
+\end_inset
+
+ complies with the usual definition of reproduction number as it equals
+ to the conditional expectation (w.r.t.
+ 
+\begin_inset Formula $\F_{t-1})$
+\end_inset
+
+ of the infections caused by an individual having arrived at 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ To see it, note that 
+\begin_inset Formula $\pi_{t}$
+\end_inset
+
+ is the conditional distribution of the state in which a randomly chosen
+ newcomer (the one brought by the import or by the infection) finds himself
+ at 
+\begin_inset Formula $t$
+\end_inset
+
+, and observe that, for each newcomer at 
+\begin_inset Formula $t$
+\end_inset
+
+, the expected number of those infected by him at 
+\begin_inset Formula $t+1$
+\end_inset
+
+ is given by the sum of the components of 
+\begin_inset Formula $\barB{}_{t}\pi_{t}$
+\end_inset
+
+, the expected number infected at 
+\begin_inset Formula $t+1$
+\end_inset
+
+ is given by the sum of components of 
+\begin_inset Formula $\barB_{t+1}\barP_{t}\pi_{t}$
+\end_inset
+
+ etc.
+\end_layout
+
+\begin_layout Standard
+If 
+\begin_inset Formula $\F_{t}\neq\G_{t}$
+\end_inset
+
+ (i.e.
+ 
+\begin_inset Formula $X$
+\end_inset
+
+ is not fully observed), then the reproduction number has to be estimated,
+ most naturally by its conditional expectation with respect to the known
+ information: 
+\begin_inset Formula 
+\[
+\tilde{r}_{t}\defined\E(r_{t}|\G_{t})=\sum_{\tau=t}^{\infty}\mathbf{1}^{T}\E(\barB_{\tau}\barP_{t,\tau-1}\pi_{t}|\G_{t-1}).
+\]
+
+\end_inset
+
+In the special case of 
+\begin_inset Formula $\barB_{\tau}\equiv\barB_{t-1},\barP_{\tau}\equiv\barP_{t-1}$
+\end_inset
+
+, 
+\begin_inset Formula $\tau\geq t$
+\end_inset
+
+, with 
+\begin_inset Formula $\rho(\barP_{t-1})<1$
+\end_inset
+
+ where 
+\begin_inset Formula $\rho$
+\end_inset
+
+ is the spectral radius, the formula simplifies to
+\begin_inset Formula 
+\[
+\tilde{r}_{t}=\mathbf{1}^{T}\barB_{t-1}\left(\sum_{i=0}^{\infty}\barP_{t-1}^{i}\right)\E(\pi_{t}|\G_{t-1})=\mathbf{1}^{T}\barB_{t-1}(E-\barP_{t-1})^{-1}\E(\pi_{t}|\G_{t-1}).
+\]
+
+\end_inset
+
+Note that, once 
+\begin_inset Formula $\overline{N}_{t}$
+\end_inset
+
+ is not observed, there could be difficulties computing 
+\begin_inset Formula $\E(\pi_{t}|\G_{t-1})$
+\end_inset
+
+ – yet the estimate 
+\begin_inset Formula $\E(\pi_{t}|\G_{t-1})\doteq\nu(\barB_{t-1}\E(\barX_{t-1}|\G_{t-1})+\barI_{t-1})$
+\end_inset
+
+ seems a straightforward choice, it is generally not unbiased due to the
+ normalization.
+ This problem, however, vanishes if the imports and new infections all fall
+ into a single state (typically called exposed), in which case 
+\begin_inset Formula $\pi_{t}\equiv(1,0,\dots,0)^{T}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Asymptotic Behavior
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Asymptotic-behavior"
+
+\end_inset
+
+Keep assuming that 
+\begin_inset Formula $\{1,\dots,m\}$
+\end_inset
+
+ is subepidemics.
+ The next Proposition states conditions for vanishing, explosion and 
+\begin_inset Quotes eld
+\end_inset
+
+stationary
+\begin_inset Quotes erd
+\end_inset
+
+ behavior of the subepidemic compartments sizes.
+\end_layout
+
+\begin_layout Proposition
+\begin_inset CommandInset label
+LatexCommand label
+name "prop:as"
+
+\end_inset
+
+(i) If 
+\begin_inset Formula $\barT_{t}\leq S$
+\end_inset
+
+ component-wise, where S is deterministic with 
+\begin_inset Formula $\sigma\defined\rho(S)<1,$
+\end_inset
+
+ and if 
+\begin_inset Formula $\E\barI_{t}=o(t^{-\alpha})$
+\end_inset
+
+ for some 
+\begin_inset Formula $\alpha>0$
+\end_inset
+
+, then 
+\begin_inset Formula $\barX_{t}\rightarrow0$
+\end_inset
+
+ almost sure.
+ Here, 
+\begin_inset Formula $\rho$
+\end_inset
+
+ denotes the spectral radius of a matrix.
+\begin_inset Newline newline
+\end_inset
+
+(ii) If 
+\begin_inset Formula $\barT_{t}\geq R$
+\end_inset
+
+ where R is deterministic irreducible with 
+\begin_inset Formula $\varrho\defined\rho(R)>1$
+\end_inset
+
+ and either 
+\begin_inset Formula $\E\barX_{0}\neq0$
+\end_inset
+
+ or 
+\begin_inset Formula $\E\barI_{\tau}\neq0$
+\end_inset
+
+ for some 
+\begin_inset Formula $\tau$
+\end_inset
+
+, then 
+\begin_inset Formula $\|\E\barX_{t}\|\rightarrow\infty$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+(iii) If 
+\begin_inset Formula $\E\barI_{t}\equiv\mu$
+\end_inset
+
+ for some 
+\begin_inset Formula $\text{\ensuremath{\mu} }$
+\end_inset
+
+and 
+\begin_inset Formula $R\leq\barT_{t}\leq S$
+\end_inset
+
+ such that 
+\begin_inset Formula $\sigma\defined\rho(S)<1,$
+\end_inset
+
+ then 
+\begin_inset Formula 
+\[
+\liminf_{t}\E\barI_{t}\ge(E-R)^{-1}\mu,\qquad\limsup_{t}\E\barI_{t}\leq(E-S)^{-1}\mu
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Proof
+(i) We have 
+\begin_inset Formula 
+\begin{multline*}
+\E\barX_{t}=\E(\E(\barX_{t}|\G_{0}))=\E(\barT_{0,\tau-1}X_{0}+\sum_{\theta=0}^{t-1}\barT_{\theta+1,t-1}\E(\barI_{\theta}|\G_{0}))\\
+\leq\E(S^{t}X_{0}+\sum_{\theta=0}^{t-1}S^{t-\theta-1}\E(\barI_{\theta}|\G_{0}))\leq a_{t}+b_{t,}\qquad a_{t}=S^{t}\E\barX_{0},\qquad b_{t}=\sum_{\theta=0}^{t-1}S^{t-\theta-1}\E\barI_{\theta}
+\end{multline*}
+
+\end_inset
+
+Thanks to the sub-unit spectral radius of 
+\begin_inset Formula $S$
+\end_inset
+
+, we have 
+\begin_inset Formula $a_{t}\rightarrow0$
+\end_inset
+
+.
+ Further, by the non-negativity of 
+\begin_inset Formula $H$
+\end_inset
+
+ and the properties of convergence, there exists 
+\begin_inset Formula $c\in\R_{+}^{m}$
+\end_inset
+
+ such that 
+\begin_inset Formula $\E\barI_{t}\leq c(t+1)^{-1}.$
+\end_inset
+
+ Thus, for any 
+\begin_inset Formula $\varsigma$
+\end_inset
+
+ fulfilling 
+\begin_inset Formula $\sigma<\varsigma<1$
+\end_inset
+
+, we get, after re-indexing the sum, 
+\begin_inset Formula 
+\[
+b_{t}=\sum_{\tau=0}^{t-1}S^{\tau}\E\barI_{t-\tau-1}\leq\sum_{\tau=0}^{t-1}S^{\tau}c\frac{1}{(t-\tau)^{\alpha}}=\underbrace{\frac{1}{t^{\alpha}}}_{\rightarrow0}\times\underbrace{\sum_{\tau=0}^{t-1}(\varsigma^{-1}S)^{\tau}c}_{\rightarrow(E-\varsigma^{-1}S)^{-1}c}\underbrace{\left(\frac{\varsigma^{\tau/\alpha}}{t-\tau}\right)^{\alpha}}_{\leq d}\rightarrow0;
+\]
+
+\end_inset
+
+the second convergence holding because 
+\begin_inset Formula $\rho(\varsigma^{-1}S)=\frac{\sigma}{\varsigma_{t}}<1$
+\end_inset
+
+, the upper bound 
+\begin_inset Formula $d$
+\end_inset
+
+ existing as 
+\begin_inset Formula $f(\tau)\defined\frac{t\varsigma^{\tau/\alpha}}{t-\tau}$
+\end_inset
+
+ increases in 
+\begin_inset Formula $\tau=t-1$
+\end_inset
+
+ and its derivative has only a single root, so we have 
+\begin_inset Formula $f(\tau)\leq\max(f(0),f(t-1))=\max(1,\varsigma^{\frac{t-1}{\alpha}}t)\leq d\defined\max(1,\frac{1}{e\varsigma^{1/\alpha}|\alpha^{-1}\ln\varsigma|})$
+\end_inset
+
+ on 
+\begin_inset Formula $[0,t-1].$
+\end_inset
+
+ Finally, thanks to the non-negativity of 
+\begin_inset Formula $\barX,$
+\end_inset
+
+ convergence of 
+\begin_inset Formula $\E\barX_{t}$
+\end_inset
+
+ suffices for a.s.
+ convergence of 
+\begin_inset Formula $\barX_{t}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Proof
+(ii) Let 
+\begin_inset Formula $\E\barX_{0}\neq0$
+\end_inset
+
+ and 
+\begin_inset Formula $\varrho>1$
+\end_inset
+
+.
+ As 
+\begin_inset Formula $R$
+\end_inset
+
+ is irreducible non-negative 
+\begin_inset Formula $\varrho$
+\end_inset
+
+ is its eigenvalue and the corresponding eigenvector 
+\begin_inset Formula $x$
+\end_inset
+
+ is positive by the Perron-Frobenius Theorem.
+ Further, by the irreducibility of 
+\begin_inset Formula $T$
+\end_inset
+
+, there exists 
+\begin_inset Formula $n$
+\end_inset
+
+ such that 
+\begin_inset Formula $y\defined R^{n}\E\barX_{0}>0$
+\end_inset
+
+ component-wise, so there exist 
+\begin_inset Formula $e>0$
+\end_inset
+
+ such that 
+\begin_inset Formula $y\geq ex$
+\end_inset
+
+.
+ Thus 
+\begin_inset Formula 
+\[
+\E\barX_{t}\geq R^{t}\E\barX_{0}\geq R^{t-n}y\geq eR^{t-n}x
+\]
+
+\end_inset
+
+norm of which converges to infinity.
+ The proof for 
+\begin_inset Formula $\E\barI_{\tau}\neq0$
+\end_inset
+
+ is analogous.
+\end_layout
+
+\begin_layout Proof
+(iii)
+\end_layout
+
+\begin_layout Proof
+\begin_inset Formula $\E\barX_{t}=\sum_{\tau=0}^{t-1}\barT_{\tau,t-2}\mu+\barT_{0,t-1}\E\barX_{0}\leq\sum_{\tau=0}^{t-1}S^{\tau}\mu+S^{t-1}\E\barX_{0}\rightarrow(\sum_{\tau=0}^{\infty}S^{\tau})\mu=(E-S)^{-1}\mu$
+\end_inset
+
+ and similarly for 
+\begin_inset Formula $R.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+\begin_inset CommandInset label
+LatexCommand label
+name "exa:e1"
+
+\end_inset
+
+Say there are five states 
+\begin_inset Formula $E$
+\end_inset
+
+ – exposed, 
+\begin_inset Formula $I_{a}$
+\end_inset
+
+ – infectious asymptomatic, who will never show symptoms, 
+\begin_inset Formula $I_{p}$
+\end_inset
+
+ – infectious pre-symptomatic, who will later show symptoms, 
+\begin_inset Formula $I_{s}$
+\end_inset
+
+ – infectious symptomatic, and 
+\begin_inset Formula $R$
+\end_inset
+
+ – removed, including recovered, dead, and infectious isolated.
+ All the 
+\begin_inset Formula $I_{\bullet}$
+\end_inset
+
+ states are equally infectious, i.e.
+ 
+\begin_inset Formula $\beta_{t}^{Ex}=\beta_{t}$
+\end_inset
+
+, 
+\begin_inset Formula $x\in\{I_{a},I_{p},I_{s}\},$
+\end_inset
+
+ where 
+\begin_inset Formula $\beta$
+\end_inset
+
+ is a 
+\begin_inset Formula $\G_{t}$
+\end_inset
+
+-adapted process.
+ The probability that the exposed transits to 
+\begin_inset Formula $\{I_{a},I_{p}\}$
+\end_inset
+
+ is 
+\begin_inset Formula $\sigma,$
+\end_inset
+
+ the probability of completely asymptomatic course is 
+\begin_inset Formula $\alpha$
+\end_inset
+
+, the probability of transition from 
+\begin_inset Formula $I_{p}$
+\end_inset
+
+ to 
+\begin_inset Formula $I_{s}$
+\end_inset
+
+ is 
+\begin_inset Formula $\varsigma$
+\end_inset
+
+.
+ Further, the probability of ending 
+\begin_inset Formula $I_{a}$
+\end_inset
+
+ or 
+\begin_inset Formula $I_{s}$
+\end_inset
+
+, by natural causes (recovery, end of infectiousness, death in case of 
+\begin_inset Formula $I_{s}$
+\end_inset
+
+) is 
+\begin_inset Formula $\varrho_{a}$
+\end_inset
+
+, 
+\begin_inset Formula $\varrho_{s}$
+\end_inset
+
+, respectively.
+ Finally, the probability that a symptomatic individual isolates himself
+ is 
+\begin_inset Formula $\eta$
+\end_inset
+
+ and the probability that the individual is isolated regardless of his state
+ is 
+\begin_inset Formula $\theta_{t}$
+\end_inset
+
+ for some 
+\begin_inset Formula $\G_{t}$
+\end_inset
+
+-adapted process 
+\begin_inset Formula $\theta$
+\end_inset
+
+.
+ The situation is illustrated on the following Figure:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename simple.eps
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Example
+If we neglect (small) joint probabilities of natural exits from the infectious
+ states and the isolations, we get 
+\begin_inset Formula 
+\[
+P_{t}=\left[\begin{array}{ccccc}
+1-\sigma-\theta_{t} & 0 & 0 & 0 & 0\\
+\alpha\sigma & 1-\varrho_{a}-\theta_{t} & 0 & 0 & 0\\
+(1-\alpha)\sigma & 0 & 1-\varsigma-\theta_{t} & 0 & 0\\
+0 & 0 & \varsigma & 1-\varrho_{s}-\eta-\theta_{t} & 0\\
+\theta_{t} & \theta_{t}+\varrho_{a} & \theta_{t} & \theta_{t}+\eta+\varrho_{s} & 1
+\end{array}\right],\qquad B_{t}=\left[\begin{array}{ccccc}
+0 & \beta_{t} & \beta_{t} & \beta_{t} & 0\\
+0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0
+\end{array}\right]
+\]
+
+\end_inset
+
+Clearly, we can put 
+\begin_inset Formula $m=4$
+\end_inset
+
+ (the first four states are subepidemic), getting 
+\begin_inset Formula 
+\[
+\barT_{t}=C(\beta_{t})-\theta_{t}E,\qquad C(\beta)=\left[\begin{array}{cccc}
+1-\sigma & \beta & \beta & \beta\\
+\alpha\sigma & 1-\varrho_{a} & 0 & 0\\
+(1-\alpha)\sigma & 0 & 1-\varsigma & 0\\
+0 & 0 & \varsigma & 1-\varrho_{s}-\eta
+\end{array}\right].
+\]
+
+\end_inset
+
+By the well known rule, we have 
+\begin_inset Formula $\rho(\barT_{t})=\rho(C(\gamma_{t}))-\theta_{t}$
+\end_inset
+
+.
+ We consider two ways of decreasing the spectral radius: decreasing the
+ infection rate 
+\begin_inset Formula $\beta_{t}$
+\end_inset
+
+ (typically by some counter-epidemic measures) and increasing the isolation
+ rate 
+\begin_inset Formula $\theta_{t}$
+\end_inset
+
+ (e.g.
+ by strengthening the tracing capacity).
+\end_layout
+
+\begin_layout Example
+Once there is a 
+\begin_inset Quotes eld
+\end_inset
+
+target
+\begin_inset Quotes erd
+\end_inset
+
+ spectral radius 
+\begin_inset Formula $\rho_{0},$
+\end_inset
+
+ all the combinations of 
+\begin_inset Formula $\beta$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta$
+\end_inset
+
+ yielding 
+\begin_inset Formula $\rho(\barT_{t})=\rho_{0}$
+\end_inset
+
+ fulfill 
+\begin_inset Formula $\rho_{0}+\theta-\rho(C(\beta))=0$
+\end_inset
+
+ giving a 
+\begin_inset Quotes eld
+\end_inset
+
+marginal rate of substitiution
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Formula $\theta(\beta)'=-\frac{\partial}{\partial\beta}\rho(C(\beta))$
+\end_inset
+
+ of the infectiousness by the isolation, i.e.
+ how much we have to increase the isolation speed when we release the restrictio
+ns.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+Assume the fraction 
+\begin_inset Formula $\nu$
+\end_inset
+
+ of the population is non-compliant, which means that, once a restriction
+ on social contacts is imposed, they apply it only partially.
+ Assume that, without restrictions, the population is mixed which means
+ that each individual, compliant or not, has, up to a constant, 
+\begin_inset Formula $(1-\nu)$
+\end_inset
+
+ contacts with the compliant individuals and 
+\begin_inset Formula $\nu$
+\end_inset
+
+ contacts with the non-compliant ones.
+ Once there is a measure under which the compliant individuals restrict
+ their opportunities to contacts by 
+\begin_inset Formula $\phi$
+\end_inset
+
+, the non-compliant ones do so only to 
+\begin_inset Formula $f(\phi)>\phi$
+\end_inset
+
+ .
+ As a result, the compliant ones will have, up to a constant, 
+\begin_inset Formula $\phi^{2}(1-\nu)$
+\end_inset
+
+ contacts with the compliant ones, 
+\begin_inset Formula $\phi f(\phi)\nu$
+\end_inset
+
+ contacts with the non-compliant ones, while the non-compliant will have
+ 
+\begin_inset Formula $\phi f(\phi)(1-\nu)$
+\end_inset
+
+ and 
+\begin_inset Formula $f(\phi)^{2}\nu$
+\end_inset
+
+ contacts with the compliant, non-compliant, respectively.
+\end_layout
+
+\begin_layout Example
+Assuming a simple epidemic model with compartments 
+\begin_inset Formula $I_{c}$
+\end_inset
+
+ - infected compliant, 
+\begin_inset Formula $I_{n}$
+\end_inset
+
+ - infected non-compliant, and 
+\begin_inset Formula $R$
+\end_inset
+
+ - removed, with the course of infection being the same for both the compartment
+s such that 
+\begin_inset Formula $\beta_{t}^{1i}=\beta c_{i}$
+\end_inset
+
+ where 
+\begin_inset Formula $\beta$
+\end_inset
+
+ is a constant and 
+\begin_inset Formula $c_{i}$
+\end_inset
+
+ is the number of contacts of the 
+\begin_inset Formula $i$
+\end_inset
+
+-th sub-population, this gives 
+\begin_inset Formula 
+\[
+P_{t}=\left[\begin{array}{ccc}
+1-\varrho & 0 & 0\\
+0 & 1-\varrho & 0\\
+\varrho & \varrho & 1
+\end{array}\right],\qquad B_{t}=\left[\begin{array}{ccc}
+\beta\phi^{2}(1-\nu) & \,\beta\phi f(\phi)\nu\, & 0\\
+\beta\phi f(\phi)(1-\nu) & \,\beta f(\phi)^{2}\nu\, & 0\\
+0 & 0 & 1
+\end{array}\right]
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\varrho$
+\end_inset
+
+ is a removal rate (perhaps consisting of an artificial and a natural part).
+ This gives 
+\begin_inset Formula 
+\[
+\barT_{t}=\beta C+(1-\varrho)E,\qquad C=\left[\begin{array}{cc}
+\phi^{2}(1-\nu) & \,\phi f(\phi)\nu\\
+\phi f(\phi)(1-\nu) & \,f(\phi)^{2}\nu
+\end{array}\right]
+\]
+
+\end_inset
+
+with 
+\begin_inset Formula 
+\[
+\varrho(\barT_{t})=\beta\rho(C)+(1-\varrho).
+\]
+
+\end_inset
+
+As the characteristic polynomial of 
+\begin_inset Formula $C$
+\end_inset
+
+ is 
+\begin_inset Formula 
+\[
+\lambda^{2}-\lambda g,\qquad g=g(\phi,\nu)=\phi^{2}(1-\nu)+f(\phi)^{2}\nu
+\]
+
+\end_inset
+
+we clearly have 
+\begin_inset Formula $\rho(C)=g.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Example
+Now say that our goal is to decrease 
+\begin_inset Formula $\rho(\barT_{t})$
+\end_inset
+
+ to a predetermined value 
+\begin_inset Formula $r$
+\end_inset
+
+ by finding appropriate 
+\begin_inset Formula $\phi=\phi(\nu)$
+\end_inset
+
+.
+ In order to do so, we have to solve
+\begin_inset Formula 
+\[
+\beta g(\phi(\nu),\nu)+(1-\varrho)=r.
+\]
+
+\end_inset
+
+Clearly, 
+\begin_inset Formula $\phi(0)=\phi_{0}\defined\sqrt{\frac{r-1+\varrho}{\beta}}$
+\end_inset
+
+.
+ For 
+\begin_inset Formula $\nu>0$
+\end_inset
+
+ we get, by the Implicit function theorem, 
+\begin_inset Formula 
+\[
+\frac{\partial}{\partial\nu}\phi=\frac{f(\phi(\nu))^{2}-\phi(\nu)^{2}}{2\phi(\nu)(1-\nu)+2f(\phi(\nu))f'(\phi(\nu))\nu}.
+\]
+
+\end_inset
+
+Note that the derivative depends neither on 
+\begin_inset Formula $r$
+\end_inset
+
+ nor on 
+\begin_inset Formula $\varrho$
+\end_inset
+
+ .
+ Thus we can easily compute how the non-compliance influences strictness
+ of the necessary restrictions.
+ For instance, we can get by the first-order Taylor expansion at 
+\begin_inset Formula $\nu=0$
+\end_inset
+
+: 
+\begin_inset Formula 
+\[
+\phi(\nu)\doteq\phi_{0}+\nu\frac{f(\phi_{0})^{2}-\phi_{0}^{2}}{2\phi_{0}}=\phi_{0}\left(1-\frac{\nu}{2}\right)+\nu\frac{f(\phi_{0})^{2}}{2\phi_{0}}
+\]
+
+\end_inset
+
+roughly holding for 
+\begin_inset Formula $\nu$
+\end_inset
+
+ close to zero.
+\end_layout
+
+\begin_layout Section
+Estimation
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Estimation"
+
+\end_inset
+
+For any stochastic process 
+\begin_inset Formula $A$
+\end_inset
+
+ and integers 
+\begin_inset Formula $s>t$
+\end_inset
+
+, denote 
+\begin_inset Formula $\hat{A}_{s|t}=\E(A_{s}|\G_{t})$
+\end_inset
+
+.
+ When 
+\begin_inset Formula $T_{\tau}\in\G_{t},t<\tau\leq s-1$
+\end_inset
+
+ (which is trivially true if 
+\begin_inset Formula $s=t+1$
+\end_inset
+
+), we get that
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline*}
+\left[{\hat{X}_{s|t}\atop \hat{Y}_{s|t}}\right]=\E\left(\left.\E\left(\left.\left[{\hat{X}_{s}\atop \hat{Y}_{s}}\right]\right|\F_{s-1}\right)\right|\G_{t}\right)=\left[{E\atop F}\right]\left(T_{s-1}\hat{X}_{s-1|t}+\hat{I}_{s-1|t}\right)\\
+=\left[{E\atop F}\right]\left(T_{t,s-1}X_{t}+\sum_{\theta=t}^{s-1}T_{\theta+1,s-1}\hat{I}_{\theta|t}\right),
+\end{multline*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{multline*}
+W_{s|t}\defined\var\left(\left.X_{s}\right|\G_{t}\right)=\var\left(\left.\E\left(\left.X_{s}\right|\F_{s-1}\right)\right|\G_{t}\right)+\E\left(\left.\var\left(\left.X_{s}\right|\F_{s-1}\right)\right|\G_{t}\right)\\
+=\var\left(T_{s-1}X_{s-1}+I_{s-1}|\G_{t}\right)+\E\left(\left.\Lambda_{s-1}(X_{s-1})\right|\G_{t}\right)\\
+=T_{s-1}W_{s-1|t}T_{s-1}^{T}+2T_{s-1}\cov(X_{s-1},I_{s-1}|\G_{t})+\var\left(I_{s-1}|\G_{t}\right)+\Lambda_{s-1}(\hat{X}_{s-1|t})
+\end{multline*}
+
+\end_inset
+
+and
+\begin_inset Formula 
+\[
+V_{s|t}\defined\var\left(\left.{X_{s}\atop Y_{s}}\right|\G_{t}\right)=\var\left(\left.{X_{s}\atop FX_{s}+\epsilon_{s}}\right|\G_{t}\right)=\left[{E\atop F}\right]W_{s|t}\left[{E\atop F}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{s-1}\hat{X}_{s-1|t}}\right)}
+\]
+
+\end_inset
+
+Unfortunately, due to the non-Gaussianity, we have analytical formulas neither
+ for 
+\begin_inset Formula $X_{t|t}$
+\end_inset
+
+ nor for 
+\begin_inset Formula $\mathrm{W_{t|t}}$
+\end_inset
+
+, so we can formulate neither the likelihood function nor a least square
+ estimate.
+ Two, from the computational point of view equivalent, ways to cope with
+ this are using estimates of the conditional expectation and variance, or
+ normally approximating the residuals.
+ We go the latter way: in the present Section, we assume that 
+\begin_inset Formula $\left.\left[{X_{t+1}\atop Y_{t+1}}\right]\right|\F_{t}$
+\end_inset
+
+ is normal with mean given by (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:moments"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) and 
+\begin_inset Formula 
+\[
+\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop F}\right]\Lambda_{t}(X_{t}\vee0)\left[{E\atop F}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}(X_{t}\vee0)}\right)}
+\]
+
+\end_inset
+
+ Given this assumption, we have, by the well known formula (see e.g.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Eaton07"
+literal "false"
+
+\end_inset
+
+), 
+\begin_inset Formula 
+\begin{multline*}
+\hat{X}_{t|t}=I_{t-1}+\hat{X}_{t|t-1}+K_{t}\left(Y_{t}-\hat{Y}_{t|t-1}\right)\\
+K_{t}\defined V_{t|t-1}^{XY}(V_{t|-1}^{YY})^{-1}=W_{t|t-1}F^{T}D_{t}^{-1},\qquad D_{t}=FW_{t|t-1}F^{T}+\mathrm{diag}(\Gamma_{t}\hat{X}_{t|t-1})
+\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline*}
+W_{t|t}=V_{t|t-1}^{XX}-V_{t|t-1}^{XY}(V_{t|t-1}^{YY})^{-1}V_{t|t-1}^{YX}=W_{t|t-1}-W_{t|t-1}F^{T}D_{t}^{-1}FW_{t|t-1}
+\end{multline*}
+
+\end_inset
+
+Note that 
+\begin_inset Formula $K_{t}$
+\end_inset
+
+ may be seen as a conditional version of a Kalman gain matrix.
+\end_layout
+
+\begin_layout Standard
+Assume that 
+\begin_inset Formula $F=F(\Theta_{0}),$
+\end_inset
+
+
+\begin_inset Formula $P_{t}=P_{t}(\Theta_{0})$
+\end_inset
+
+, 
+\begin_inset Formula $B_{t}=B_{t}(\Theta_{0})$
+\end_inset
+
+, 
+\begin_inset Formula $\Gamma_{t}=\Gamma_{t}(\Theta_{0})$
+\end_inset
+
+ and 
+\begin_inset Formula $I_{t}=I_{t}(\Theta_{0})$
+\end_inset
+
+ where 
+\begin_inset Formula $\Theta_{0}\in\R^{r}$
+\end_inset
+
+ is an unknown parameter.
+ For its estimation, it is possible to to use either nonlinear least squares,
+ i.e.
+ 
+\begin_inset Formula 
+\[
+\hat{\Theta}=\arg\min\sum_{t}(Y_{t}-\hat{Y}_{t|t}(\Theta))^{T}U_{t}(Y_{t}-\hat{Y}_{t|t}(\Theta))
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $U_{t}\in\G_{t-1}$
+\end_inset
+
+ is a suitable weighting matrix, or 
+\begin_inset Formula 
+\[
+\tilde{\Theta}=\arg\min\sum_{t}\varphi(Y_{t}-\hat{Y}_{t|t}(\Theta),D_{t}(\Theta)),\qquad\varphi(x,v)=-\frac{k\ln2\pi+\ln\mathrm{det}(v)+x^{T}v^{-1}x}{2}
+\]
+
+\end_inset
+
+Both these estimators are consistent and asymptotically normal under some
+ conditions, see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Jacob10"
+literal "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "jacob2013generalized"
+literal "false"
+
+\end_inset
+
+, respectively.
+ Verifying these conditions for our model is, however, beyond the scope
+ of this short technical report and remains as topic of a future research.
+ Note also that our proof of Proposition 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "prop:as"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is not valid for the approximate model, as 
+\begin_inset Formula $\barX$
+\end_inset
+
+ is not necessarily positive here.
+\end_layout
+
+\begin_layout Section
+Application to The COVID Pandemics in Czech Republic
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Application-to-The"
+
+\end_inset
+
+We applied our model to the data from the first and second wave of the pandemics
+ in the Czech Republic between February and November of 2020.
+ We considered a generalized version of the model from Example 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "exa:e1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, compartments of which are shown in the following Picture:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename bigpng.png
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To the compartments from Example 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "exa:e1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ we added their 
+\begin_inset Quotes eld
+\end_inset
+
+detected
+\begin_inset Quotes erd
+\end_inset
+
+ versions, distinguishing detection when being asymptomatic (subscript 
+\begin_inset Formula $\delta$
+\end_inset
+
+) and when being symptomatic (subscript 
+\begin_inset Formula $d$
+\end_inset
+
+).
+ Moreover, for both the symptomatic and the asymptomatic course, we added
+ the states in which the individuals are RNA positive, but not infectious
+ (denoted by 
+\begin_inset Formula $J$
+\end_inset
+
+).
+ We also distinguish two 
+\begin_inset Quotes eld
+\end_inset
+
+removed
+\begin_inset Quotes erd
+\end_inset
+
+ states: recovered (
+\begin_inset Formula $R$
+\end_inset
+
+) and dead (
+\begin_inset Formula $D$
+\end_inset
+
+).
+ All the 
+\begin_inset Formula $J$
+\end_inset
+
+ and 
+\begin_inset Formula $R$
+\end_inset
+
+ states have three versions: undetected, detected when asymptomatic and
+ detected when symptomatic.
+ Assuming that once the undetected course ends by death, the detection takes
+ place before the time of death, we have only two death states: detected
+ when asymptomatic and detected when symptomatic.
+\end_layout
+
+\begin_layout Standard
+We use the following parameters of the disease, obtained from the literature:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tabular}{lll} 
+\backslash
+hline Par.&	description&	Source 
+\backslash
+
+\backslash
+ 
+\backslash
+hline
+\backslash
+hline 
+\end_layout
+
+\begin_layout Plain Layout
+
+$m_E=5.08$ & mean of incubation period &		
+\backslash
+cite{he2020estimation}	
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$
+\backslash
+alpha = 0.179$ & probability of asymptomatic course & 
+\backslash
+cite{mizumoto2020estimating}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$m_a=4$ & expected duration of presymptomatic period
+\end_layout
+
+\begin_layout Plain Layout
+
+&	
+\backslash
+cite{nie2020epidemiological} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ $m_i = 8$ & expected duration of infectiousness 
+\end_layout
+
+\begin_layout Plain Layout
+
+	&	
+\backslash
+cite{Wolfel2020virological}	
+\backslash
+
+\backslash
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+ $m_y=22.6$ &
+\end_layout
+
+\begin_layout Plain Layout
+
+expected duration of RNA positivity for asymptomatic	& 
+\backslash
+cite{noh2020asymptomatic}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$m_s=25.2$ & expected duration of RNA positivity for asymptomatic &	 	
+\backslash
+cite{noh2020asymptomatic}	
+\end_layout
+
+\begin_layout Plain Layout
+
+%
+\backslash
+
+\backslash
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+% r=0.018 & case fatality ratio & 
+\backslash
+cite{he2020estimation}
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\backslash
+
+\backslash
+ 
+\backslash
+hline 
+\backslash
+end{tabular} 
+\backslash
+end{center}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Assuming the compartment occupation times to be exponential, we get the
+ following transition probabilities:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tabular}{l} 
+\backslash
+hline Par.
+ 
+\backslash
+
+\backslash
+ 
+\backslash
+hline
+\backslash
+hline 
+\end_layout
+
+\begin_layout Plain Layout
+
+$
+\backslash
+sigma=1-
+\backslash
+exp
+\backslash
+{-1/m_E
+\backslash
+}$ 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$
+\backslash
+varsigma = 1-
+\backslash
+exp
+\backslash
+{-
+\backslash
+frac{1}{m_a}
+\backslash
+}$ 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$
+\backslash
+delta_s=1-
+\backslash
+exp
+\backslash
+{-
+\backslash
+frac{1}{m_s}
+\backslash
+}$ 	
+\backslash
+
+\backslash
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+$
+\backslash
+delta_a = 1-
+\backslash
+exp
+\backslash
+{-
+\backslash
+frac{1}{m_i+m_a}
+\backslash
+}$ 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+ $
+\backslash
+iota_a = 1-
+\backslash
+exp
+\backslash
+{-
+\backslash
+frac{1}{m_y-m_i-m_a}
+\backslash
+}$ 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$
+\backslash
+iota_s = (1-r)(1-
+\backslash
+exp
+\backslash
+{
+\backslash
+frac{1}{m_s-m_i-m_a}
+\backslash
+})$
+\backslash
+
+\backslash
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+$
+\backslash
+mu$ - estimated 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+%
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+% $
+\backslash
+mu=r(1-
+\backslash
+exp
+\backslash
+{
+\backslash
+frac{1}{m_s-m_i-m_a}
+\backslash
+})$
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\backslash
+
+\backslash
+ 
+\backslash
+hline 
+\backslash
+end{tabular} 
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{center}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Similarly as in the Example, we assumed equal infectiousness 
+\begin_inset Formula $\beta_{t}$
+\end_inset
+
+ for all the infectious states 
+\begin_inset Formula $I_{a},I_{p},I_{s}$
+\end_inset
+
+, varying in time:
+\begin_inset Formula 
+\begin{equation}
+\beta_{t}=\beta c_{t}p_{t}\label{eq:gamma}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\beta$
+\end_inset
+
+ is an (estimated) constant, 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ is the contact reduction (with 
+\begin_inset Formula $c_{0}=1$
+\end_inset
+
+) and 
+\begin_inset Formula $p_{t}$
+\end_inset
+
+ is the reduction caused by personal protection.
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+removal
+\begin_inset Quotes erd
+\end_inset
+
+ are 
+\begin_inset Formula $\eta$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta$
+\end_inset
+
+, which both are also time-varying.
+ Reflecting the weekly pattern of reporting, we assume 
+\begin_inset Formula 
+\[
+\theta_{t}=\phi_{t+1}\theta,\qquad\eta_{t}=\phi_{t+1}\eta
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\phi_{t}$
+\end_inset
+
+ is the adjustment for the day of the week, having different values for
+ different weekdays and being computed in a standard way from 
+\begin_inset Formula $\ln R_{t}$
+\end_inset
+
+ where 
+\begin_inset Formula $R_{t}$
+\end_inset
+
+ is the total number of positive cases.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+In particular we assume 
+\begin_inset Formula $\Delta R_{t}=\phi_{t}\Delta r_{t}$
+\end_inset
+
+ where 
+\begin_inset Formula $r$
+\end_inset
+
+ is a 
+\begin_inset Quotes eld
+\end_inset
+
+trend
+\begin_inset Quotes erd
+\end_inset
+
+ without oscillations and 
+\begin_inset Formula $\prod_{i=1}^{7}\phi_{i}=1$
+\end_inset
+
+, which gives 
+\begin_inset Formula $\ln(\Delta R_{t})=\ln(\phi_{t})+\ln(\Delta r_{t})$
+\end_inset
+
+ and 
+\begin_inset Formula $\sum_{i=1}^{7}\ln\phi_{i}=0$
+\end_inset
+
+.
+ Assuming 
+\begin_inset Formula $r$
+\end_inset
+
+ to be locally linear, we estimate 
+\begin_inset Formula $\ln\phi_{t}=\frac{1}{4}\sum_{i=1}^{4}\left(\ln(\Delta R_{t-7i})-\frac{1}{7}\sum_{j=-3}^{3}\ln(\Delta R_{t-7i+j})\right)-\frac{1}{18}\sum_{i=1}^{28}\ln(\Delta R_{t-i})$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ The following graph illustrates de-seasoning we made:
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename dayadjust.eps
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We use three data series as observations: the daily numbers of detected
+ cases, distinguished between symptomatic (S), asymptomatic (
+\begin_inset Formula $A$
+\end_inset
+
+) and daily numbers of dead (
+\begin_inset Formula $D)$
+\end_inset
+
+, i.e.
+\begin_inset Formula 
+\[
+Y_{t}=\left[\begin{array}{c}
+A_{t}\\
+S_{t}\\
+D_{t}
+\end{array}\right].
+\]
+
+\end_inset
+
+As for the transformation matrix 
+\begin_inset Formula $F$
+\end_inset
+
+, we put 
+\begin_inset Formula $F=(f^{ij})$
+\end_inset
+
+ where 
+\begin_inset Formula $f^{1i}$
+\end_inset
+
+is one/zero if the state 
+\begin_inset Formula $i$
+\end_inset
+
+ is/is not 
+\emph on
+detected asymptomatic on 
+\emph default
+the Figure above, and similarly with 
+\begin_inset Formula $f^{2i}$
+\end_inset
+
+ – 
+\emph on
+detected symptomatic
+\emph default
+ and 
+\begin_inset Formula $f^{3i}$
+\end_inset
+
+ – 
+\emph on
+dead
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Assuming the imports only to the state 
+\begin_inset Formula $E$
+\end_inset
+
+, we take 
+\begin_inset Formula 
+\[
+I_{t}=r_{t}M_{t+8}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $M_{t}$
+\end_inset
+
+ is the number of detected with the indicated infection abroad and 
+\begin_inset Formula $r_{t}$
+\end_inset
+
+ is a multiplication factor.
+ We took 
+\begin_inset Formula $r_{t}=\iota$
+\end_inset
+
+ for 
+\begin_inset Formula $t<30$
+\end_inset
+
+ (the first month), where 
+\begin_inset Formula $\iota$
+\end_inset
+
+ is an unknown parameter; this allowed us to reflect the excess numbers
+ of dead in comparison with the detected, which suggests that many of the
+ cases remained unnoticed in the beginning of the pandemics.
+ For the next months of the pandemics, we took 
+\begin_inset Formula $r_{t}=\frac{1}{1-\alpha}$
+\end_inset
+
+ to reflect the fact that the fraction 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ of imports will remain asymptomatic.
+\end_layout
+
+\begin_layout Standard
+The following graphs show the time series we mentioned.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename A.eps
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename S.eps
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename D.eps
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename M.eps
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To compute 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $p_{t}$
+\end_inset
+
+ we used 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "paqcovid"
+literal "false"
+
+\end_inset
+
+ which is a longitudinal study, inquiring a panel of 3000 respondents about
+ their (weekly) intense contacts, observance of several personal protection
+ measures (see the Table below), and some other variables.
+ Using this, we compute 
+\begin_inset Formula $c_{t}=\frac{C_{t-\Delta}}{C_{0}}$
+\end_inset
+
+ where 
+\begin_inset Formula $C_{t}$
+\end_inset
+
+ is the average reported number of contacts people had at a given time (the
+ weekly reponses values are linearly interpolated assuming the responded
+ values on Wednesdays) and 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ is an unknown parameter, reflecting our lack of knowledge concerning a
+ delay.
+\end_layout
+
+\begin_layout Standard
+With determining the level of personal protection 
+\begin_inset Formula $p_{t}$
+\end_inset
+
+, the situation is more complicated, as the study monitors observance of
+ several protective measures.
+ However, if we assume that the 
+\begin_inset Formula $i$
+\end_inset
+
+-th measure reduces the probability of infection by 
+\begin_inset Formula $\lambda_{i}$
+\end_inset
+
+, we get that, denoting 
+\begin_inset Formula $\pi_{t}^{i}$
+\end_inset
+
+ the average observance of the 
+\begin_inset Formula $i$
+\end_inset
+
+-th measure among the respondents at 
+\begin_inset Formula $t$
+\end_inset
+
+, that the average reduction brought by the the measure will be 
+\begin_inset Formula $(1-\pi_{t}^{i})\times1+\pi_{t}^{i}(1-\lambda^{i})=1-\pi_{t}^{i}\lambda^{i}.$
+\end_inset
+
+ This gives total reduction
+\begin_inset Formula 
+\[
+p_{t}\defined\prod_{i=1}^{q}(1-\pi_{t}^{i}\lambda^{i}).
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $q$
+\end_inset
+
+ is the number of measures.
+ Unfortunately, 
+\begin_inset Formula $\lambda_{i}$
+\end_inset
+
+ are unknown and their estimation would bring a serious danger of over-fitting
+ and/or co-linearity (series 
+\begin_inset Formula $\pi_{t}^{1},\dots,\pi_{t}^{q}$
+\end_inset
+
+ are almost perfectly co-related).
+ To overcome this difficulty, we applied factor analysis to 
+\begin_inset Formula $(C_{t},\pi_{t}^{1},\dots,\pi_{t}^{q})$
+\end_inset
+
+ on the respondent level, treating the responses in different times as separate
+ observations.
+ As a result, we extracted two main factors as shown in the following Table
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tabular}{lll}
+\end_layout
+
+\begin_layout Plain Layout
+
+$f$ & $g$ & Value 
+\backslash
+
+\backslash
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.563$ &	$0.352$ &	Avoiding caughing people (yes or no) 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.315$ &	$0.669$ &	Avoiding crowded places 
+\backslash
+
+\backslash
+ 
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.269$ &	$0.454$ &	Wearing a mask or a respirator 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.394$ &    $0.610$	& Restricting physical contact with people 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.539$ & $0.095$ &	Using desinfection 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.526$ & $0.295$ &	Avoiding people being in contact with an infected 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.081$ & $0.734$ &	Avoiding public transport 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.417$ & $0.100$ &	Taking vitamines 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.640$ & $0.201$ &	Avoiding touching nose and eyes 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.565$ & $0.261$ & Extra hygiene 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.661$ & $0.121$ & Washing hands after coughing
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.670$ & $-0.244$ & Washing hands after using public transport.
+ 
+\backslash
+
+\backslash
+
+\end_layout
+
+\begin_layout Plain Layout
+
+$0.084$ & $-0.517$ & $C_t$
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{tabular}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{center}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It can be seen that, while the first factor speaks more about contacts,
+ the second one concerns personal protection, lacking connection with 
+\begin_inset Formula $C$
+\end_inset
+
+.
+ Being interested in the protection, we approximate 
+\begin_inset Formula 
+\[
+\pi_{t}^{i}\doteq\overline{\pi}_{t}^{i}+\nu_{t}f_{t}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\overline{\pi}_{t}^{i}$
+\end_inset
+
+ is the average of 
+\begin_inset Formula $\pi_{t}^{i}$
+\end_inset
+
+ over time and respondents, 
+\begin_inset Formula $\nu_{t}$
+\end_inset
+
+ is a constant and 
+\begin_inset Formula $f_{t}$
+\end_inset
+
+ is average of the second factor over respondents at 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ Having that.
+ we could approximate 
+\begin_inset Formula 
+\begin{multline*}
+p_{t}\doteq\prod_{i=1}^{q}(1-\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}f_{t}))=\exp\left\{ \sum_{i=1}^{q}\ln(1-\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}f_{t}))\right\} \\
+\doteq\exp\left\{ -\sum_{i=1}^{q}\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}f_{t})\right\} =\omega_{0}\exp\left\{ -\omega_{1}f_{t}\right\} 
+\end{multline*}
+
+\end_inset
+
+where 
+\begin_inset Formula $\omega_{0},\omega_{1}\geq0$
+\end_inset
+
+.
+ Consequently, we take 
+\begin_inset Formula 
+\[
+\beta_{t}=bc_{t}\exp\left\{ -\omega_{1}f_{t}\right\} ,\qquad b=\beta\omega_{0}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Not assuming additional errors of observations, we 
+\begin_inset Formula $\Gamma_{t}\equiv0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+For estimation, we used Weighted least squares with weights 
+\begin_inset Formula 
+\[
+U_{t}=\mathrm{diag}\left(\frac{1}{\max(\overline{r}_{t},20)},\frac{1}{\max(\overline{r}_{t},20)},\frac{1}{\max(\overline{d}_{t},5)}\right)
+\]
+
+\end_inset
+
+ where 
+\begin_inset Formula $\overline{r}_{t}$
+\end_inset
+
+ is the weekly average of reported positive over past week and 
+\begin_inset Formula $\overline{d}_{t}$
+\end_inset
+
+ is the weekly average of dead.
+\end_layout
+
+\begin_layout Standard
+The results of the estimation, based on data from February 24th to November
+ 5th, 2020, can be seen in the following Table:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tabular}{lcccc}									 	&	Estimate	&	Std.
+ Error	&	z	&	Significance	
+\backslash
+
+\backslash
+ 
+\backslash
+hline $
+\backslash
+iota$	&	$0$	&	$0.204$	&	$0$	&	$1^{***}$	
+\backslash
+
+\backslash
+ $b_{0}$	&	$0$	&	$0.302$	&	$0$	&	$1^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+omega_{1}$	&	$2.30022$	&	$1.004$	&	$2.291$	&	$0.022^{*}$	
+\backslash
+
+\backslash
+ $
+\backslash
+Delta$	&	$5.14679$	&	$0.314$	&	$16.39$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+mu$	&	$0.00198165$	&	$0$	&	$5.722$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+theta$	&	$0.0347199$	&	$0$	&	$257.228$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+eta$	&	$0.644159$	&	$0.005$	&	$142.484$	&	$0^{***}$	
+\backslash
+
+\backslash
+   
+\backslash
+end{tabular} 
+\backslash
+end{center}									 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Yet the standard errors and significance are only indicative here (we did
+ note verify regularity conditions), the result suggest a good fit.
+\end_layout
+
+\begin_layout Standard
+The following graphs show standardized residuals, standardized mean absolute
+ errors of a one day ahead prediction and the predictions of weekly amounts.
+ The red lines stand for predictions, the blue ones for actual data.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Standardized residuals
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Stamdardized MAE
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Seven-day prediction
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ar.eps
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename a1.eps
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename a7.eps
+	scale 25
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $S$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename sr.eps
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename s1.eps
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename s7.eps
+	scale 25
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $D$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename dr.eps
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename d1.eps
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename d7.eps
+	scale 25
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The residuals are standardized in the sense that the actual residual is
+ divided by the standard deviation of the one-day ahead prediction (its
+ square is found on the diagonal of the 
+\begin_inset Formula $V_{t\text{|}t-1})$
+\end_inset
+
+.
+ The MAEs are standardized divided by the weekly averages, i.e.
+ they estimate in fact the MAEs of the relative increments.
+ The predictions are in-sample in the sense that they use parameters originated
+ from the estimation over the whole period; however, the predictions are
+ always based only on the data available at the moment of prediction.
+\end_layout
+
+\begin_layout Standard
+These results clearly show limitations of the present simple parametrization
+ of the model.
+ First of all, the 
+\begin_inset Quotes eld
+\end_inset
+
+standardized
+\begin_inset Quotes erd
+\end_inset
+
+ residuals are far from having unit variance which means that the actual
+ variance of the observations is much bigger than that predicted by the
+ model, the problem being more severe with the reported infections and less
+ severe with deaths.
+ It is clear that assuming a non-zero 
+\begin_inset Formula $\Gamma_{t}$
+\end_inset
+
+ (i.e.
+ observation errors), can make the variances right; then, however, the predictio
+n errors increase; resolving this puzzle is a topic for the future research.
+\end_layout
+
+\begin_layout Standard
+It is also clear from the graphs that, the model tends to over-estlimate
+ reported infections between the individual waves.
+ This can be naturally attributed to better tracing when numbers are low.
+ In addition, asymptomatic numbers are over-estimated even during the first
+ wave.
+ A natural solution here is to assume a variable rates 
+\begin_inset Formula $\theta$
+\end_inset
+
+, which was proved to increase the prediction power,
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+In the 
+\begin_inset CommandInset href
+LatexCommand href
+name "Situation report 44 by BISOP"
+target "https://www.bisop.eu/?p=322"
+literal "false"
+
+\end_inset
+
+ , for instance, 
+\begin_inset Formula $\theta_{t}$
+\end_inset
+
+ was approximated by a piece-wise linear function with kinks at 24/02/20,
+ 16/03/20, 26/04/20.
+ 04/07/20, 06/08/20, 16/09/20 and 27/10/20 and taking values 
+\begin_inset Formula $\theta_{0},\dots,\theta_{6}$
+\end_inset
+
+ at these points.
+ We got the following parameters by ML estimation:
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{center}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tabular}{lcccc}									 	&	Estimate	&	Std.
+ Error	&	z	&	Significance	
+\backslash
+
+\backslash
+ 
+\backslash
+hline $
+\backslash
+iota$	&	$9.96795$	&	$0.801$	&	$12.441$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $b$	&	$0.618509$	&	$0.035$	&	$17.539$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+alpha$	&	$0.549047$	&	$0.026$	&	$21.402$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+omega_{1}$	&	$0.550946$	&	$0.061$	&	$8.986$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+theta_0$	&	$0.0194497$	&	$0.015$	&	$1.317$	&	$0.0939^{*}$	
+\backslash
+
+\backslash
+ $
+\backslash
+theta_1$	&	$0.00402584$	&	$0.003$	&	$1.318$	&	$0.0937^{*}$	
+\backslash
+
+\backslash
+ $
+\backslash
+theta_2$	&	$0.0204434$	&	$0.006$	&	$3.346$	&	$0.0004^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+theta_3$	&	$0.0260418$	&	$0.004$	&	$5.789$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+theta_4$	&	$0.0248783$	&	$0.004$	&	$6.784$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+theta_5$	&	$0.00966628$	&	$0.001$	&	$16.701$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+theta_6$	&	$0.0221601$	&	$0.001$	&	$14.897$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+eta$	&	$0.624971$	&	$0.007$	&	$89.31$	&	$0^{***}$	
+\backslash
+
+\backslash
+ 
+\backslash
+hline 
+\backslash
+end{tabular}
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{center}									 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ but it can bring a danger of over-fitting.
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Conclusion"
+
+\end_inset
+
+ We presented a stochastic epidemic model, formulated its basic properties
+ and suggested way of its estimation, all demonstrated by a real-life example.
+ They are, however, things to be done, in the first place formulation of
+ regularity conditions which would assure desirable.
+ asymptotic properties.
+ Another issue to deal with is the underestimation of the variances of 
+\begin_inset Formula $X$
+\end_inset
+
+ and or 
+\begin_inset Formula $Y$
+\end_inset
+
+; the most probable reason for this is that the actual infection is not
+ Poisson but rather the arrival of new cases is stochastically dependent.
+ However, even as it is, it can be immediately used for statistically correct
+ modeling of an epidemics.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "/home/martin/Documents/s/smid,covid_m"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{document}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{document}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Second order 
+\begin_inset Formula $p_{t}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline*}
+p_{t}\doteq\prod_{i=1}^{q}(1-\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}f_{t}))=\exp\left\{ \sum_{i=1}^{q}\ln(1-\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}f_{t}))\right\} \\
+\doteq\exp\left\{ \sum_{i=1}^{q}\left[-\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}f_{t})-\frac{(\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}f_{t}))^{2}}{2}\right]\right\} =\omega_{0}\exp\left\{ -\omega_{1}f_{t}-\omega_{2}f_{t}^{2}\right\} 
+\end{multline*}
+
+\end_inset
+
+where 
+\begin_inset Formula $\omega_{0},\omega_{1},\omega_{2}\geq0$
+\end_inset
+
+.
+ Consequently, we take 
+\begin_inset Formula 
+\[
+\gamma_{t}=\beta_{0}c_{t}\exp\left\{ -\omega_{1}f_{t}-\omega_{2}f_{t}^{2}\right\} ,\qquad\beta_{0}=\beta\omega_{0}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Linearized model
+\end_layout
+
+\begin_layout Standard
+except for 
+\begin_inset Formula $ $
+\end_inset
+
+ and 
+\begin_inset Formula $\omega_{1}$
+\end_inset
+
+, which are (locally) colinear – the correlation of the corresponding estimators
+ is 
+\begin_inset Formula $0.99$
+\end_inset
+
+.
+ In order to disentangle these parameters, we re-estimated the model with
+ the linear approximation
+\begin_inset Formula 
+\[
+\gamma_{t}=c_{t}(b-\varpi_{1}f_{t})
+\]
+
+\end_inset
+
+results of which are in the following Table.
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{tabular}{lcccc}
+\end_layout
+
+\begin_layout Plain Layout
+
+&	Estimate	&	Std.
+ Error	&	z	&	Significance	
+\backslash
+
+\backslash
+ 
+\backslash
+hline									 $
+\backslash
+iota$	&	$9.86793$	&	$0.464$	&	$21.267$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+Delta$	&	$4.7787$	&	$0.657$	&	$7.272$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $b_0$	&	$0.420202$	&	$0.041$	&	$10.203$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+omega_{1}$	&	$0.12406$	&	$0.084$	&	$1.475$	&	$0.0701^{*}$	
+\backslash
+
+\backslash
+ $
+\backslash
+theta$	&	$0.0339621$	&	$0$	&	$273.996$	&	$0^{***}$	
+\backslash
+
+\backslash
+ $
+\backslash
+eta$	&	$0.623455$	&	$0.004$	&	$148.797$	&	$0^{***}$	
+\backslash
+
+\backslash
+ 
+\backslash
+hline  
+\backslash
+end{tabular}									 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This clearly shows, that, while contacts are indisputable driver of the
+ epidemics, this (simple) model confirms the significance of personal protection
+ only on $10$ per cent level; this, however, is most likely caused by small
+ variation of 
+\begin_inset Formula $f_{1}$
+\end_inset
+
+ over time.
+ The following graphs show course of 
+\begin_inset Formula $c_{t},$
+\end_inset
+
+estimated course of 
+\begin_inset Formula $\beta_{t}$
+\end_inset
+
+ for both the original and the linear model, and the estimated course of
+ 
+\begin_inset Formula $\text{\ensuremath{\beta}. }$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="1" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename cp.eps
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename gamma.eps
+	scale 30
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is clear that the original and the linearized models are practically
+ equivalent, so we will refer only to the linear one until the end of the
+ paragraph.
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+y
+\end_layout
+
+\begin_layout Standard
+A question arises what 
+\begin_inset Formula $I_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $P_{t}$
+\end_inset
+
+ should be so that 
+\begin_inset Formula $Z_{t}\rightarrow0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $U=\{E,I_{a},I_{s},I_{n}\}$
+\end_inset
+
+ We have 
+\begin_inset Formula 
+\[
+\barP=\left[\begin{array}{cccc}
+p^{E} & \iota & \iota & \iota\\
+p^{Ea} & p^{aa} & 0 & 0\\
+0 & p^{as} & p^{ss} & 0\\
+p^{En} & 0 & 0 & p^{nn}
+\end{array}\right]
+\]
+
+\end_inset
+
+and we have 
+\begin_inset Formula 
+\begin{multline*}
+|\barP-\lambda I|=\left|\begin{array}{cccc}
+p^{E}-\lambda & \iota & \iota & \iota\\
+p^{Ea} & p^{aa}-\lambda & 0 & 0\\
+0 & p^{as} & p^{ss}-\lambda & 0\\
+p^{En} & 0 & 0 & p^{nn}-\lambda
+\end{array}\right|\\
+=(p^{E}-\lambda)\left|\begin{array}{ccc}
+p^{aa}-\lambda & 0 & 0\\
+p^{as} & p^{ss}-\lambda & 0\\
+0 & 0 & p^{nn}-\lambda
+\end{array}\right|-\iota\left|\begin{array}{ccc}
+p^{Ea} & 0 & 0\\
+0 & p^{ss}-\lambda & 0\\
+p^{En} & 0 & p^{nn}-\lambda
+\end{array}\right|\\
++\iota\left|\begin{array}{ccc}
+p^{Ea} & p^{aa}-\lambda & 0\\
+0 & p^{as} & 0\\
+p^{En} & 0 & p^{nn}-\lambda
+\end{array}\right|-\iota\left|\begin{array}{ccc}
+p^{Ea} & p^{aa}-\lambda & 0\\
+0 & p^{as} & p^{ss}-\lambda\\
+p^{En} & 0 & 0
+\end{array}\right|\\
+=(p^{E}-\lambda)(p^{nn}-\lambda)(p^{aa}-\lambda)(p^{ss}-\lambda)\\
+-\gamma(p^{nn}-\lambda)(p^{ss}-\lambda)+\iota(p^{nn}-\lambda)p^{Ea}p^{as}-\gamma(p^{ss}-\lambda)(p^{aa}-\lambda)
+\end{multline*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+\frac{\partial f}{\partial\iota} & =-p^{Ea}(p^{nn}-\lambda)(p^{ss}-\lambda)+(p^{nn}-\lambda)p^{Ea}p^{as}-p^{En}(p^{ss}-\lambda)(p^{aa}-\lambda)
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\frac{\partial f}{\partial p^{ss}}=(p^{E}-\lambda)(p^{nn}-\lambda)(p^{aa}-\lambda)-\gamma(p^{nn}-\lambda)-\gamma(p^{aa}-\lambda)
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\begin{multline*}
+p^{ss}'(\iota)=\frac{f_{\iota}}{f_{ss}}
+\end{multline*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{document}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $Y_{t}\in\mathbb{N}^{k+1}$
+\end_inset
+
+ be the state vector.
+ For 
+\begin_inset Formula $s\neq E$
+\end_inset
+
+, 
+\begin_inset Formula $Y_{t}^{s}|Y_{t-1}=\sum_{j}\Bi(Y_{t-1}^{j}M_{t}^{s,j})$
+\end_inset
+
+ and´ 
+\begin_inset Formula $\epsilon_{t}^{E}|Y_{t-1}=\Bi(Y_{t-1}^{E},P_{t}^{E,E})+\Bi(N,\sum_{s\neq E}\frac{Y_{t-1}^{s}}{N}\iota_{t}^{s})\doteq\dots+\mathrm{Po}(\sum_{s\neq E}Y_{t-1}^{s}\iota_{t}^{s})$
+\end_inset
+
+ i.e.
+\begin_inset Formula 
+\[
+Y_{t}=M_{t}Y_{t-1}+\epsilon_{t}
+\]
+
+\end_inset
+
+ where
+\begin_inset Formula 
+\[
+\var(\epsilon_{t}^{E}|Y_{t-1})=Y_{t-1}^{E}M_{t}^{E,E}(1-M_{t}^{E,E})+\sum_{j\neq E}M_{t}^{s,j}Y_{t-1}^{j},\qquad\var(\epsilon_{t}^{s}|Y_{t-1})=\sum_{j}M_{t}^{s,j}(1-M_{t}^{s,j})Y_{t-1}^{j}
+\]
+
+\end_inset
+
+Further, 
+\begin_inset Formula 
+\[
+\Delta R_{t}|Y_{t-1}^{j}\sim\sum_{j\leq k+1}\Bi(Y_{t-1}^{j},P_{t}^{j,R})
+\]
+
+\end_inset
+
+Nearly clearly, 
+\begin_inset Formula 
+\[
+\Delta R_{t}=\tau(t)+\mathcal{E}_{t},\qquad\tau(t)=N_{t}M_{t-1}\dots M_{1}Y_{0},\qquad N_{t}=(P_{t}^{E,R},\dots,P_{t}^{S_{k},R})
+\]
+
+\end_inset
+
+where, 
+\begin_inset Formula $\mathcal{\E E}_{t}=0$
+\end_inset
+
+ and hopefully, 
+\begin_inset Formula $\var(\mathcal{E}_{t}|\Delta R_{1},\dots,\Delta R_{t-1})$
+\end_inset
+
+ is proportional to 
+\begin_inset Formula $Y_{t-1}^{R}$
+\end_inset
+
+ (maybe can be computed when residuals are approximated by normal ones).
+\end_layout
+
+\begin_layout Standard
+The contagion probability is assumed to fulfill 
+\begin_inset Formula 
+\[
+\iota_{t}=\beta c_{t}(1-am_{t})
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\beta,\mu$
+\end_inset
+
+ are parameters constant, 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ is the contact restriction and 
+\begin_inset Formula $m_{t}$
+\end_inset
+
+ is the rate of self-protecting activities.
+\end_layout
+
+\begin_layout Standard
+To stop epidemic growing, we need 
+\begin_inset Formula 
+\[
+\|T_{t}\|\leq1
+\]
+
+\end_inset
+
+we can determine set of 
+\begin_inset Formula $c$
+\end_inset
+
+ and 
+\begin_inset Formula $m$
+\end_inset
+
+'s fulfilling this.
+\end_layout
+
+\begin_layout Proof
+Further we have
+\end_layout
+
+\begin_layout Proof
+\begin_inset Formula 
+\begin{multline*}
+\var(X_{t})=\E(\var(X_{t}|\G_{0}))+\var(\E(X_{t}|\G_{0}))\\
+=\E(\underbrace{\var\left(M_{t-1}+T_{t-1}X_{t-1}|\G_{0}\right)}_{\preceq\var(M_{t-1}+T_{t-1}X_{t-1})})+\underbrace{\E\Lambda(\E(X_{t-1}|\G_{0}))}_{=\Lambda_{t}(\E(X_{t-1}))}+\var(M_{t-1}+T_{t-1}X_{t-1})\\
+\preceq2\var(M_{t-1}+T_{t-1}X_{t-1})+\Lambda(\E(X_{t-1}))\\
+\preceq4\var(M_{t-1})+4\var(T_{t-1}X_{t-1})+\Lambda(\E(X_{t-1}))\\
+\preceq4\var(M_{t-1})+4T_{t-1}\var(X_{t-1})T_{t-1}^{T}+k\|T\|\|x\|\E(X_{t-1}))
+\end{multline*}
+
+\end_inset
+
+as
+\begin_inset Formula 
+\[
+\|\Lambda_{t}(x)\|_{1}\leq\mathrm{\|\sum_{k}diag}(\iota_{t}^{i}??+p_{t}^{i})x^{i}\|_{t}\leq k\|T\|\|x\|
+\]
+
+\end_inset
+
+(laer, we have 
+\begin_inset Formula $\Lambda_{t}(\E(X_{t-1}))\rightarrow0$
+\end_inset
+
+.)
+\end_layout
+
+\begin_layout Subsection*
+Variance
+\end_layout
+
+\begin_layout Proof
+By the parallerogram inequalitiex (Lukeš rovn.
+ pravidlo, Clarkson), we have 
+\begin_inset Formula 
+\[
+\var(M_{t-1}+T_{t-1}X_{t-1})\leq2\var(M_{t-1})+2\var(T_{t-1}X_{t-1})=
+\]
+
+\end_inset
+
+we have 
+\begin_inset Formula 
+\[
+\var(T_{t-1}X_{t-1})=T_{t-1}\var(X_{t-1})T_{t-1}^{T}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Old
+\end_layout
+
+\begin_layout Standard
+Compartments
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $S$
+\end_inset
+
+ - suspectible (constant for simplicity)
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $E$
+\end_inset
+
+ - exposed noninfectious
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $A$
+\end_inset
+
+ - asymptotic
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $I$
+\end_inset
+
+ - symptomatic
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $P$
+\end_inset
+
+ - reported
+\end_layout
+
+\begin_layout Description
+\begin_inset Formula $R$
+\end_inset
+
+ - removed
+\end_layout
+
+\begin_layout Standard
+Transition Matrix 
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="9">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+S
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+E
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+A
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+I
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+P
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+R
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell multirow="3" alignment="center" valignment="middle" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+S
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1-\dots$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\kappa_{t}(\epsilon_{A}A+\text{\ensuremath{\epsilon_{I}}}I)$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+E
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1-\dots$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\alpha$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+A
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1-\dots$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\iota$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\pi_{A}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho_{A}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+I
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1-\dots$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\pi_{I}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\rho_{I}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+P
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+R
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Beginning of epidemic -
+\begin_inset Formula $|S|$
+\end_inset
+
+ very large
+\end_layout
+
+\begin_layout Standard
+Equations
+\begin_inset Formula 
+\[
+E_{t}=(1-\alpha)E_{t-1}+\epsilon_{A}A_{t-1}+\epsilon_{I}I_{t-1}-\alpha+\eta_{t,E}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+A_{t} & =(1-\iota-\pi_{A}-\rho_{A})A_{t-1}+\alpha E_{t-1}+\eta_{t,A}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+I_{t} & =(\pi_{A}+\rho_{A})I_{t-1}+\gamma+\eta_{t,I}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Delta P_{t}=\pi_{A}A_{t-1}+\pi_{I}I_{t-1}+\eta_{t,P}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $\eta_{t,E}|\F_{t-1}\dot{\sim}\text{\ensuremath{\mathcal{N}(0,(1-\alpha)E_{t-1}+\epsilon_{A}A_{t-1}+\epsilon_{I}I_{t-1}),}etc.}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Up to observed (removed may be modeled separately):
+\begin_inset Formula 
+\[
+\left[\begin{array}{c}
+E\\
+A\\
+I\\
+P
+\end{array}\right]=\underbrace{\left[\begin{array}{cccc}
+\omega_{E} & \iota_{t}\epsilon_{A} & \iota_{t}\epsilon_{I} & 0\\
+\alpha & \omega_{A} & 0 & 0\\
+0 & \iota & \omega_{I} & 0\\
+0 & \pi_{A} & \pi_{I} & 0
+\end{array}\right]}_{M_{t}}\left[\begin{array}{c}
+E\\
+A\\
+I\\
+P
+\end{array}\right]+\eta_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+P_{t}=(0,0,0,1)M_{t}M_{t-1}....M_{0}(\alpha,0,0,0)+\mathcal{E}_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\alpha$
+\end_inset
+
+ is an initial seed.
+ Can be rewritten as 
+\begin_inset Formula 
+\[
+\Delta P_{t}=\tau(t)\alpha+\mathcal{E}_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In particular
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\tau(0)=a
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The system can be estimated by MLE
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{document}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+x
+\end_layout
+
+\begin_layout Standard
+We have
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $A$
+\end_inset
+
+ unobserved.
+\end_layout
+
+\begin_layout Standard
+We have
+\begin_inset Formula 
+\[
+A_{t}=\underbrace{(1+\mu_{t}-\gamma_{A}-\iota)}_{\theta_{t}}A_{t-1}+\nu I_{t-1}^{k}+\eta_{A,t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+we rewrite
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{multline*}
+A_{t}=\theta_{t}A_{t-1}+\nu I_{t-1}^{k}+\eta_{A,t}=\theta_{t}(\theta_{t-1}A_{t-2}+\nu I_{t-2}^{k}+\eta_{A,t-1})+\nu I_{t-1}^{k}+\eta_{A,t}\\
+=Z_{t}+\epsilon_{t},\\
+Z_{t}=(\theta_{1}\times\dots\times\theta_{t})\alpha_{0}+\nu\sum_{\tau=1}^{t-1}(\theta_{\tau+2}\times\dots\times\theta_{t})I_{\tau}^{k}=\theta^{s\wedge t}\theta_{1}^{(t-s)\wedge0}\alpha_{0}+\nu\sum_{\tau=1}^{t-1}\theta^{(s-(\tau+1))\wedge0}\theta_{1}^{t-(s\vee\tau+1)}\\
+\epsilon_{t}=\sum_{\tau=1}^{t}(\theta_{\tau+1}\times\dots\times\theta_{t})\eta_{A,t}
+\end{multline*}
+
+\end_inset
+
+where 
+\begin_inset Formula $\alpha_{0}=A_{0}$
+\end_inset
+
+ (to be estimated) 
+\begin_inset Formula $Z$
+\end_inset
+
+ may be evaluated recursively (assuming 
+\begin_inset Formula $I_{0}=0$
+\end_inset
+
+): 
+\begin_inset Formula 
+\[
+Z_{0}=\alpha_{0},Z_{1}=\theta_{1}\alpha_{0}+\nu I_{0},Z_{2}=\theta_{2}\theta_{1}\alpha_{0}+\theta_{2}\nu I_{0}+\nu I_{1},\dots Z_{t}=\theta_{t}Z_{t-1}+\nu I_{t-1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This gives 
+\begin_inset Formula 
+\[
+\Delta I_{t}=\gamma+e_{t},\qquad e_{t}=\iota\epsilon_{t-1}+\eta_{I,t}
+\]
+
+\end_inset
+
+It is not easy to compute 
+\begin_inset Formula $\var(e|\G_{t-1})$
+\end_inset
+
+ (possible in normal case via well known formula for conditional distribution,
+ no time here for this).
+ So we dare to estimate the variances by 
+\begin_inset Formula $\var(\bullet_{t}|\F_{\t-1}),$
+\end_inset
+
+ which equals to those of etas.
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $s$
+\end_inset
+
+ be the threshold when different policy started to be applied.
+\end_layout
+
+\begin_layout Standard
+Summary of parameters
+\end_layout
+
+\begin_layout Subsubsection*
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\iota\alpha_{0}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\theta$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1+\mu-\gamma_{A}-\iota$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\theta_{t}=\theta$
+\end_inset
+
+ for 
+\begin_inset Formula $t<s$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\theta_{t}=\theta_{1}$
+\end_inset
+
+ for 
+\begin_inset Formula $t\geq s$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\iota\nu$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\]
+
+\end_inset
+
+Estimation
+\end_layout
+
+\begin_layout Standard
+MLE.
+ Loglikelihood
+\begin_inset Formula 
+\[
+C-\frac{1}{2w}\sum_{i=1}^{T}(Y_{t}-\Delta I_{t})^{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+Y_{t}=\gamma=\iota\alpha_{0}\theta^{s\vee}\theta_{1}^{(t-1-s)\vee0}+\iota\nu\sum_{\tau=1}^{t-2}\theta^{(s-(\tau+1))\wedge0}\theta_{1}^{t-1-(s\vee\tau+1)}
+\]
+
+\end_inset
+
+derivatives by the multipliers clear, by thetas recursively: by 
+\begin_inset Formula $\theta$
+\end_inset
+
+: 
+\begin_inset Formula 
+\begin{align*}
+Y'_{0} & =0,\qquad Y'_{1}=\begin{cases}
+\iota\alpha_{0}(=Y_{\tau-1}) & s\geq1\\
+0 & s<1
+\end{cases},\qquad
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Y'_{\tau}=(\theta_{\tau}Y_{\tau-1}+\iota\nu I_{\tau-1})'=\begin{cases}
+Y_{\tau-1}+\theta Y'_{\tau-1} & \tau\leq s\\
+\theta_{1}Y'_{\tau-1} & \tau>s
+\end{cases}
+\]
+
+\end_inset
+
+and by 
+\begin_inset Formula $\theta_{1}:$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+Y'_{0}=\dots=Y'_{s}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Y'_{s+1}=Y_{s},\qquad Y'_{\tau}=Y_{\tau-1}+\theta_{1}Y'_{\tau-1},\tau>s+1\text{}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Apokryfy
+\end_layout
+
+\begin_layout Standard
+By Pavuo, chart 1:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\mu$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+infection of 
+\begin_inset Formula $A$
+\end_inset
+
+ per day
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $1$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\nu$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+of 
+\begin_inset Formula $I$
+\end_inset
+
+ per day
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0.2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\iota$
+\end_inset
+
+,
+\begin_inset Formula $\gamma_{A}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+transitions from 
+\begin_inset Formula $A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{\iota}{\iota+\gamma_{a}}=0.7$
+\end_inset
+
+ 
+\begin_inset Formula $\iota=5^{-1}$
+\end_inset
+
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+
+\begin_inset Formula $\gamma_{A}=\frac{1}{12}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\delta,\gamma_{i}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+from I
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{\delta}{\delta+\gamma_{i}}=\frac{15}{70}$
+\end_inset
+
+ ,
+\begin_inset Formula $\delta+\gamma_{i}=\frac{1}{7}$
+\end_inset
+
+ 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+
+\begin_inset Formula $\delta=0.03,\gamma=\text{´0.11}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\phi,\gamma_{C}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+from 
+\begin_inset Formula $C$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{\phi}{\phi+\gamma_{C}}=\frac{1}{3}$
+\end_inset
+
+,
+\begin_inset Formula $\phi+\gamma_{C}=\frac{1}{5}\rightarrow\phi=\frac{1}{15},\gamma_{C}=\frac{2}{15}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula $\left[\begin{array}{cccc}
+p^{s,E}(1-p^{s,E}) & p^{s,I_{1}}p^{s,E}\\
++p^{s,E}p^{s,I_{1}} & p^{s,I_{1}}(1-p^{s,I_{1}}\\
+\\
+ &  &  & p^{s,R}(1-p^{s,R})
+\end{array}\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $p^{s,E}=0,s\neq E$
+\end_inset
+
+ and let 
+\begin_inset Formula $p^{R,R}=1$
+\end_inset
+
+ (
+\begin_inset Formula $R$
+\end_inset
+
+ is terminal).
+ Then, assuming CI, we have
+\end_layout
+
+\begin_layout Section*
+Apokryfy
+\end_layout
+
+\begin_layout Standard
+Denote 
+\begin_inset Formula $M_{t}=\E(X_{t},Y_{t}|\G_{t-1})$
+\end_inset
+
+ and 
+\begin_inset Formula $V_{t}=\var(X_{t},Y_{t}|\G_{t-1})$
+\end_inset
+
+.
+ As, given normal approximation,we get
+\begin_inset Formula 
+\begin{multline*}
+\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\G_{t}\right]=\E\left[\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]\G_{t}\right]\\
+=\E\left[\left.\left[{T_{t}\atop FT_{t}}\right]X_{t}\right|\G_{t}\right]=\left[{T_{t}\atop FT_{t}}\right]N_{t},\qquad N_{t}=\E(X_{t}|\G_{t})
+\end{multline*}
+
+\end_inset
+
+and 
+\begin_inset Formula 
+\begin{multline*}
+V_{t+1}=\var\left(\left.\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]\right|\G_{t}\right)+\E\left(\left.\var\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]\right|\G_{t}\right)\\
+=\var\left[\left.\left[{T_{t}\atop FT_{t}}\right]X_{t}\right|\G_{t}\right]+\E\left[\left.\begin{array}{cc}
+\Lambda_{t} & \Lambda_{t}F^{T}\\
+F\Lambda_{t} & F\Lambda_{t}F^{T}+FX_{t}
+\end{array}\right|\G_{t}\right]\\
+=\left[{T_{t}\atop FT_{t}}\right]W_{t}\left[{T_{t}\atop FT_{t}}\right]^{T}+\sum_{i+1}^{k}\left[\begin{array}{cc}
+\Phi_{i} & \Phi_{i}F^{T}\\
+F\Phi_{i} & F\Phi_{i}F^{T}
+\end{array}\right]N_{t}^{i}+\left[\begin{array}{cc}
+J_{t} & J_{t}F^{T}\\
+FJ_{t} & FJ_{t}F^{T}+\Gamma tbdN_{t}
+\end{array}\right]
+\end{multline*}
+
+\end_inset
+
+where 
+\begin_inset Formula $J_{t}=\mathrm{diag}(I_{t}N_{t})$
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

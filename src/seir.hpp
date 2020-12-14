@@ -95,7 +95,7 @@ protected:
 
     dmatrix bigPhi(unsigned t, const vector<double>& pars, unsigned s,const G& g) const
     {
-        dmatrix phi = varfactor(pars) * Phi(t,pars,s,g);
+        dmatrix phi = Phi(t,pars,s,g);
         return block(phi,phi*H.transpose(),H*phi,H*phi*H.transpose());
     }
 
@@ -185,6 +185,7 @@ public:
                     o << u.x()[i] << ",";
                 for(unsigned i=0; i<u.dim(); i++)
                     o << sqrt(u.var()(i,i)) << ",";
+
                 if(s < est.size())
                 {
                     const uncertain& u = est[s];
@@ -192,6 +193,7 @@ public:
                         o << u.x()[i] << ",";
                     for(unsigned i=0; i<u.dim(); i++)
                         o << sqrt(u.var()(i,i)) << ",";
+
                 }
                 else
                 {
@@ -303,11 +305,6 @@ public:
         {
             dmatrix& T = res.Ts[i-1];
 
-if(i==275)
-{
-            Eigen::IOFormat f(Eigen::StreamPrecision, Eigen::DontAlignCols,",");
-cerr << "time " << i << endl << T.format(f) << endl << endl << endl;
-}
             dmatrix THT = stackm(T,H*T);
 
             dvector N;
@@ -321,28 +318,15 @@ cerr << "time " << i << endl << T.format(f) << endl << endl << endl;
             else
             {
                 N = res.pred[i-1].x();
-clog << "i=" << i << endl;
-clog << " Nbefore" << endl;
-clog << N << endl<< endl;
 
                 adjust(i,N);
 
                 N.conservativeResize(k());
-clog << " Nafter" << endl;
-clog << N << endl<< endl;
                 W = res.pred[i-1].var().block(0,0,k(),k());
                 assert(isVar(W,"W2",i-1,dv(pars)));
             }
             dvector Mx = T * N + dv(I(i-1,pars,g));
             dvector My = H * Mx;
-if(i > 260 && Mx[1] < 20000)
-{
-    clog << "i=" << i << " M" << endl;
-    clog << Mx << endl<< endl;
-    clog << " N" << endl;
-    clog << N << endl<< endl;
-    clog << endl;
-}
 
             dmatrix V = THT * W * THT.transpose();
 
@@ -488,7 +472,8 @@ public:
         double ov;
         try
         {
-            oresult = o.optimize(pars, ov);
+           oresult = o.optimize(pars, ov);
+//oresult = (nlopt::result) 0;
         }
         catch(std::exception &e)
         {
@@ -511,7 +496,7 @@ public:
         }
 
         try {
-            res = uncertain(dv(r), paramvar(r,ad));
+            res = uncertain(dv(r), paramvar(r,ad,act));
         } catch (...) {
             res = uncertain(r); // tbd nan
         }
@@ -572,9 +557,9 @@ public:
     }
 
     dmatrix paramvar(const vector<double>& pars,
-                    const data& d) const
+                    const data& d, contrasttype act) const
     {
-        evalresult fixed = eval(pars,d);
+        evalresult fixed = eval(pars,d,0,act);
         vector<evalresult> perturbed;
         dvector h = sqrt(std::numeric_limits<double>::epsilon()) * dv(pars);
         for(unsigned i=0; i<h.size(); i++)
@@ -586,7 +571,7 @@ public:
         {
             vector<double> p = pars;
             p[i] = xph[i];
-            perturbed.push_back(eval(p,d));
+            perturbed.push_back(eval(p,d,0,act));
         }
         dmatrix res(pars.size(),pars.size());
         unsigned t = fixed.contrasts.size();
