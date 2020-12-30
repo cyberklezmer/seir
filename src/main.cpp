@@ -26,20 +26,20 @@ struct paraminit { string n;	double v;	bool filtered; };
 
 // #define TRV1
 // #define TRV2
-#define NORMAL
-//#define WORKING
+//#define NORMAL
+#define WORKING
 #ifdef NORMAL
 
 
 
-static constexpr seirmodel::contrasttype ct = seirmodel::ectll; // // ectwls; // ;:;
-static constexpr bool nopred = true;
-static constexpr bool estimate = false  ;
+static constexpr seirmodel::contrasttype ct = seirmodel::ectwls ; //ectll // ectwls; // ;:;
+static constexpr bool nopred = false;
+static constexpr bool estimate = true;
 static constexpr bool sensanal = true;
 
 static constexpr double timest = 20*60;
 
-static constexpr unsigned horizon=290;
+static constexpr unsigned horizon=295;
 static constexpr unsigned dusekpenalty=0;
 
 #define NOEXTRAMIMPORT
@@ -71,7 +71,6 @@ static constexpr unsigned dusekpenalty=0;
 //#define SETA
 //#define PIECEWISEETA
 #define GAMMAS
-
 //#define PIECEWISETHETA
 //#define THREEPIECETHETA
 //#define SCURVE
@@ -79,38 +78,44 @@ static constexpr unsigned dusekpenalty=0;
 //#define K
 //#define KACTIVE
 //#define K2
-//#define WEIGHTVACCATION
+#define WEIGHTVACCATION
+
 
 vector<paraminit> initvals = {
-    {"beta",0.591317,false},// (0.0283431) -789.527
-    {"pdettheta",0.0336908,true},// (0.00126119) -11093.1
-    {"pdetcoef",1.88995,false},// (0.015602) -235.408
-    {"imunity",1,true},// (0.0527796) 1229.67
-    {"shift",9.35726,true},// (0.228449) -0.343254
-    {"mu",0.000607467,true},// (2.60937e-05) -1.98427e+06
-    {"omega1",2.1391,false},// (0.0930169) -2.61957
-    {"omega2",0,true},// (0.0518558) -nan
-    {"rho",0.00438512,true},// (0.000339618) -108260
-    {"daktela",0.00100247,true},// (6.57788e-05) -45552.5
-    {"varfactor",14.2139,false},// (0.108913) 177.927
+    {"beta",1.96078,false},
+    {"pdettheta",0.0503791,false},
+    {"pdetcoef",2,true},
+    {"imunity",1,true},
+    {"shift",7.00153,false},
+    {"mu",0.000575525,false},
+    {"omega1",4.06449,false},
+    {"omega2",0,true},
+    {"rho",0.00249239,false},
+    {"daktela",0.000449692,false},
+    {"gammaa",0,true},
+    {"gammas",0,true},
+    {"gammad",0,true},
+    {"varfactor",71.418,false},
+
 };
 #endif
 #ifdef WORKING
 
-static constexpr seirmodel::contrasttype ct = seirmodel::ectll;  //// ectwls; // ;:;ectll;
-static constexpr bool nopred = false;
+static constexpr seirmodel::contrasttype ct = seirmodel::ectwls;  //// ectwls; // ;:;ectll;
+static constexpr bool nopred = true;
 static constexpr bool estimate = true;
 static constexpr double timest = 10*60;
+static constexpr bool sensanal = true;
 
-static constexpr unsigned horizon=269;
-static constexpr unsigned dusekpenalty=1000;
+static constexpr unsigned horizon=302;
+static constexpr unsigned dusekpenalty=00;
 
-//#define DEADFROMIS
+#define DEADFROMIS
 #define NOEXTRAMIMPORT
 //#define PARKS
 #define IMUNITY
 #define DAKTELA
-//#define VARFACTOR
+#define VARFACTOR
 //#define POSITIVITY
 #define EXPAPPROX
 //#define LINAPPROX
@@ -138,19 +143,21 @@ static constexpr unsigned dusekpenalty=1000;
 //#define K
 //#define KACTIVE
 //#define K2
-//#define WEIGHTVACCATION
+#define WEIGHTVACCATION
 
 vector<paraminit> initvals = {
-{"beta",0.641435 / 4,false},
-{"imunity",1,true},
-{"shift",8.36995,false},
-{"mu",0.00160774 / 2,false},
-{"omega1",1.29349,false},
-{"omega2",0,true},
-{"rho",0.0316952 / 4,false},
-{"eta",0.770684 / 4,false},
-{"daktela",0.00127326,false}
+    {"beta",0.669447,false},
+    {"imunity",1,true},
+    {"shift",0,true},
+    {"mu",0.000322727,false},
+    {"omega1",1.85324,false},
+    {"omega2",0,true},
+    {"rho",0.0182556,false},
+    {"eta",0.1,true},
+    {"daktela",1.89808e-37,true},
+    {"varfactor",63.218,false},
 };
+
 
 
 #endif
@@ -555,9 +562,9 @@ public:
 
 double muinis;
 #ifdef DEADFROMIS
-        ret(eseirisds,eseirdds) = mu;
-        ret(eseirisda,eseirdda) = mu;
-        muinis = mu;
+        ret(eseirisds,eseirdds) = 2*mu;
+        ret(eseirisda,eseirdda) = 2*mu;
+        muinis = 2*mu;
 #else
         muinis = 0;
 #endif
@@ -594,11 +601,11 @@ double muinis;
         ret(eseirjsda,eseirrda) = p.gamma_Is;
         ret(eseirjsds,eseirrds) = p.gamma_Is;
 
-#if(!defined(DEADFROMIS))
+//#if(!defined(DEADFROMIS))
         ret(eseirjsda,eseirdda) = mu;
         ret(eseirjsds,eseirdds) = mu;
         ret(eseirjs,eseirdds) = mu;
-#endif
+//#endif
 
         for(unsigned i=0; i<eseirnumstates; i++)
         {
@@ -836,13 +843,6 @@ public:
 #ifdef PARKS
        ba -=  p[eparks] * p[egparks];
 #endif
-#ifdef IMUNITY
-        ba -= p[eimunity]
-                * max(numantibodiesv(g.est[at]) / 10693000.00,0.0);
-//clog << at << "->" << p[eimunity] << "*"
-//     << numantibodiesv(g.est[at]) / 10693000.00 << "="
-//     << p[eimunity] * numantibodiesv(g.est[at]) / 10693000.00 << endl;
-#endif
 
 
 #ifdef PIECEWISEIOTA
@@ -902,6 +902,17 @@ double preiota = // exp(-p[eomega0] - p[eomegag]*g.z[t1][egammared] - p[eomegas]
 #else
         assert(preiota >= 0);
         double iot = max(p[ebeta]+ba,0.0)*d * preiota;
+
+#ifdef IMUNITY
+        iot *= (1-p[eimunity] * max(numantibodiesv(g.est[at]) / 10693000.00,0.0));
+/*clog << at << "->" << p[eimunity] << "*"
+     << numantibodiesv(g.est[at]) / 10693000.00 << "="
+     << p[eimunity] * numantibodiesv(g.est[at]) / 10693000.00
+     << " iot=" << iot << " c=" << c
+      << " gammared=" << gammared << " e=" << exp(-p[eomega1]*gammared)
+     << endl; */
+#endif
+
 #endif
 
         iota[eseiria] = iota[eseiris] = iot;
@@ -1165,8 +1176,11 @@ void seir()
         else
             wd = 1 / d;
 #ifdef WEIGHTVACCATION
-        if(i < 200)
-            w /=3;
+        if(i < 180)
+        {
+            w /=20;
+            wd /= 20;
+        }
 #endif
         si.w.push_back({w,w,wd});
     }
@@ -1217,7 +1231,7 @@ void seir()
     #endif
 
     #ifdef SHIFT
-            paraminfo("shift",5,0,14),
+            paraminfo("shift",5,0,15),
     #endif
 
 #ifdef ARATE
@@ -1330,12 +1344,12 @@ void seir()
 #endif
 
 #ifdef GAMMAS
-                paraminfo("gammaa",0, 0 , 100 ),
-                paraminfo("gammas",0, 0 , 100 ),
+                paraminfo("gammaa",0, 0 , 0.0001 ),
+                paraminfo("gammas",0, 0 , 0.0001 ),
                 paraminfo("gammad",0,0, 100),
 #endif
 #ifdef VARFACTOR
-        paraminfo("varfactor",1,1,50),
+        paraminfo("varfactor",1,1,150),
 #endif
 
               };
@@ -1393,18 +1407,19 @@ assert(params.size()==enumparams);
              << "additional contrast = " << s.contrastaddition(r) << endl
              << "Duseks survey = " << s.numantibodies(r,70) << endl
              << "Teachars survey = " << s.numagpositive(r,280) << endl
+             << "People with antibodies = " << s.numantibodies(r,289) << endl
              << endl << endl;
 
         if(0) // difference
         {
             auto rrr = rp;
-/*            for(unsigned i=0; i<20; i++)
+            for(unsigned i=0; i<20; i++)
             {
                czseir::evalresult rr = s.eval<true>(rrr,si, si.z.size()-si.y.size(),ct);
-               cout << rrr[epdeteta] << "->" << rr.contrast << endl;
-               rrr[epdeteta] += 0.000001;
+               cout << rrr[erho] << "->" << rr.contrast << endl;
+               rrr[erho] += 0.000001;
             }
-            throw;*/
+            throw;
 //            rrr[epdeteta] += 0.000001;
             czseir::evalresult rr = s.eval<true>(rrr,si, si.z.size()-si.y.size(),ct);
             for(unsigned i=0; i<rr.contrasts.size(); i++)

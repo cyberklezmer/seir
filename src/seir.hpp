@@ -114,8 +114,14 @@ protected:
             if(Jx[i]<0.0)
                 throw "negative J";
         dmatrix D= varfactor(pars) * diag(Jx);
+dvector nn(n);
+for(unsigned i=0; i<n.size(); i++)
+    nn[i] *= nn[i];
+
         return block( D, D*H.transpose(), H*D, H*D*H.transpose()
-                      + diag(Gamma(t,pars, g)*n));
+                      + diag(Gamma(t,pars, g)*
+nn // n
+                             ));
     }
 
     virtual double contrast(contrasttype act, const dvector& o,
@@ -580,7 +586,7 @@ public:
             dvector g(perturbed.size());
             for(unsigned j=0; j<perturbed.size(); j++)
                 g[j] = (perturbed[j].contrasts[i] - fixed.contrasts[i]) / dx[j];
-            res = res + g * g.transpose();
+            res = res + g * g.transpose();            
         }
         try
         {

@@ -983,9 +983,9 @@ where
 
  is the identity matrix and
 \begin_inset Formula 
-\[
-T_{t}\defined P_{t}+e_{L}B_{t},\qquad\Lambda_{t}(X_{t})\defined\sum_{i=1}^{k}\mathrm{[diag}(P_{t}^{(i)})-P_{t}^{(i)}(P_{t}^{(i)}){}^{T}]X_{t}^{i}+\mathrm{diag}(s_{L}B_{t}X_{t}),\qquad t\geq0.
-\]
+\begin{equation}
+T_{t}\defined P_{t}+e_{L}B_{t},\qquad\Lambda_{t}(X_{t})\defined\sum_{i=1}^{k}\mathrm{[diag}(P_{t}^{(i)})-P_{t}^{(i)}(P_{t}^{(i)}){}^{T}]X_{t}^{i}+\mathrm{s_{L}diag}(B_{t}X_{t}),\qquad t\geq0.\label{eq:tlambda}
+\end{equation}
 
 \end_inset
 
@@ -1251,12 +1251,25 @@ Observe that
  follows its own version of our model, namely that 
 \begin_inset Formula 
 \[
-\left.\barX_{t+1}\right|\F_{t}\sim\bigcirc_{1\leq i\leq m}\mathrm{Multinomial}(\barX_{t}^{i},\barP_{t}^{(i)})\circ\Po(\barB_{t}\barX_{t})\circ\delta(\barI_{t}).
+\left.\barX_{t+1}\right|\F_{t}\sim\bigcirc_{1\leq i\leq m}\mathrm{Multinomial^{-}}(\barX_{t}^{i},\barP_{t}^{(i)})\circ\mathrm{CPo}(\barB_{t}\barX_{t},L)\circ\delta(\barI_{t}).
 \]
 
 \end_inset
 
+where 
+\begin_inset Formula $\mathrm{Multinomial^{-}}(x,p)$
+\end_inset
 
+ is the marginal distribution of the first 
+\begin_inset Formula $m$
+\end_inset
+
+ components of 
+\begin_inset Formula $\mathrm{Multinomial}\left(x,\left[{p\atop 1-\sum_{i=1}^{m}p^{i}}\right]\right)$
+\end_inset
+
+.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -1268,7 +1281,7 @@ For any
 \begin_inset Formula $r_{t}$
 \end_inset
 
- (of a subepidemic 
+ (of a sub-epidemic 
 \begin_inset Formula $\{1,\dots,m\}$
 \end_inset
 
@@ -1707,17 +1720,23 @@ Say there are five states
 \end_inset
 
  – removed, including recovered, dead, and infectious isolated.
- All the 
-\begin_inset Formula $I_{\bullet}$
+ We index the states by 
+\begin_inset Formula $e,a,p,s,r$
 \end_inset
 
- states are equally infectious, i.e.
+.
+ For simplicity we assume 
+\begin_inset Formula $e_{L}=s_{L}=1$
+\end_inset
+
+ which means that the new infections are Poisson rather than Compound Poisson.
+ All the infectious states are equally infectious, i.e.
  
 \begin_inset Formula $\beta_{t}^{Ex}=\beta_{t}$
 \end_inset
 
 , 
-\begin_inset Formula $x\in\{I_{a},I_{p},I_{s}\},$
+\begin_inset Formula $x\in\{a,p,s\},$
 \end_inset
 
  where 
@@ -1729,13 +1748,8 @@ Say there are five states
 \end_inset
 
 -adapted process.
- For simplicity we assume 
-\begin_inset Formula $e_{L}=s_{L}=1$
-\end_inset
-
- which means that the new infections are Poisson rather than Compound Poisson.
  The probability that the exposed transits to 
-\begin_inset Formula $\{I_{a},I_{p}\}$
+\begin_inset Formula $\{a,p\}$
 \end_inset
 
  is 
@@ -1785,9 +1799,12 @@ Say there are five states
 \begin_inset Formula $\eta$
 \end_inset
 
- and the probability that the individual is isolated regardless of his state
- is 
-\begin_inset Formula $\theta_{t}$
+ and the probability that the individual finding herself in state 
+\begin_inset Formula $i$
+\end_inset
+
+ is isolated is 
+\begin_inset Formula $\theta_{t}^{i'}$
 \end_inset
 
  for some 
@@ -1795,11 +1812,15 @@ Say there are five states
 \end_inset
 
 -adapted process 
-\begin_inset Formula $\theta$
+\begin_inset Formula $\theta^{i}$
 \end_inset
 
 .
- The situation is illustrated on the following Figure:
+ The situation is illustrated on the following Figure: [¨TBD pridat 
+\begin_inset Formula $i$
+\end_inset
+
+]
 \end_layout
 
 \begin_deeper
@@ -1821,11 +1842,11 @@ If we neglect (small) joint probabilities of natural exits from the infectious
 \begin_inset Formula 
 \[
 P_{t}=\left[\begin{array}{ccccc}
-1-\sigma-\theta_{t} & 0 & 0 & 0 & 0\\
-\alpha\sigma & 1-\varrho_{a}-\theta_{t} & 0 & 0 & 0\\
-(1-\alpha)\sigma & 0 & 1-\varsigma-\theta_{t} & 0 & 0\\
-0 & 0 & \varsigma & 1-\varrho_{s}-\eta-\theta_{t} & 0\\
-\theta_{t} & \theta_{t}+\varrho_{a} & \theta_{t} & \theta_{t}+\eta+\varrho_{s} & 1
+1-\sigma-\theta_{t}^{e} & 0 & 0 & 0 & 0\\
+\alpha\sigma & 1-\varrho_{a}-\theta_{t}^{a} & 0 & 0 & 0\\
+(1-\alpha)\sigma & 0 & 1-\varsigma-\theta_{t}^{p} & 0 & 0\\
+0 & 0 & \varsigma & 1-\varrho_{s}-\eta-\theta_{t}^{s} & 0\\
+\theta_{t}^{e} & \theta_{t}^{a}+\varrho_{a} & \theta_{t}^{p} & \theta_{t}^{s}+\eta+\varrho_{s} & 1
 \end{array}\right],\qquad B_{t}=\left[\begin{array}{ccccc}
 0 & \beta_{t} & \beta_{t} & \beta_{t} & 0\\
 0 & 0 & 0 & 0 & 0\\
@@ -1841,21 +1862,30 @@ Clearly, we can put
 \begin_inset Formula $m=4$
 \end_inset
 
- (the first four states are subepidemic), getting 
+ (the first four states form a sub-epidemic), getting 
 \begin_inset Formula 
 \[
-\barT_{t}=C(\beta_{t})-\theta_{t}E,\qquad C(\beta)=\left[\begin{array}{cccc}
-1-\sigma & \beta & \beta & \beta\\
+\barT_{t}=Q+\beta_{t}C-\mathrm{diag}(\theta_{t}),\qquad Q=\left[\begin{array}{cccc}
+1-\sigma & 0 & 0 & 0\\
 \alpha\sigma & 1-\varrho_{a} & 0 & 0\\
 (1-\alpha)\sigma & 0 & 1-\varsigma & 0\\
 0 & 0 & \varsigma & 1-\varrho_{s}-\eta
-\end{array}\right].
+\end{array}\right],\qquad C=\left[\begin{array}{cccc}
+0 & 1 & 1 & 1\\
+0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0
+\end{array}\right]..
 \]
 
 \end_inset
 
-By the well known rule, we have 
-\begin_inset Formula $\rho(\barT_{t})=\rho(C(\gamma_{t}))-\theta_{t}$
+Further we assume 
+\begin_inset Formula $\theta_{t}\defined\theta_{t}^{e}=\theta_{t}^{a}=\theta_{t}^{p}=\theta_{t}^{s}$
+\end_inset
+
+, which yields, by the well known rule, 
+\begin_inset Formula $\rho(\barT_{t})=\rho(Q+\beta_{t}C)-\theta_{t}$
 \end_inset
 
 .
@@ -1899,7 +1929,7 @@ target
 \end_inset
 
  fulfill 
-\begin_inset Formula $\rho_{0}+\theta-\rho(C(\beta))=0$
+\begin_inset Formula $\rho_{0}+\theta-\rho(Q+\beta_{t}C)=0$
 \end_inset
 
  giving a 
@@ -1911,7 +1941,7 @@ marginal rate of substitiution
 \end_inset
 
  
-\begin_inset Formula $\theta(\beta)'=-\frac{\partial}{\partial\beta}\rho(C(\beta))$
+\begin_inset Formula $\theta(\beta)'=-\frac{\partial}{\partial\beta}\rho(Q+\beta_{t}C)$
 \end_inset
 
  of the infectiousness by the isolation, i.e.
@@ -1927,7 +1957,7 @@ ns.
 \end_layout
 
 \begin_layout Example
-Assume the fraction 
+Assume there is a fraction 
 \begin_inset Formula $\nu$
 \end_inset
 
@@ -2132,6 +2162,191 @@ roughly holding for
 \end_layout
 
 \begin_layout Section
+Optimal Control of the Epidemics
+\end_layout
+
+\begin_layout Standard
+Assume the setting of Example 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "exa:e1"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and assume that 
+\begin_inset Formula $X_{0}$
+\end_inset
+
+ is known.
+ Our aim is to minimize the size of the epidemic at time 
+\begin_inset Formula $t$
+\end_inset
+
+ given that we are ready to pay a given price 
+\begin_inset Formula $c_{0}$
+\end_inset
+
+.
+ We assume that, to achieve infection rate 
+\begin_inset Formula $\beta$
+\end_inset
+
+, a cost 
+\begin_inset Formula $\gamma(\beta)$
+\end_inset
+
+ has to be paid where 
+\begin_inset Formula $\gamma$
+\end_inset
+
+ is a strictly decreasing convex positive function defined on 
+\begin_inset Formula $(0,\beta_{0}]$
+\end_inset
+
+ with 
+\begin_inset Formula $\gamma(\beta_{0})=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma(0-)=\infty$
+\end_inset
+
+.
+ Further, to achieve the isolation rate 
+\begin_inset Formula $\theta_{t}^{i}$
+\end_inset
+
+ in the 
+\begin_inset Formula $i$
+\end_inset
+
+-th compartment, the price 
+\begin_inset Formula $\delta(\theta_{t}^{i},X_{t}^{i})\defined d\theta_{t}^{i}X_{t}^{i}$
+\end_inset
+
+ has to be paid where 
+\begin_inset Formula $d$
+\end_inset
+
+ is a constant.
+ This reflects the real-life situation in which the cost of global restrictions
+ does not depend on the infection size while the cost of isolation does,
+ for instance through the number of call-center workers involved in tracing.
+ 
+\end_layout
+
+\begin_layout Standard
+Our problem is to find 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+V_{0}(X_{0},c_{0})\defined\inf_{\sum_{\tau=0}^{t-1}[\gamma(\beta_{\tau})+\delta(\theta_{t}^{k},X_{t}^{k})+\dots+\delta(\theta_{t}^{k},X_{t}^{k})]\leq c_{0},\beta,0\leq\theta\leq q,\theta_{\tau}\in\F_{\tau},\beta_{\tau}\in\F_{\tau},1\leq\tau<t}\E(\mathbf{1}'X_{t})
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $q$
+\end_inset
+
+ is the diagonal of 
+\begin_inset Formula $Q.$
+\end_inset
+
+ The problem may be rewritten by means of Bellman equations 
+\begin_inset Formula 
+\begin{align*}
+V_{\tau}(x,c) & =\inf_{\gamma(\beta)+d\theta^{k}x^{k}+\dots+d\theta^{k}x^{k}+y\leq c,\beta\geq0,\theta\geq0,y\geq0}\E(V_{\tau+1}(J,y)),\qquad0\leq\tau<t,
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+V_{t}(x,c)=\mathbf{1}'x,
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+J\sim\L(x,\beta,\theta)\defined\bigcirc_{1\leq i\leq m}\mathrm{Multinomial^{-}}(x^{i},Q^{(i)}-\Delta_{i}\theta^{i})\circ\mathrm{Po}(\beta Cx)
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\Delta_{i}$
+\end_inset
+
+ is the vector with the unit component on the 
+\begin_inset Formula $i$
+\end_inset
+
+-th place and zeros otherwise.
+\end_layout
+
+\begin_layout Standard
+Though the final problem is convex –
+\begin_inset Formula 
+\begin{multline*}
+V_{t-1}(x,c)=\inf_{\gamma(\beta)+d\theta^{1}x^{1}+\dots+d\theta^{m}x^{m}+y\leq c,0\leq\theta\leq q,\beta,y\geq0}\mathbf{1}'(Qx-\mathrm{diag}(\theta)x+\Delta_{e}\beta\sum_{i\neq e}x^{i})
+\end{multline*}
+
+\end_inset
+
+– its objective function is not jointly convex in 
+\begin_inset Formula $(u,v,x,c)$
+\end_inset
+
+, so the convexity of 
+\begin_inset Formula $V_{t-1}$
+\end_inset
+
+ is not guaranteed.
+ Moreover, as neither the optimal solution nor the expectation of the objective
+ functions of all but the last problem are analytically tractable, it is
+ necessary to resort to approximations.
+ To this end, use the sample mean approximation 
+\begin_inset Formula 
+\[
+V_{\tau}(x,c)\doteq\tilde{V_{\tau}}(x,c)
+\]
+
+\end_inset
+
+ where 
+\begin_inset Formula $\tilde{V}_{t}=V_{t}$
+\end_inset
+
+ and, recursively,
+\begin_inset Formula 
+\[
+V_{\tau}(x,c)\doteq\tilde{V_{\tau}}(x,c)\defined\inf_{\gamma(\beta)+d\theta^{k}x^{k}+\dots+d\theta^{k}x^{k}+y\leq c,\beta,\theta,y\geq0}\frac{1}{r}\sum_{i=1}^{r}\tilde{V}_{\tau+1}(J_{i},y)
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $J_{1},\dots,J_{r}$
+\end_inset
+
+ is an i.i.d.
+ sample from 
+\begin_inset Formula $\L(x,\beta,\theta)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
 Estimation
 \end_layout
 
@@ -2286,7 +2501,15 @@ Assume that
 \begin_inset Formula $I_{t}=I_{t}(\Theta_{0})$
 \end_inset
 
- where 
+, 
+\begin_inset Formula $e_{L}=e_{L}(\Theta_{0}),$
+\end_inset
+
+
+\begin_inset Formula $s_{L}=s_{L}(\Theta_{0})$
+\end_inset
+
+, where 
 \begin_inset Formula $\Theta_{0}\in\R^{r}$
 \end_inset
 
@@ -2333,7 +2556,59 @@ literal "false"
 , respectively.
  Verifying these conditions for our model is, however, beyond the scope
  of this short technical report and remains as topic of a future research.
- Note also that our proof of Proposition 
+ 
+\end_layout
+
+\begin_layout Standard
+Note also that, as 
+\begin_inset Formula $T_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $\Lambda_{t}$
+\end_inset
+
+ depend on 
+\begin_inset Formula $e_{L}B_{t}$
+\end_inset
+
+, 
+\begin_inset Formula $s_{L}B_{t},$
+\end_inset
+
+ respectively, it may happen that 
+\begin_inset Formula $s_{L}$
+\end_inset
+
+, 
+\begin_inset Formula $e_{L}$
+\end_inset
+
+ 
+\begin_inset Formula $B_{t}$
+\end_inset
+
+ are not identified; in this case, 
+\begin_inset Formula $\tilde{s}_{L}$
+\end_inset
+
+ and 
+\begin_inset Formula $\tilde{B_{t}}$
+\end_inset
+
+ should be estimated instead where 
+\begin_inset Formula $\tilde{s}_{L}=\frac{s_{L}}{e_{L}}$
+\end_inset
+
+, 
+\begin_inset Formula $\tilde{B}_{t}=e_{L}B_{t}.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally note that our proof of Proposition 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "prop:as"
@@ -2348,6 +2623,7 @@ noprefix "false"
 \end_inset
 
  is not necessarily positive here.
+ 
 \end_layout
 
 \begin_layout Section
