@@ -605,9 +605,9 @@ Assume an infinite population, each individual of which is either susceptible,
 \begin_inset Formula $t\in\N_{0}^{+},$
 \end_inset
 
- be an observable external inflow (import) of individuals into the compartments
- and let 
-\begin_inset Formula $Z_{t}\in\R^{n},$
+ be an external inflow (import) of individuals into the compartments and
+ let 
+\begin_inset Formula $Z_{t}\in\R^{p},$
 \end_inset
 
  
@@ -670,7 +670,7 @@ be a process of observations where
 \end_inset
 
 , by 
-\begin_inset Formula $(Y,I,Z)$
+\begin_inset Formula $(Y,Z)$
 \end_inset
 
 , respectively.
@@ -749,7 +749,7 @@ Here,
 \uwave default
 \noun default
 \color inherit
- is the inflow of domestically infected indivuduals (different from 
+ is the inflow of domestically infected individuals (other than 
 \begin_inset Formula $I_{t}$
 \end_inset
 
@@ -794,7 +794,7 @@ Here,
 \begin_inset Formula $e_{L}$
 \end_inset
 
- and sedond raw moment 
+ and second raw moment 
 \begin_inset Formula $s_{L}$
 \end_inset
 
@@ -802,7 +802,11 @@ Here,
 \begin_inset Formula $s_{L}$
 \end_inset
 
- is not the variance).
+ is not the variance of 
+\begin_inset Formula $L$
+\end_inset
+
+).
  Further, for any 
 \begin_inset Formula $i$
 \end_inset
@@ -811,8 +815,8 @@ Here,
 \begin_inset Formula $M_{i,t+1}\in\N_{0}^{k}$
 \end_inset
 
- is the distribution (not a probability one) of those, who found themselves
- in compartment 
+ is the distribution (here we do not mean a probability distribution) of
+ those, who found themselves in compartment 
 \begin_inset Formula $i$
 \end_inset
 
@@ -1248,7 +1252,7 @@ Observe that
 \begin_inset Formula $\barX$
 \end_inset
 
- follows its own version of our model, namely that 
+ follows a slightly modified version of our model, namely that 
 \begin_inset Formula 
 \[
 \left.\barX_{t+1}\right|\F_{t}\sim\bigcirc_{1\leq i\leq m}\mathrm{Multinomial^{-}}(\barX_{t}^{i},\barP_{t}^{(i)})\circ\mathrm{CPo}(\barB_{t}\barX_{t},L)\circ\delta(\barI_{t}).
@@ -1399,7 +1403,7 @@ Note that, once
 \end_inset
 
  – yet the estimate 
-\begin_inset Formula $\E(\pi_{t}|\G_{t-1})\doteq\nu(\barB_{t-1}\E(\barX_{t-1}|\G_{t-1})+\barI_{t-1})$
+\begin_inset Formula $\E(\pi_{t}|\G_{t-1})\doteq\nu(\barB_{t-1}\E(\barX_{t-1}|\G_{t-1})+\E(\barI_{t-1}|\G_{t-1}))$
 \end_inset
 
  seems a straightforward choice, it is generally not unbiased due to the
@@ -2362,11 +2366,16 @@ For any stochastic process
 \end_inset
 
  and integers 
-\begin_inset Formula $s>t$
+\begin_inset Formula $s\geq t$
 \end_inset
 
 , denote 
 \begin_inset Formula $\hat{A}_{s|t}=\E(A_{s}|\G_{t})$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $s>t$
 \end_inset
 
 .
@@ -2408,12 +2417,16 @@ V_{s|t}\defined\var\left(\left.{X_{s}\atop Y_{s}}\right|\G_{t}\right)=\var\left(
 
 \end_inset
 
-Unfortunately, due to the non-Gaussianity, we have analytical formulas neither
- for 
+Unfortunately, due to the non-Gaussianity, we have analytical formulas for
+ none of 
 \begin_inset Formula $X_{t|t}$
 \end_inset
 
- nor for 
+ 
+\begin_inset Formula $I_{t|t}$
+\end_inset
+
+ and 
 \begin_inset Formula $\mathrm{W_{t|t}}$
 \end_inset
 
@@ -2444,7 +2457,13 @@ noprefix "false"
 
 \end_inset
 
- Given this assumption, we have, by the well known formula (see e.g.
+Moreover, we assume that 
+\begin_inset Formula $I_{t}\in\G_{t},t\geq0$
+\end_inset
+
+ (i.e.
+ the import is observable).
+ Given these assumptions, we have, by the well known formula (see e.g.
  
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -2477,7 +2496,7 @@ Note that
 \begin_inset Formula $K_{t}$
 \end_inset
 
- may be seen as a conditional version of a Kalman gain matrix.
+ may be seen as a conditional version of the Kalman gain matrix.
 \end_layout
 
 \begin_layout Standard
