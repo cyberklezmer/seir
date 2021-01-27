@@ -93,6 +93,20 @@ public:
      }
 
      const C& partial() const { return fpartial; }
+
+     virtual double abssusceptible(unsigned t, const vector<double>& params, const G& g) const
+     {
+         unsigned nc = numcohorts();
+         unsigned pk = fpartial.k();
+         auto pars = pars2pars(t,params,g);
+         const dvector& c = g.est[t].x();
+         double s = 0;
+         for(unsigned i=0; i<nc; i++)
+             s += fpopulation[i] *  fpartial.susceptible(fpopulation[i],
+                           c.block(i*pk,0,pk,1));
+         return s;
+     }
+
 private:
      unsigned fnumcohorts;
      vector<double> fpopulation;;

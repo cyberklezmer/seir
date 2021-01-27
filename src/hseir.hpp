@@ -101,7 +101,7 @@ Pt(Ip,Hd) = params[iotas];
         double b = params[prebeta]*params[betafactor];
         Bt(Is,E) = b;
         Bt(Ip,E) = b;
-        Bt(Ia,E) = b;
+        Bt(Ia,E) = b / 4;
         Bt(Iu,E) = b;
 
         return Bt.transpose();
@@ -146,8 +146,8 @@ public:
 
     enum computationparams {
                omega,
-               eta,
-               theta,
+               pi,
+               thetacoef,
                eta0,
                theta0,
                numcomputationparams
@@ -196,15 +196,13 @@ public:
 
         vector<double> preparams(hpartial::numparams,0);
 
-        preparams[hpartial::pi] =
-1;
-//
+        preparams[hpartial::pi] = params[pi] * g.z[t][PDET];
 
         preparams[hpartial::eta] =
-                (params[eta0] + params[eta] * g.z[t][PDET])
+                params[eta0]
                 *  g.z[t][DAYADJUST];
         preparams[hpartial::theta] =
-                (params[theta0] + params[theta] * g.z[t][PDET])
+                (params[theta0] + params[thetacoef] * g.z[t][PDET])
                 * g.z[t][DAYADJUST];;
 
         preparams[hpartial::prebeta]
@@ -315,6 +313,7 @@ public:
 
         }
     }
+
 
 private:
     uncertain fx0;

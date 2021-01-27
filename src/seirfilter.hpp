@@ -107,7 +107,6 @@ public:
             return z[0].size();
         }
 
-
         void output(ostream& o, bool longpred = true)
         {
             assert(ylabels.size()==sm.n());

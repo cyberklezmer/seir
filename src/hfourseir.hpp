@@ -9,7 +9,7 @@ class hfourseir: public hcohortseir
 public:
     enum obscolums { /* R */
        RA, RS,
-       HY, HO, GY, GO, DHY, DHO, // DOY, DOO, can be computed from others
+       HY, HO, GY, GO, DHY, DHO, // DOY, DOO, can  computed from others
        D0 , D20, D65, D80, R0, R20, R65, /* R80 linearly dependent */
        numobscolumns };
 
