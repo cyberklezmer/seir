@@ -105,7 +105,7 @@ public:
         ret.setZero();
         unsigned j=0;
         for(unsigned i=I0; i<=I80; i++,j++)
-            ret[hpartial::E + j*partial().k()] = g.z[t][i];
+            ret[hpartial::E + j*partial().k()] = g.Z(t,i);
         return ret;
     }
 

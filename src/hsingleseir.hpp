@@ -35,7 +35,7 @@ public:
         ret.setZero();
         double s=0;
         for(unsigned i=I0; i<=I80; i++)
-            s += g.z[t][i];
+            s += g.Z(t,i);
         ret[hpartial::E] = s;
         return ret;
     }

@@ -107,6 +107,26 @@ public:
          return s;
      }
 
+     virtual dmatrix activesubmatrix(const dmatrix &T) const
+     {
+         vector<vector<dmatrix>> s(fnumcohorts,vector<dmatrix>(fnumcohorts));
+         unsigned pk = fpartial.k();
+         for(unsigned i=0; i<fnumcohorts; i++)
+             for(unsigned j=0; j<fnumcohorts; j++)
+                 s[i][j] = fpartial.activesubmatrix(T.block(i*pk,j*pk,pk,pk));
+         unsigned pm = s[0][0].cols();
+         dmatrix ret(fnumcohorts*pm,fnumcohorts*pm);
+         ret.setZero();
+
+         for(unsigned i=0; i<fnumcohorts; i++)
+             for(unsigned j=0; j<fnumcohorts; j++)
+             {
+                 assert(s[i][j].cols() == pm);
+                 assert(s[i][j].rows() == pm);
+                 ret.block(pm * i, pm * j, pm,pm) = s[i][j];
+             }
+         return ret;
+     }
 private:
      unsigned fnumcohorts;
      vector<double> fpopulation;;

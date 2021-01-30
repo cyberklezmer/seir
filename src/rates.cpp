@@ -5,6 +5,30 @@ using namespace orpp;
 
 constexpr int maxint = numeric_limits<int>::max();
 
+enum cohorts { c0, c20, c65, c80, numcohorts};
+
+cohorts v2cohort(unsigned v)
+{
+    if(v < 20)
+        return c0;
+    else
+    {
+        if(v<65)
+            return c20;
+        else
+        {
+            if(v < 80)
+                return c65;
+            else
+            {
+                if(v < 105)
+                    return c80;
+                else
+                    return numcohorts;
+            }
+        }
+    }
+};
 
 struct counter
 {
@@ -56,25 +80,114 @@ int date2int(const string s, int zerodate, int lastdate, counter& c)
         return di;
 }
 
+int zerodate = date2int("2020-02-24");
 
-void uzis2uzis()
+
+void mzcr2mzcr(const string& horizon)
 {
+    int lastdate = date2int(horizon);
+    int numdates = lastdate - zerodate + 1;
+
+    counter ocounter;
+    unsigned inconsistento = 0;
+
+
+    vector<vector<unsigned>> I(numdates,vector<unsigned>(numcohorts,0));
+    vector<vector<unsigned>> R(numdates,vector<unsigned>(numcohorts,0));
+
+    csv<','> osoby("/home/martin/Documents/s/covid/data/mzcr/osoby.csv");
+
+    cout << "Importing osoby" << endl;
+
+    for(unsigned i=1; i<osoby.r(); i++)
+    {
+        enum {datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod, nakaza_v_zahranici,nakaza_zeme_csu_kod};
+
+        string ds = osoby(i,datum);
+        int d = date2int(ds, zerodate,lastdate, ocounter);
+
+        if(d == maxint)
+            inconsistento++;
+        else
+        {
+            unsigned v = osoby.getunsigned(i,vek);
+            cohorts c = v2cohort(v);
+            if(c==numcohorts)
+                inconsistento++;
+            else
+            {
+                R[d-zerodate][c]++;
+                if(osoby(i,nakaza_v_zahranici)=="1")
+                    I[d-zerodate][c]++;
+            }
+        }
+    }
+    cout << inconsistento << " records: "
+         << ocounter.wrong << " wrong dates,"
+         << ocounter.over << " dates over,"
+         << ocounter.under << " dates under" << endl;
+
+    counter ucounter;
+    unsigned inconsistentu = 0;
+    vector<vector<unsigned>> D(numdates,vector<unsigned>(numcohorts,0));
+
+    csv<','> umrti("/home/martin/Documents/s/covid/data/mzcr/umrti.csv");
+
+    cout << "Importing umrti" << endl;
+
+    for(unsigned i=1; i<umrti.r(); i++)
+    {
+        enum labels {datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod};
+
+        string ds = umrti(i,datum);
+        int d = date2int(ds, zerodate,lastdate, ucounter);
+
+        if(d == maxint)
+            inconsistentu++;
+        else
+        {
+            unsigned v = umrti.getunsigned(i,vek);
+            cohorts c = v2cohort(v);
+            if(c==numcohorts)
+                inconsistentu++;
+            else
+                D[d-zerodate][c]++;
+        }
+    }
+    cout << inconsistentu << " records: "
+         << ucounter.wrong << " wrong dates,"
+         << ucounter.over << " dates over,"
+         << ucounter.under << " dates under" << endl;
+
+    cout << "I0,I20,I65,I80,R0,R20,R65,R80,D0,D20,D65,D80" << endl;
+
+    for(unsigned i=0; i<numdates; i++)
+    {
+        cout << I[i][0] << "," << I[i][1] << ","
+             << I[i][2] << "," << I[i][3] << ",";
+        cout << R[i][0] << "," << R[i][1] << ","
+             << R[i][2] << "," << R[i][3] << ",";
+        cout << D[i][0] << "," << D[i][1] << ","
+             << D[i][2] << "," << D[i][3] << endl;
+    }
+}
+
+// durs mean numbers to death
+void uzis2uzis(string horizon, bool uziscsv=false, bool rates=false, bool durs=true)
+{
+    enum cats {c0, c20, c65, numcats };
+
     enum labels {okres,orp,pohlavi,vek_kat,datum_prvniho_priznaku,
                  datum_odberu, datum_vysledku, datum_hlaseni,
                  datum_izolace, zahajeni_hospitalizace,
                  ukonceni_hospitalizace,datum_vyleceni,datum_umrti,
                  numlabels};
 
-
-
-    enum cats {c0, c20, c65, numcats };
     enum hcatc {cy, co, numhcats };
 
     enum gender {man, woman, other, numgenders};
 
-
-    int zerodate = date2int("2020-02-24");
-    int lastdate = date2int("2021-01-16");
+    int lastdate = date2int(horizon);
     int numdates = lastdate - zerodate + 1;
 
     vector<counter> cntr(numlabels); // i know the first will be unused
@@ -97,7 +210,7 @@ void uzis2uzis()
 
     enum efromis { efideath, efihosp, efidet};
 
-    csv<';'> src("/home/martin/tmp/pepa/IDEA-anti-COVID-19-data/epidemie/modely_05_datumy.csv");
+    csv<';'> src("/home/martin/Documents/s/covid/data/pepa/IDEA-anti-COVID-19-data/epidemie/modely_05_datumy.csv");
 
     assert(src.c(0)==numlabels);
 
@@ -153,7 +266,6 @@ void uzis2uzis()
             inconsistent++;
         else
         {
-
             if(dd < maxint && dd > dpp)
             {
                 unsigned cindex = c;
@@ -195,7 +307,6 @@ void uzis2uzis()
                         fromh[dh-zerodate].push_back({m, d < r ? 1 : 0,c});
                 }
             }
-
         }
     }
 
@@ -209,7 +320,7 @@ void uzis2uzis()
     cout << inconsistent << " inconsistent records." << endl;
     cout << endl;
 
-    if(0)
+    if(durs)
     {
         for(unsigned i=0; i<numcats*2; i++)
         {
@@ -220,7 +331,7 @@ void uzis2uzis()
         }
     }
 
-    if(1)
+    if(uziscsv)
     {
         cout << "HY,HO,RHY,RHO,DHY,DHO,DOY,DOO" << endl;
         for(unsigned i=0; i<numdates; i++)
@@ -231,7 +342,7 @@ void uzis2uzis()
                  << dother[0][i] << "," << dother[1][i] << endl;
     }
 
-    if(0)
+    if(rates)
     {
         cout << "no,";
         vector<string> cl = { "0", "20", "65", "all"};

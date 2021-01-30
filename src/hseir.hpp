@@ -135,13 +135,18 @@ Pt(Ip,Hd) = params[iotas];
         return 1.0 - s / population;
     }
 
+    virtual dmatrix activesubmatrix( const dmatrix& T) const
+    {
+        return T.block(0,0,numactives,numactives);
+    }
 };
 
 class hcohortseir: public cohortseir<hpartial>
 {
 public:
     enum excolumns {I0,	I20,	I65,	I80,
-                     DAYADJUST,PDET,REDUCTIONMEAN,REDUCTIONMEDIAN,FEAR,
+                     DAYADJUST,PDET,REDUCTIONMEAN,REDUCTIONMEDIAN,FEAR,BETAFACTOR,
+                     ALPHA0, ALPHA20, ALPHA65, ALPHA80,
                      numexcolumns};
 
     enum computationparams {
@@ -162,8 +167,7 @@ public:
             unsigned t, const vector<double>& params, const G& g) const
     {
         static std::vector<hpartial::params> commonpars
-                = {hpartial::alpha,
-                   hpartial::sigma,
+                = {hpartial::sigma,
                    hpartial::varsigma};
 
         static std::vector<hpartial::params> exclusivepars
@@ -176,7 +180,8 @@ public:
                    hpartial::muh};
 
         static std::vector<hpartial::params> computedpars
-               = { hpartial::pi,
+               = { hpartial::alpha,
+                   hpartial::pi,
                    hpartial::eta,
                    hpartial::theta,
                    hpartial::prebeta };
@@ -196,19 +201,20 @@ public:
 
         vector<double> preparams(hpartial::numparams,0);
 
-        preparams[hpartial::pi] = params[pi] * g.z[t][PDET];
+        preparams[hpartial::pi] = min(1.0,params[pi] * g.Z(t,PDET));
 
         preparams[hpartial::eta] =
                 params[eta0]
-                *  g.z[t][DAYADJUST];
+                *  g.Z(t,DAYADJUST);
         preparams[hpartial::theta] =
-                (params[theta0] + params[thetacoef] * g.z[t][PDET])
-                * g.z[t][DAYADJUST];;
+                (params[theta0] + params[thetacoef] * g.Z(t,PDET))
+                * g.Z(t,DAYADJUST);
 
         preparams[hpartial::prebeta]
-           = g.z[t][REDUCTIONMEAN]
-//                * exp(-params[omega] * g.z[t][FEAR] );
-* (1-params[omega] * g.z[t][FEAR]);
+           = g.Z(t,REDUCTIONMEAN)
+                * exp(-params[omega] * g.Z(t,BETAFACTOR));
+//* (1-params[omega] * g.Z(t,FEAR));
+
 
         unsigned srcc=numcomputationparams;
         for(unsigned i=0; i<commonpars.size(); i++)
@@ -219,6 +225,7 @@ public:
             res[c] = preparams;
             for(unsigned i=0; i<exclusivepars.size(); i++)
                 res[c][exclusivepars[i]] = params[srcc++];
+            res[c][hpartial::alpha] = g.Z(t,ALPHA0+c);
         }
         assert(srcc==params.size());
         return res;
@@ -296,7 +303,7 @@ public:
             return seirfilter::X0(params);
         else
         {
-            assert(fx0.x().size() == k());
+            assert(fx0.x().size() == this->k());
             return fx0;
 
 /*
@@ -313,7 +320,6 @@ public:
 
         }
     }
-
 
 private:
     uncertain fx0;

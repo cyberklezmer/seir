@@ -35,7 +35,7 @@ public:
         {
             unsigned former = t>7 ? t-7 : 0;
             for(unsigned i=0; i<n(); i++)
-                res[i]= (g.y[t][i]-g.y[former][i])/ (t-former);
+                res[i]= (g.Y(t,i)-g.Y(former,i))/ (t-former);
         }
         return res;
     }
@@ -50,7 +50,7 @@ public:
             for(unsigned i=0; i<n(); i++)
             {
                 double w = wa[i] < 10 ? 1.0 / 10 : 1.0 / wa[i];
-                double x = g.y[t][i]-
+                double x = g.Y(t,i)-
                         (longpredtocontrast
                            ?  g.predlong[t].x()[k()+i]
                           :g.pred[t].x()[k()+i]);
@@ -72,7 +72,7 @@ public:
                 throw( "Vyy det = 0!" );
             }
 
-            dvector d =g.y[t]-x.x().block(k(),0,n(),1);
+            dvector d =g.Y(t)-x.x().block(k(),0,n(),1);
             vector<double> ics(n(),0);
 
             for(unsigned i=0; i<n(); i++)

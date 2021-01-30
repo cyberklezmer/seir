@@ -69,12 +69,12 @@ class seirfilter
 
 public:
 
-    struct G : public seirdata
+    struct G : private seirdata
     {
-        G(const seirdata& d, const seirfilter& am) :
+        G(const seirdata& d, const seirfilter& am, unsigned evalsize) :
             seirdata(d),
-            pred(d.z.size()), predlong(d.z.size()), est(d.z.size()),
-            hatBs(d.z.size()),Ps(d.z.size()),
+            pred(evalsize), predlong(evalsize), est(evalsize),
+            hatBs(evalsize),Ps(evalsize),
             contrasts(d.y.size(),0),icontrasts(d.y.size()), contrast(0), sm(am)
            { assert(d.z.size()>=d.y.size()); }
         vector<uncertain> pred;
@@ -106,6 +106,31 @@ public:
             assert(z.size());
             return z[0].size();
         }
+        virtual dvector Y(unsigned t) const
+        {
+            assert(t<y.size());
+            return y[t];
+        }
+
+        double Y(unsigned t, unsigned i) const
+        {
+            return Y(t)[i];
+        }
+
+        unsigned Ysize() const
+        {
+            return y.size();
+        }
+
+        virtual dvector Z(unsigned t) const
+        {
+            return z[t<z.size() ? t : z.size()-1];
+        }
+
+        double Z(unsigned t, unsigned i) const
+        {
+            return Z(t)[i];
+        }
 
         void output(ostream& o, bool longpred = true)
         {
@@ -135,7 +160,10 @@ public:
             o << endl;
             for(unsigned s=0; s<pred.size(); s++)
             {
-                o << dates[s] << ",";
+                if(s<dates.size())
+                    o << dates[s] << ",";
+                else
+                    o << ",";
                 const uncertain& u = longpred ? predlong[s] : pred[s];
                 for(unsigned i=0; i<u.dim(); i++)
                     o << u.x()[i] << ",";
@@ -155,12 +183,18 @@ public:
                     for(unsigned i=0; i<est[0].dim(); i++)
                         o << ",,";
                 }
-                if(s < y.size() && s < z.size())
+                if(s < y.size())
                 {
                     for(unsigned i=0; i<y[s].size(); i++)
                         o<< y[s][i] << ",";
-                    for(unsigned i=0; i<z[s].size(); i++)
-                        o<< z[s][i] << ",";
+                }
+                else
+                    for(unsigned i=0; i<y[0].size(); i++)
+                        o<< ",";
+                for(unsigned i=0; i<z[0].size(); i++)
+                     o<< Z(s,i) << ",";
+                if(s<contrasts.size())
+                {
                     o << contrasts[s] << ",";
                     for(unsigned i=0; i<icontrasts[s].size();i++)
                         o << icontrasts[s][i] << ",";
@@ -240,10 +274,10 @@ public:
         return ret;
     }
 
-    double rho(unsigned t, const G& er,unsigned m) const
-    {
-        return radius(er.T(t).block(0,0,m,m));
-    }
+//    double rho(unsigned t, const G& er,unsigned m) const
+//    {
+//        return radius(er.T(t).block(0,0,m,m));
+//    }
     double Rcp(unsigned t, const G& er, unsigned m) const
     {
         const dmatrix& K = er.hatBs[t].block(0,0,m,m);
@@ -306,27 +340,28 @@ public:
         unsigned estoffset = 0;
         bool longpredtocontrast = false;
         bool longpredvars = false;        
+        unsigned ds = 0;
     };
 
-    G eval(const vector<double>& pars, const seirdata& d, evalparams ep) const
+    template<typename TG=G>
+    TG eval(const vector<double>& pars,
+            const seirdata& data, evalparams ep) const
     {
-        assert(d.y.size());
-        assert(ep.firstcomputedcontrast > 0);
+        assert(data.y.size());
+        assert(ep.firstcomputedcontrasttime > 0);
 
         if(ep.longpredtocontrast)
-            assert(ep.longpredlag <= ep.firstcomputedcontrast);
+            assert(ep.longpredlag <= ep.firstcomputedcontrasttime);
 
-        unsigned pret = d.y.size()-1;
-        assert(ep.estoffset <= pret);
-        unsigned t = pret - ep.estoffset;
-        int ds = d.z.size()-d.y.size();
-        assert(ds >= 0);
-        assert(d.z.size()>=t+ds);
+        TG g(data,*this, data.y.size() + ep.ds);
 
+        unsigned horizon = g.Ysize()-1;
+        assert(ep.estoffset <= horizon);
+        unsigned esthorizon = horizon - ep.estoffset;
+        unsigned evalhorizon = horizon + ep.ds;
         dvector nanvector(k()+n());
         nanvector.setConstant(numeric_limits<double>::quiet_NaN());
 
-        G g(d,*this);
 
         for(unsigned i=0; i<g.predlong.size(); i++)
             g.predlong[i] = nanvector;
@@ -343,7 +378,7 @@ public:
         g.hatBs[0]=this->hatB(0, pars, g);
         g.Ps[0]=this->P(0, pars, g);
         unsigned i=1;
-        for(; i<= pret+ds; i++)
+        for(; i<= evalhorizon; i++)
         {
             bool computingcontrast = (i >= ep.firstcomputedcontrasttime);
 
@@ -351,7 +386,7 @@ public:
 
             dvector Xold;
             dmatrix Wold;
-            if(i<=t+1)
+            if(i<=esthorizon+1)
             {
                 Xold = g.est[i-1].x();
                 Wold = g.est[i-1].var();
@@ -386,7 +421,7 @@ public:
 
             g.pred[i] = uncertain(stackv(Xnew, Ynew),V);
             unsigned ilong = i + ep.longpredlag - 1;
-            if(ep.longpredlag && ilong < g.z.size())
+            if(ep.longpredlag && ilong <= evalhorizon)
             {
                 assert(!ep.longpredvars); // not yet implemented
 
@@ -400,7 +435,7 @@ public:
                 g.predlong[ilong] = stackv(xpred, this->F(i+ep.longpredlag,pars,tmpg)*xpred);
             }
 
-            if(i<=t)
+            if(i<=esthorizon)
             {
                 dmatrix Vxx = V.block(0,0,k(),k());
                 dmatrix Vxy = V.block(0,k(),k(),n());
@@ -415,7 +450,7 @@ public:
                 else
                 {
                     dmatrix Vinv = pseudoinverse(Vyy); // Vyy.inverse();
-                    dvector Xest = Xnew + Vxy * Vinv * (g.y[i]-Ynew);
+                    dvector Xest = Xnew + Vxy * Vinv * (g.Y(i)-Ynew);
                     dmatrix West =Vxx + ((-1) * Vxy) * Vinv * Vyx;
                     assert(isVar(West,"W",i-1,dv(pars)));
                     g.est[i] = uncertain(Xest,West);
@@ -440,9 +475,19 @@ public:
             g.Ps[i] = this->P(i,pars, g);
         }
 
-
         return g;
     }
+
+    virtual dmatrix activesubmatrix( const dmatrix& T) const
+    {
+        return T;
+    }
+
+    double radius(unsigned t, const vector<double>& pars, const G& g) const
+    {
+        return ::radius(activesubmatrix(T(t,pars,g)));
+    }
+
 };
 
 
