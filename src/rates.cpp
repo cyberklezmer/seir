@@ -82,8 +82,7 @@ int date2int(const string s, int zerodate, int lastdate, counter& c)
 
 int zerodate = date2int("2020-02-24");
 
-
-void mzcr2mzcr(const string& horizon)
+void mzcr2mzcr(const string& horizon, bool elementary=false)
 {
     int lastdate = date2int(horizon);
     int numdates = lastdate - zerodate + 1;
@@ -91,9 +90,12 @@ void mzcr2mzcr(const string& horizon)
     counter ocounter;
     unsigned inconsistento = 0;
 
+    unsigned firstelem = 6;
+    unsigned numclasses = 9;
 
     vector<vector<unsigned>> I(numdates,vector<unsigned>(numcohorts,0));
     vector<vector<unsigned>> R(numdates,vector<unsigned>(numcohorts,0));
+    vector<vector<unsigned>> E(numdates,vector<unsigned>(numclasses,0));
 
     csv<','> osoby("/home/martin/Documents/s/covid/data/mzcr/osoby.csv");
 
@@ -112,6 +114,10 @@ void mzcr2mzcr(const string& horizon)
         {
             unsigned v = osoby.getunsigned(i,vek);
             cohorts c = v2cohort(v);
+
+            if(v>=firstelem && v < firstelem + numclasses)
+                E[d-zerodate][v-firstelem]++;
+
             if(c==numcohorts)
                 inconsistento++;
             else
@@ -159,21 +165,34 @@ void mzcr2mzcr(const string& horizon)
          << ucounter.over << " dates over,"
          << ucounter.under << " dates under" << endl;
 
-    cout << "I0,I20,I65,I80,R0,R20,R65,R80,D0,D20,D65,D80" << endl;
-
-    for(unsigned i=0; i<numdates; i++)
+    if(elementary)
     {
-        cout << I[i][0] << "," << I[i][1] << ","
-             << I[i][2] << "," << I[i][3] << ",";
-        cout << R[i][0] << "," << R[i][1] << ","
-             << R[i][2] << "," << R[i][3] << ",";
-        cout << D[i][0] << "," << D[i][1] << ","
-             << D[i][2] << "," << D[i][3] << endl;
+        cout << "1,2,3,4,5,6,7,8,9" << endl;
+        for(unsigned i=0; i<numdates; i++)
+        {
+            for(unsigned j=0; j<numclasses; j++)
+                cout << E[i][j] << ",";
+            cout << endl;
+        }
+    }
+    else
+    {
+        cout << "I0,I20,I65,I80,R0,R20,R65,R80,D0,D20,D65,D80" << endl;
+
+        for(unsigned i=0; i<numdates; i++)
+        {
+            cout << I[i][0] << "," << I[i][1] << ","
+                 << I[i][2] << "," << I[i][3] << ",";
+            cout << R[i][0] << "," << R[i][1] << ","
+                 << R[i][2] << "," << R[i][3] << ",";
+            cout << D[i][0] << "," << D[i][1] << ","
+                 << D[i][2] << "," << D[i][3] << endl;
+        }
     }
 }
 
 // durs mean numbers to death
-void uzis2uzis(string horizon, bool uziscsv=false, bool rates=false, bool durs=true)
+void uzis2uzis(const string& horizon, bool uziscsv=false, bool rates=false, bool durs=false, bool hospdurs =false)
 {
     enum cats {c0, c20, c65, numcats };
 
@@ -207,6 +226,7 @@ void uzis2uzis(string horizon, bool uziscsv=false, bool rates=false, bool durs=t
 
     const unsigned numdurs = 100;
     vector<vector<unsigned>> durhist(2*3,vector<unsigned>(numdurs,0));
+    vector<vector<unsigned>> hospdurhist(2*3,vector<unsigned>(numdurs,0));
 
     enum efromis { efideath, efihosp, efidet};
 
@@ -277,6 +297,17 @@ void uzis2uzis(string horizon, bool uziscsv=false, bool rates=false, bool durs=t
                 durhist[cindex][d]++;
             }
 
+            if(dr < maxint && dr > dh)
+            {
+                unsigned cindex = c;
+                if(g == woman)
+                    cindex += numcats;
+                unsigned d = dr - dh;
+                if(d >= numdurs)
+                    d = numdurs - 1;
+                hospdurhist[cindex][d]++;
+            }
+
             if(drep < maxint)
                 delays[dpp-zerodate].push_back(drep-dpp);
 
@@ -330,6 +361,18 @@ void uzis2uzis(string horizon, bool uziscsv=false, bool rates=false, bool durs=t
            cout << endl;
         }
     }
+
+    if(hospdurs)
+    {
+        for(unsigned i=0; i<numcats*2; i++)
+        {
+           cout << i;
+           for(unsigned j=0; j<numdurs; j++)
+               cout << "," << hospdurhist[i][j];
+           cout << endl;
+        }
+    }
+
 
     if(uziscsv)
     {

@@ -40,11 +40,6 @@ public:
         return ret;
     }
 
-    virtual double hats(const vector<double>&/* params */) const
-    {
-        return 10;
-    }
-
 
     virtual dmatrix Gamma(unsigned /* t */, const vector<double>&  params , const struct G& ) const
     {

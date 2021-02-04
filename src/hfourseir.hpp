@@ -7,10 +7,10 @@ class hfourseir: public hcohortseir
 {
 
 public:
-    enum obscolums { /* R */
-       RA, RS,
+    enum obscolums {
+       /* RA - excluded due to linear dependence  */ RS,
        HY, HO, GY, GO, DHY, DHO, // DOY, DOO, can  computed from others
-       D0 , D20, D65, D80, R0, R20, R65, /* R80 linearly dependent */
+       D0 , D20, D65, D80, R0, R20, R65, R80,
        numobscolumns };
 
     static dmatrix makeF()
@@ -28,9 +28,9 @@ public:
            //     E,  Ia,  Ip,  Is,  Iu,  R, Edelta, Iadelta, Ipdelta,  Isdelta,  Rdelta,  Hdelta, Rhdelta, Ddelta, Dhdelta,  Isd, Rd, Hd, Rhd, Dd, Dhd
 
 
-           ret.block(RA,offset,1,pk) = row(
-                {  0,  0,   0,   0,   0,  0, 0,      1,       1,        1,        1,       1,      1,       1,      1,        0,   0,  0,  0,   0,  0}
-             );
+//           ret.block(RA,offset,1,pk) = row(
+//                {  0,  0,   0,   0,   0,  0, 0,      1,       1,        1,        1,       1,      1,       1,      1,        0,   0,  0,  0,   0,  0}
+//             );
 
            ret.block(RS,offset,1,pk) = row(
                 {  0,  0,   0,   0,   0,  0, 0,      0,       0,        0,        0,       0,      0,       0,      0,        1,   1,  1,  1,   1,  1}
@@ -55,9 +55,8 @@ public:
            ret.block(D0+i,offset,1,pk) = row(
            /*D*/ {0,  0,   0,   0,   0,   0,  0,     0,       0,        0,        0,       0,      0,       1,      1,        0,   0,  0,  0,   1,  1}
              );
-           if(i<3)
-               ret.block(R0+i,offset,1,pk) = row(
-               /*R*/ {0,  0,   0,   0,   0,   0,  0,     1,       1,        1,        1,       1,      1,       1,      1,        1,   1,  1,  1,   1,  1}
+           ret.block(R0+i,offset,1,pk) = row(
+           /*R*/ {0,  0,   0,   0,   0,   0,  0,     1,       1,        1,        1,       1,      1,       1,      1,        1,   1,  1,  1,   1,  1}
                  );
        }
 
@@ -109,10 +108,6 @@ public:
         return ret;
     }
 
-    virtual double hats(const vector<double>&/* params */) const
-    {
-        return 10;
-    }
 
     virtual dmatrix Gamma(unsigned /* t */, const vector<double>& /* params */, const struct G& ) const
     {
@@ -122,17 +117,16 @@ return ret;
         for(unsigned i=0; i<4; i++)
         {
             unsigned offset = i * partial().k();
-            ret(RA,offset+hpartial::E)=ret(RA,offset+hpartial::Ia)
-                =ret(RA,offset + hpartial::Ia) = 0.16;
+//            ret(RA,offset+hpartial::E)=ret(RA,offset+hpartial::Ia)
+//                =ret(RA,offset + hpartial::Ia) = 0.16;
             ret(RS,offset+hpartial::Is)=ret(RS,offset+hpartial::Iu)=1.45;
 
             unsigned oi = i >= 2;
 
             ret(HY+oi,offset+hpartial::Hd)=ret(HY+oi,offset+hpartial::Hdelta)=0.19;
             ret(DHY+oi,offset+hpartial::Hd)=ret(DHY+oi,offset+hpartial::Hdelta)=0.0008;
-            if(i<3)
-                ret(R0+i,offset +hpartial::E)=ret(R0+i,offset+hpartial::Ia)
-                    =ret(R0+i,offset + hpartial::Ia) = 0.16;
+            ret(R0+i,offset +hpartial::E)=ret(R0+i,offset+hpartial::Ia)
+                 =ret(R0+i,offset + hpartial::Ia) = 0.16;
 
         }
         return ret;
@@ -146,9 +140,9 @@ class fourdatareader : public datareader
 {
     virtual vector<string> obslabels() const
     {
-        return   { "RA", "RS",
+        return   { "RS",
             "HY", "HO","GY","GO","DHY","DHO",
-            "D0","D20","D65","D80", "R0","R20","R65" };
+            "D0","D20","D65","D80", "R0","R20","R65", "R80" };
     }
 
     virtual unsigned numobs() const
@@ -159,7 +153,7 @@ class fourdatareader : public datareader
     {
         vector<double> dst(numobs());
 
-         dst[hfourseir::RA] = src[RA];
+//         dst[hfourseir::RA] = src[RA];
         dst[hfourseir::RS] = src[RS];
         dst[hfourseir::HY] = src[HY];
         dst[hfourseir::HO] = src[HO];
@@ -174,6 +168,7 @@ class fourdatareader : public datareader
         dst[hfourseir::R0] = src[R0];
         dst[hfourseir::R20] = src[R20];
         dst[hfourseir::R65] = src[R65];
+        dst[hfourseir::R80] = src[R80];
 
         return dst;
     }

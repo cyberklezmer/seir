@@ -36,13 +36,32 @@ public:
         dmatrix Pt(k(),k());
         Pt.setZero();
 
+        double A = params[theta] *
+            (1
+             + params[alpha] * params[sigma] / (params[theta] + params[gammaa])
+             + (1-params[alpha]) * params[sigma] / (params[varsigma] +params[theta]))
+          / (params[theta]+params[sigma]);
+        double B =
+              (1-params[alpha]) * params[sigma] * params[varsigma] * params[eta]
+                      / (params[gammas]+params[mus]+params[gammas]+params[eta])
+                      / (params[theta]+params[sigma])
+                      / (params[varsigma]+params[theta]);
+        double pu = min(1.0, (params[pi] - A ) / B);
+        if(pu > 1)
+        {
+            cerr << params[pi] << " - " <<  pu << " A: " << A << " B: " << B <<endl;
+            throw("positive pu!");
+        }
+
         Pt(E,Ia) = params[sigma] * params[alpha];
         Pt(E,Ip) = params[sigma] * (1-params[alpha]);
-        Pt(Ip,Is) = params[varsigma] * params[pi];
+        Pt(Ip,Is) = params[varsigma] * pu;
+
 
 Pt(Ip,Hd) = params[iotas];
 
-        Pt(Ip,Iu) = params[varsigma] * (1-params[pi]);
+        Pt(Ip,Iu) = params[varsigma] *(1-pu);
+
         Pt(Ia,R) = params[gammaa];
         Pt(Is,R) = params[gammas];
         Pt(Iu,R) = params[gammas];
@@ -150,7 +169,12 @@ public:
                      numexcolumns};
 
     enum computationparams {
+               varbfactor,
+               cactive,
+               cpassive,
+               newvarcoef,
                omega,
+               omega2,
                pi,
                thetacoef,
                eta0,
@@ -210,10 +234,16 @@ public:
                 (params[theta0] + params[thetacoef] * g.Z(t,PDET))
                 * g.Z(t,DAYADJUST);
 
+        double nw1 = 270;
+        double nw2 = 270+6*7;
+        double at = g.abstime(t);
+        double nwc = at < nw1 ? 1 :
+                       ( at > nw2 ? params[newvarcoef]
+                             : 1+(params[newvarcoef]-1) * (at-nw1) / (nw2-nw1));
         preparams[hpartial::prebeta]
-           = g.Z(t,REDUCTIONMEAN)
-                * exp(-params[omega] * g.Z(t,BETAFACTOR));
-//* (1-params[omega] * g.Z(t,FEAR));
+           = nwc * g.Z(t,REDUCTIONMEAN)
+                * exp(-params[omega] * g.Z(t,BETAFACTOR))
+                * (1-params[omega2] * g.Z(t,FEAR));
 
 
         unsigned srcc=numcomputationparams;
@@ -230,6 +260,15 @@ public:
         assert(srcc==params.size());
         return res;
     }
+    virtual double vb(const vector<double>& params ) const
+    {
+        return params[varbfactor];
+    }
+    virtual double vp(const vector<double>& params, unsigned i) const
+    {
+        return params[i < hpartial::numactives ? cactive : cpassive];
+    }
+
 };
 
 class datareader

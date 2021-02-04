@@ -2,14 +2,14 @@
 
 extern int old();
 extern int nw();
-extern void uzis2uzis(bool, bool, bool);
-extern void mzcr2mzcr(const std::string& horizon);
+extern void uzis2uzis(const std::string& horizon, bool, bool, bool, bool);
+extern void mzcr2mzcr(const std::string& horizon, bool);
 
 
 int main()
 {
-//    mzcr2mzcr("2021-01-28");
-//    uzis2uzis("2021-01-28", true, false, false);
+//    mzcr2mzcr("2021-01-28", true);
+    uzis2uzis("2021-02-01", false, false, false, true);
 //    return 0;
-    return nw();
+//    return nw();
 }

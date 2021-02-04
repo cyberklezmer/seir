@@ -19,6 +19,7 @@ struct seirdata
     vector<dvector> z;
 
     unsigned lag = 0;
+    unsigned abstime(unsigned t) const { return t+lag; }
 };
 
 class seirfilter
@@ -202,6 +203,7 @@ public:
                 o << endl;
             }
         }
+        unsigned abstime(unsigned t) const { return seirdata::abstime(t);}
     };
 
 
@@ -221,7 +223,8 @@ public:
         { dmatrix ret(n(),k()); ret.setZero(); return ret;; }
 
     virtual double contrastaddition(const vector<double>& /* params */, const G& /*r */) const { return 0; }
-    virtual double hats(const vector<double>&/* params */) const { return 1; }
+    virtual double vb(const vector<double>&/* params */) const { return 1; }
+    virtual double vp(const vector<double>&/* params */, unsigned i) const { return numeric_limits<double>::infinity(); }
 
     virtual uncertain X0(const vector<double>& /*params */) const
     {
@@ -257,19 +260,28 @@ public:
                 if(i==j)
                     ret(i,i)+=P(s,i);
             }
-        dmatrix eb = hatB(t,pars,g);
-        double vf = hats(pars);
-        for(unsigned i=0; i<k; i++)
-            ret(i,i) += eb(i,s) * vf;
         return ret;
     }
 
+private:
+    double overdcoef( double c, double x) const
+    {
+        return c == numeric_limits<double>::infinity() ? 1
+                      : (c + x) / (c+1);
+    }
+public:
     dmatrix Lambda(unsigned t, const vector<double>& pars, const dvector& x, const G& g) const
     {
         dmatrix ret( this->k(), this->k());
         ret.setZero();
         for(unsigned i=0; i<this->k(); i++)
-            ret += x[i] * Phi(t,pars,i,g);
+            ret += x[i] * overdcoef(vp(pars,i),x[i]) * Phi(t,pars,i,g);
+
+        dmatrix eb = hatB(t,pars,g);
+        double vf = vb(pars);
+        for(unsigned s=0; s<this->k(); s++)
+            for(unsigned i=0; i<this->k(); i++)
+                ret(i,i) += x[s] * eb(i,s) * vf;
 
         return ret;
     }
@@ -423,16 +435,41 @@ public:
             unsigned ilong = i + ep.longpredlag - 1;
             if(ep.longpredlag && ilong <= evalhorizon)
             {
-                assert(!ep.longpredvars); // not yet implemented
 
                 G tmpg = g;
                 dvector xpred = Xnew;
+                dmatrix W = Wnew;
+                dvector xpredplus = Xplus;
                 for(unsigned j=1;j<ep.longpredlag;j++ )
                 {
-                    tmpg.est[i+j-1] = xpred;
+                    tmpg.est[i+j-1] = { xpred, W };
+
+                    xpredplus = xpred;
+
                     xpred = this->T(i+j-1,pars,tmpg)*xpred + I(i+j-1,pars,tmpg);
+                    if(ep.longpredvars)
+                    {
+                        for(unsigned j=0; j<k(); j++)
+                            if(xpredplus[j] < 0)
+                                xpredplus[j] = 0;
+
+                        W = T * W * T.transpose() + Lambda(i+j-1,pars,xpredplus,tmpg);
+                    }
                 }
-                g.predlong[ilong] = stackv(xpred, this->F(i+ep.longpredlag,pars,tmpg)*xpred);
+
+                auto F = this->F(ilong,pars,tmpg);
+
+                if(ep.longpredvars)
+                {
+                    g.predlong[ilong] = {
+                        stackv(xpred, F*xpred),
+                        block( W, W*F.transpose(),
+                               F*W, F*W*F.transpose()
+                                  + diag(Gamma(ilong-1,pars,tmpg) * xpredplus))
+                        };
+                }
+                else
+                    g.predlong[ilong] = stackv(xpred, F*xpred);
             }
 
             if(i<=esthorizon)
