@@ -275,7 +275,15 @@ public:
         dmatrix ret( this->k(), this->k());
         ret.setZero();
         for(unsigned i=0; i<this->k(); i++)
+        {
             ret += x[i] * overdcoef(vp(pars,i),x[i]) * Phi(t,pars,i,g);
+//if(ret(3,3) < 0)
+//{
+//    cout << ret(3,3) << " " <<   overdcoef(vp(pars,i),x[i]) << " " <<  x[i] << endl;
+//    cout << m2csv(this->P(t,pars,g))<<endl;
+//}
+
+        }
 
         dmatrix eb = hatB(t,pars,g);
         double vf = vb(pars);
@@ -429,6 +437,11 @@ public:
             dvector gd = Gamma(i-1,pars, g) * Xplus;
             dmatrix V =  block( Wnew, Wnew*F.transpose(),
                                 F*Wnew, F*Wnew*F.transpose() + diag(gd));
+//if(i-1==21)
+//{
+//    cout << m2csv(Lambda(i-1,pars,Xplus,g)) << endl;
+//    assert(isVar(Lambda(i-1,pars,Xplus,g),"V2",i-1,dv(pars)));
+//}
             assert(isVar(V,"V2",i-1,dv(pars)));
 
             g.pred[i] = uncertain(stackv(Xnew, Ynew),V);

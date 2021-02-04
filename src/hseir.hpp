@@ -46,12 +46,7 @@ public:
                       / (params[gammas]+params[mus]+params[gammas]+params[eta])
                       / (params[theta]+params[sigma])
                       / (params[varsigma]+params[theta]);
-        double pu = min(1.0, (params[pi] - A ) / B);
-        if(pu > 1)
-        {
-            cerr << params[pi] << " - " <<  pu << " A: " << A << " B: " << B <<endl;
-            throw("positive pu!");
-        }
+        double pu = max(min(1.0, (params[pi] - A ) / B),0.0);
 
         Pt(E,Ia) = params[sigma] * params[alpha];
         Pt(E,Ip) = params[sigma] * (1-params[alpha]);
@@ -158,6 +153,7 @@ Pt(Ip,Hd) = params[iotas];
     {
         return T.block(0,0,numactives,numactives);
     }
+
 };
 
 class hcohortseir: public cohortseir<hpartial>
@@ -170,8 +166,13 @@ public:
 
     enum computationparams {
                varbfactor,
-               cactive,
-               cpassive,
+               cpre,
+                         firstdisp=cpre,
+               cu,
+               cd,
+               cdelta,
+               chospital,
+                        lastdisp=chospital,
                newvarcoef,
                omega,
                omega2,
@@ -264,9 +265,22 @@ public:
     {
         return params[varbfactor];
     }
+
     virtual double vp(const vector<double>& params, unsigned i) const
-    {
-        return params[i < hpartial::numactives ? cactive : cpassive];
+   {
+      static computationparams p[hpartial::numstates ] =
+    //    E,    Ia,   Ip,   Is,   Iu, R,
+       {  cpre, cpre, cpre, cpre, cu, cu,
+    //    Edelta, Iadelta, Ipdelta,  Isdelta,  Rdelta,
+          cdelta, cdelta,  cdelta,   cdelta,   cdelta,
+
+     //  Hdelta,    Rhdelta,   Ddelta,    Dhdelta,
+         chospital, chospital, cdelta,    chospital,
+
+     //   Isd, Rd,  Hd,        Rhd,       Dd, Dhd,
+          cd,  cd,  chospital, chospital, cd, chospital };
+       unsigned ci = i % partial().k();
+       return params[firstdisp + p[ci]];
     }
 
 };
