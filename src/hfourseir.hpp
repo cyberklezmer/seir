@@ -108,29 +108,15 @@ public:
         return ret;
     }
 
-
-    virtual dmatrix Gamma(unsigned /* t */, const vector<double>& /* params */, const struct G& ) const
+    virtual dvector gamma(unsigned /* t */, const vector<double>& params, const struct G& /*g*/) const
     {
-        dmatrix ret(n(),k());
+        dvector ret(n());
         ret.setZero();
-return ret;
-        for(unsigned i=0; i<4; i++)
-        {
-            unsigned offset = i * partial().k();
-//            ret(RA,offset+hpartial::E)=ret(RA,offset+hpartial::Ia)
-//                =ret(RA,offset + hpartial::Ia) = 0.16;
-            ret(RS,offset+hpartial::Is)=ret(RS,offset+hpartial::Iu)=1.45;
-
-            unsigned oi = i >= 2;
-
-            ret(HY+oi,offset+hpartial::Hd)=ret(HY+oi,offset+hpartial::Hdelta)=0.19;
-            ret(DHY+oi,offset+hpartial::Hd)=ret(DHY+oi,offset+hpartial::Hdelta)=0.0008;
-            ret(R0+i,offset +hpartial::E)=ret(R0+i,offset+hpartial::Ia)
-                 =ret(R0+i,offset + hpartial::Ia) = 0.16;
-
-        }
+        ret[RS] = params[rscoef];
+        ret[R0] = ret[R20] = ret[R65] = ret[R80] = params[racoef];
         return ret;
     }
+
 private:
     dmatrix fF;
 };

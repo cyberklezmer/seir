@@ -25,6 +25,7 @@ public:
                   gammah, muh,
                   prebeta,
                   betafactor,
+                  ufactor,
                   numparams
                 };
 
@@ -67,8 +68,8 @@ Pt(Ip,Hd) = params[iotas];
         Pt(Is,Isd) = params[eta];
         Pt(Is,Hd) = params[iotas];
         Pt(Is,Dd) = params[mus];
-        Pt(Iu,Hd) = params[iotas];
-        Pt(Iu,Dd) = params[mus];
+        Pt(Iu,Hd) = params[ufactor] * params[iotas];
+        Pt(Iu,Dd) = params[ufactor] * params[mus];
 
         Pt(Edelta,Iadelta) = params[sigma] * params[alpha];
         Pt(Edelta,Ipdelta) = params[sigma] * (1-params[alpha]);
@@ -166,13 +167,16 @@ public:
 
     enum computationparams {
                varbfactor,
-               cpre,
-                         firstdisp=cpre,
-               cu,
-               cd,
-               cdelta,
+               ce,
+                         firstdisp=ce,
+//               cp,
+//               ca,
+//               cs,
                chospital,
                         lastdisp=chospital,
+               racoef,
+               rscoef,
+                        lastvar=rscoef,
                newvarcoef,
                omega,
                omega2,
@@ -193,7 +197,9 @@ public:
     {
         static std::vector<hpartial::params> commonpars
                 = {hpartial::sigma,
-                   hpartial::varsigma};
+                   hpartial::varsigma,
+                   hpartial::ufactor
+                  };
 
         static std::vector<hpartial::params> exclusivepars
                = { hpartial::betafactor,
@@ -230,10 +236,12 @@ public:
 
         preparams[hpartial::eta] =
                 params[eta0]
-                *  g.Z(t,DAYADJUST);
+//                *  g.Z(t,DAYADJUST)
+                ;
         preparams[hpartial::theta] =
                 (params[theta0] + params[thetacoef] * g.Z(t,PDET))
-                * g.Z(t,DAYADJUST);
+//                * g.Z(t,DAYADJUST)
+                ;
 
         double nw1 = 270;
         double nw2 = 270+6*7;
@@ -268,19 +276,26 @@ public:
 
     virtual double vp(const vector<double>& params, unsigned i) const
    {
-      static computationparams p[hpartial::numstates ] =
+auto cs = ce;
+auto ca = ce;
+auto cp = ce;
+      static int p[hpartial::numstates ] =
     //    E,    Ia,   Ip,   Is,   Iu, R,
-       {  cpre, cpre, cpre, cpre, cu, cu,
+       {  ce,   ca,   cp,   cs,   cs, -1,
     //    Edelta, Iadelta, Ipdelta,  Isdelta,  Rdelta,
-          cdelta, cdelta,  cdelta,   cdelta,   cdelta,
+          ce,     ca,      cp,       cs,       -1,
 
      //  Hdelta,    Rhdelta,   Ddelta,    Dhdelta,
-         chospital, chospital, cdelta,    chospital,
+         chospital, -1,        -1,        -1,
 
-     //   Isd, Rd,  Hd,        Rhd,       Dd, Dhd,
-          cd,  cd,  chospital, chospital, cd, chospital };
+     //   Isd, Rd,      Hd,        Rhd,       Dd,     Dhd,
+          cs,  -1,      chospital, -1,        -1,     -1 };
        unsigned ci = i % partial().k();
-       return params[firstdisp + p[ci]];
+
+       if(p[ci]==-1)
+           return numeric_limits<double>::infinity();
+       else
+           return params[p[ci]];
     }
 
 };

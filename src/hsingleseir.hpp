@@ -40,16 +40,12 @@ public:
         return ret;
     }
 
-
-    virtual dmatrix Gamma(unsigned /* t */, const vector<double>&  params , const struct G& ) const
+    virtual dvector gamma(unsigned /* t */, const vector<double>& params, const struct G& /*g*/) const
     {
-        dmatrix ret(n(),k());
+        dvector ret(n());
         ret.setZero();
-return ret;
-        ret(RA,hpartial::E)=ret(RA,hpartial::Ia)=ret(RA,hpartial::Ia)=0.16;
-        ret(RS,hpartial::Is)=ret(RS,hpartial::Iu)=1.45;
-        ret(H,hpartial::Hd)=ret(H,hpartial::Hdelta)=0.19;
-        ret(DH,hpartial::Hd)=ret(DH,hpartial::Hdelta)=0.0008;
+        ret[RA] = params[racoef];
+        ret[RS] = params[rscoef];
         return ret;
     }
 

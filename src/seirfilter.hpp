@@ -219,8 +219,8 @@ public:
     virtual dmatrix hatB(unsigned t, const vector<double>& params, const G& g) const = 0;
     virtual dmatrix F(unsigned t, const vector<double>& params, const G& g) const = 0;
     virtual dvector I(unsigned t, const vector<double>& params, const G& g) const = 0;
-    virtual dmatrix Gamma(unsigned /* t */, const vector<double>& /* params */, const G& /*g*/) const
-        { dmatrix ret(n(),k()); ret.setZero(); return ret;; }
+    virtual dvector gamma(unsigned /* t */, const vector<double>& /* params */, const G& /*g*/) const
+        { dvector ret(n()); ret.setZero(); return ret; }
 
     virtual double contrastaddition(const vector<double>& /* params */, const G& /*r */) const { return 0; }
     virtual double vb(const vector<double>&/* params */) const { return 1; }
@@ -282,9 +282,12 @@ public:
 //    cout << ret(3,3) << " " <<   overdcoef(vp(pars,i),x[i]) << " " <<  x[i] << endl;
 //    cout << m2csv(this->P(t,pars,g))<<endl;
 //}
-
+//if(t==330-182)
+//    cout << overdcoef(vp(pars,i),x[i]) <<  " " << vp(pars,i) << endl;
         }
 
+//if(t==330-182)
+//    throw;
         dmatrix eb = hatB(t,pars,g);
         double vf = vb(pars);
         for(unsigned s=0; s<this->k(); s++)
@@ -434,7 +437,11 @@ public:
             dvector Ynew = F * Xnew;
             dmatrix Wnew = T * Wold * T.transpose() + Lambda(i-1,pars,Xplus,g);
 //assert(isVar(Lambda(i-1,pars,Xplus,g),"L",i-1,dv(pars)));
-            dvector gd = Gamma(i-1,pars, g) * Xplus;
+            dvector Yplus = F * Xplus;
+            dvector gm = gamma(i-1,pars, g);
+            dvector gd(n());
+            for(unsigned i=0; i<n(); i++)
+                gd[i] = gm[i] * Yplus[i];
             dmatrix V =  block( Wnew, Wnew*F.transpose(),
                                 F*Wnew, F*Wnew*F.transpose() + diag(gd));
 //if(i-1==21)
@@ -474,11 +481,18 @@ public:
 
                 if(ep.longpredvars)
                 {
+                    dvector Yplus = F * xpredplus;
+                    dvector gm = gamma(ilong-1,pars, tmpg);
+                    dvector gd(n());
+                    for(unsigned i=0; i<n(); i++)
+                        gd[i] = gm[i] * Yplus[i];
+
+
                     g.predlong[ilong] = {
                         stackv(xpred, F*xpred),
                         block( W, W*F.transpose(),
                                F*W, F*W*F.transpose()
-                                  + diag(Gamma(ilong-1,pars,tmpg) * xpredplus))
+                                  + diag(gd))
                         };
                 }
                 else
