@@ -198,13 +198,13 @@ public:
         static std::vector<hpartial::params> commonpars
                 = {hpartial::sigma,
                    hpartial::varsigma,
-                   hpartial::ufactor
+                   hpartial::ufactor,
+                   hpartial::gammas,
+                   hpartial::gammaa
                   };
 
         static std::vector<hpartial::params> exclusivepars
                = { hpartial::betafactor,
-                   hpartial::gammas,
-                   hpartial::gammaa,
                    hpartial::iotas,
                    hpartial::mus,
                    hpartial::gammah,
@@ -244,7 +244,7 @@ public:
                 ;
 
         double nw1 = 270;
-        double nw2 = 270+6*7;
+        double nw2 = nw1+6*7;
         double at = g.abstime(t);
         double nwc = at < nw1 ? 1 :
                        ( at > nw2 ? params[newvarcoef]
@@ -357,12 +357,12 @@ public:
 };
 
 
-template <typename S, bool wls>
-class hestseir : public S, public estimableseirfilter<wls>
+template <typename S, estimationmethod method=emwls>
+class hestseir : public S, public estimableseirfilter<method>
 {
 public:
     hestseir(const uncertain& ax0 = uncertain(dvector(0))) : S(),
-        estimableseirfilter<wls>(),
+        estimableseirfilter<method>(),
         fx0(ax0)
     {}
     virtual uncertain X0(const vector<double>& params) const

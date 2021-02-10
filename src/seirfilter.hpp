@@ -264,30 +264,19 @@ public:
     }
 
 private:
-    double overdcoef( double c, double x) const
+    double overdcoef( double c, double x, double y) const
     {
         return c == numeric_limits<double>::infinity() ? 1
-                      : (c + x) / (c+1);
+                      : ( c * x + y) / (c+1);
     }
 public:
-    dmatrix Lambda(unsigned t, const vector<double>& pars, const dvector& x, const G& g) const
+    dmatrix Lambda(unsigned t, const vector<double>& pars, const dvector& x, const dvector& y, const G& g) const
     {
         dmatrix ret( this->k(), this->k());
         ret.setZero();
         for(unsigned i=0; i<this->k(); i++)
-        {
-            ret += x[i] * overdcoef(vp(pars,i),x[i]) * Phi(t,pars,i,g);
-//if(ret(3,3) < 0)
-//{
-//    cout << ret(3,3) << " " <<   overdcoef(vp(pars,i),x[i]) << " " <<  x[i] << endl;
-//    cout << m2csv(this->P(t,pars,g))<<endl;
-//}
-//if(t==330-182)
-//    cout << overdcoef(vp(pars,i),x[i]) <<  " " << vp(pars,i) << endl;
-        }
+            ret += overdcoef(vp(pars,i),x[i],y[i]) * Phi(t,pars,i,g);
 
-//if(t==330-182)
-//    throw;
         dmatrix eb = hatB(t,pars,g);
         double vf = vb(pars);
         for(unsigned s=0; s<this->k(); s++)
@@ -427,15 +416,19 @@ public:
             }
 
             dvector Xplus(Xold);
+            dvector y(k());
             for(unsigned j=0; j<k(); j++)
+            {
                 if(Xplus[j] < 0)
                     Xplus[j] = 0;
+                y[j] = Xold[j] * Xold[j] + Wold(j,j);
+            }
 
             dmatrix F = this->F(i,pars,g);
 
             dvector Xnew = T * Xold + I(i-1,pars,g);
             dvector Ynew = F * Xnew;
-            dmatrix Wnew = T * Wold * T.transpose() + Lambda(i-1,pars,Xplus,g);
+            dmatrix Wnew = T * Wold * T.transpose() + Lambda(i-1,pars,Xplus,y,g);
 //assert(isVar(Lambda(i-1,pars,Xplus,g),"L",i-1,dv(pars)));
             dvector Yplus = F * Xplus;
             dvector gm = gamma(i-1,pars, g);
@@ -464,16 +457,21 @@ public:
                 {
                     tmpg.est[i+j-1] = { xpred, W };
 
-                    xpredplus = xpred;
 
                     xpred = this->T(i+j-1,pars,tmpg)*xpred + I(i+j-1,pars,tmpg);
                     if(ep.longpredvars)
                     {
+                        xpredplus = xpred;
+                        dvector y(k());
+
                         for(unsigned j=0; j<k(); j++)
+                        {
                             if(xpredplus[j] < 0)
                                 xpredplus[j] = 0;
+                            y[j] = xpred[j]*xpred[j] + W(j,j);
+                        }
 
-                        W = T * W * T.transpose() + Lambda(i+j-1,pars,xpredplus,tmpg);
+                        W = T * W * T.transpose() + Lambda(i+j-1,pars,xpredplus,y,tmpg);
                     }
                 }
 

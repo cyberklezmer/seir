@@ -18,7 +18,9 @@ struct seirparaminit
     bool omit;
 };
 
-template <bool wls=true>
+enum estimationmethod { emwls, emmle, emstdres };
+
+template <estimationmethod method=emwls>
 class estimableseirfilter : virtual public seirfilter
 {
 
@@ -42,7 +44,7 @@ public:
 
     virtual double contrast(unsigned t, const vector<double>&, G& g, bool longpredtocontrast) const
     {
-        if constexpr(wls)
+        if constexpr(method==emwls)
         {
             vector<double> wa = weekave(t,g);
             double s=0;
@@ -60,7 +62,7 @@ public:
             g.icontrasts[t] = ics;
             return s;
         }
-        else
+        else if constexpr(method==emmle)
         {
             const uncertain& x = longpredtocontrast
                     ? g.predlong[t]: g.pred[t];
@@ -86,6 +88,22 @@ public:
                 -0.5 * ::log(det)
                 -0.5 * (d.transpose()*Vyy.inverse()*d)(0,0);
         }
+        else
+        {
+            const uncertain& x = longpredtocontrast
+                    ? g.predlong[t]: g.pred[t];
+
+            vector<double> ics(n());
+
+            for(unsigned i=0; i<n(); i++)
+            {
+                unsigned j=k()+i;
+                double dd = g.Y(t)[i]-x.x()[j];
+                ics[i] = dd*dd / x.var()(j,j);
+            }
+            g.icontrasts[t] = ics;
+            return 0;
+        }
     }
 private:
 
@@ -110,6 +128,18 @@ private:
         }
 
         G r = f.eval(x,f.fdata, f.fevalparams);
+        if(method == emstdres)
+        {
+            r.contrast = 0;
+            for(unsigned i=0; i<f.n(); i++)
+            {
+                double s=0;
+                for(unsigned j=f.fevalparams.firstcomputedcontrasttime ; j<r.contrasts.size(); j++)
+                    s += r.icontrasts[j][i] - 1;
+                r.contrast += s*s;
+            }
+        }
+
         double ret = r.contrast+f.contrastaddition(v,r);
 
 //        double ret = f.totalcontrast(x,f.d,f.ct);
@@ -155,7 +185,7 @@ public:
         o.set_ftol_rel(1e-7);
         o.set_maxtime(timest);
 
-        if(wls)
+        if(method == emwls || method == emstdres)
             o.set_min_objective(llobj, this);
         else
             o.set_max_objective(llobj, this);
