@@ -133,7 +133,7 @@ public:
             return Z(t)[i];
         }
 
-        void output(ostream& o, bool longpred = true)
+        void output(ostream& o, bool longpred = true, dmatrix additional = dmatrix())
         {
             assert(ylabels.size()==sm.n());
             o << "date,";
@@ -153,6 +153,12 @@ public:
                 o << ylabels[i] << ",";
             for(unsigned i=0; i<zlabels.size(); i++)
                 o << zlabels[i]<<",";
+            for(unsigned i=0; i < additional.rows(); i++)
+                o << "A" << i << " act,";
+            for(unsigned i=0; i < additional.rows(); i++)
+                o << "A" << i << " pred,";
+            for(unsigned i=0; i < additional.rows(); i++)
+                o << "A" << i << " stdev,";
             o << "contrast,";
             for(unsigned i=0; i<sm.n(); i++)
                 o << "C_" + ylabels[i] << ",";
@@ -194,6 +200,25 @@ public:
                         o<< ",";
                 for(unsigned i=0; i<z[0].size(); i++)
                      o<< Z(s,i) << ",";
+                if(s < y.size())
+                {
+                    dvector e = additional * y[s];
+                    for(unsigned i=0; i < additional.rows(); i++)
+                        o << e[i] << ",";
+                }
+                else
+                    for(unsigned i=0; i < additional.rows(); i++)
+                        o << ",";
+
+                dvector p = additional * pred[s].x().block(sm.k(),0,sm.n(),1);
+                dvector v = additional
+                        * pred[s].var().block(sm.k(),sm.k(),sm.n(),sm.n())
+                        * additional.transpose();
+                for(unsigned i=0; i < additional.rows(); i++)
+                    o << p[i] << ",";
+                for(unsigned i=0; i < additional.rows(); i++)
+                    o << sqrt(v[i]) << ",";
+
                 if(s<contrasts.size())
                 {
                     o << contrasts[s] << ",";

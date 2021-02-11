@@ -252,7 +252,8 @@ public:
         preparams[hpartial::prebeta]
            = nwc * g.Z(t,REDUCTIONMEAN)
                 * exp(-params[omega] * g.Z(t,BETAFACTOR))
-                * (1-params[omega2] * g.Z(t,FEAR));
+* exp(-params[omega2] * g.Z(t,FEAR));
+//                * (1-params[omega2] * g.Z(t,FEAR));
 
 
         unsigned srcc=numcomputationparams;
