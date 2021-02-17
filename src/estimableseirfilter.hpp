@@ -18,7 +18,7 @@ struct seirparaminit
     bool omit;
 };
 
-enum estimationmethod { emwls, emmle, emstdres };
+enum estimationmethod { emwls, emmle, emstdres, emwlsstd };
 
 template <estimationmethod method=emwls>
 class estimableseirfilter : virtual public seirfilter
@@ -44,7 +44,7 @@ public:
 
     virtual double contrast(unsigned t, const vector<double>&, G& g, bool longpredtocontrast) const
     {
-        if constexpr(method==emwls)
+        if constexpr(method==emwls || method==emwlsstd)
         {
             vector<double> wa = weekave(t,g);
             double s=0;
@@ -88,7 +88,11 @@ public:
                 -0.5 * ::log(det)
                 -0.5 * (d.transpose()*Vyy.inverse()*d)(0,0);
         }
+        else if(method==emstdres)
+            return 0;
         else
+            throw "unknown method";
+/*        else
         {
             const uncertain& x = longpredtocontrast
                     ? g.predlong[t]: g.pred[t];
@@ -103,8 +107,46 @@ public:
             }
             g.icontrasts[t] = ics;
             return 0;
-        }
+        } */
     }
+
+    virtual double contrastaddition(const vector<double>& params, const G& r ,
+                                  evalparams ep ) const
+    {
+        if(method == emstdres || method == emwlsstd)
+        {
+            unsigned horizon = r.Ysize()-1;
+            unsigned esthorizon = horizon - ep.estoffset;
+
+            double contrast = 0;
+            for(unsigned i=0; i<n(); i++)
+            {
+                unsigned ki=k()+i;
+                double s=0;
+                double s2=0;
+                unsigned n=0;
+                for(unsigned j=ep.firstcomputedcontrasttime
+                     ;j<=esthorizon;j++)
+                {
+                    const uncertain& x = ep.longpredtocontrast
+                            ? r.predlong[j]: r.pred[j];
+                    double dd = (r.Y(j)[i]-x.x()[ki]) / sqrt(x.var()(ki,ki));
+
+                    s += dd;
+                    s2 += dd * dd;
+                    n++;
+                }
+                double stdev = sqrt( s2 / n - s*s / n / n );
+                if(stdev == 0)
+                    throw "zero stdev";
+                contrast += exp((stdev-1)*(stdev-1));
+            }
+            return contrast;
+        }
+        else
+            return 0;
+    }
+
 private:
 
     // state variables
@@ -128,23 +170,10 @@ private:
         }
 
         G r = f.eval(x,f.fdata, f.fevalparams);
-        if(method == emstdres)
-        {
-            r.contrast = 0;
-            for(unsigned i=0; i<f.n(); i++)
-            {
-                double s=0;
-                for(unsigned j=f.fevalparams.firstcomputedcontrasttime ; j<r.contrasts.size(); j++)
-                    s += r.icontrasts[j][i] - 1;
-                r.contrast += s*s;
-            }
-        }
-
-        double ret = r.contrast+f.contrastaddition(v,r);
 
 //        double ret = f.totalcontrast(x,f.d,f.ct);
-        clog << ret << endl;
-        return ret;
+        clog << r.contrast << endl;
+        return r.contrast;
     }
 
 public:
@@ -157,6 +186,9 @@ public:
                     double timest = numeric_limits<double>::infinity()
                     )
     {
+        fdata = ad;
+        fevalparams = ep;
+
         using namespace nlopt;
         vector<double> upper;
         vector<double> lower;
@@ -174,8 +206,6 @@ public:
                 nloptpars.push_back(params[i].initial);
             }
         }
-        fdata = ad;
-        fevalparams = ep;
 
         opt o(LN_COBYLA,nloptpars.size());
 
@@ -185,10 +215,19 @@ public:
         o.set_ftol_rel(1e-7);
         o.set_maxtime(timest);
 
-        if(method == emwls || method == emstdres)
-            o.set_min_objective(llobj, this);
-        else
-            o.set_max_objective(llobj, this);
+        switch(method)
+        {
+            case emwls:
+            case emwlsstd:
+            case emstdres:
+                o.set_min_objective(llobj, this);
+            break;
+            case emmle:
+                o.set_max_objective(llobj, this);
+            break;
+        default:
+            throw "unknown method";
+        }
 
         nlopt::result oresult;
         double ov;

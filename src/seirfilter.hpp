@@ -247,7 +247,19 @@ public:
     virtual dvector gamma(unsigned /* t */, const vector<double>& /* params */, const G& /*g*/) const
         { dvector ret(n()); ret.setZero(); return ret; }
 
-    virtual double contrastaddition(const vector<double>& /* params */, const G& /*r */) const { return 0; }
+    struct evalparams
+    {
+        unsigned firstcomputedcontrasttime=1;
+        unsigned longpredlag = 1;
+        unsigned estoffset = 0;
+        bool longpredtocontrast = false;
+        bool longpredvars = false;
+        unsigned ds = 0;
+        double additionalcontrastweight = 1e5;
+    };
+
+
+    virtual double contrastaddition(const vector<double>& /* params */, const G& /*r */, evalparams /* ep */) const { return 0; }
     virtual double vb(const vector<double>&/* params */) const { return 1; }
     virtual double vp(const vector<double>&/* params */, unsigned i) const { return numeric_limits<double>::infinity(); }
 
@@ -370,16 +382,6 @@ public:
         return res;
     }
 
-    struct evalparams
-    {
-        unsigned firstcomputedcontrasttime=1;
-        unsigned longpredlag = 1;
-        unsigned estoffset = 0;
-        bool longpredtocontrast = false;
-        bool longpredvars = false;        
-        unsigned ds = 0;
-    };
-
     template<typename TG=G>
     TG eval(const vector<double>& pars,
             const seirdata& data, evalparams ep) const
@@ -417,7 +419,9 @@ public:
         unsigned i=1;
         for(; i<= evalhorizon; i++)
         {
-            bool computingcontrast = (i >= ep.firstcomputedcontrasttime);
+            bool computingcontrast
+                    = (i >= ep.firstcomputedcontrasttime)
+                      && ( i<=esthorizon);
 
             dmatrix T = g.T(i-1);
 
@@ -481,7 +485,6 @@ public:
                 for(unsigned j=1;j<ep.longpredlag;j++ )
                 {
                     tmpg.est[i+j-1] = { xpred, W };
-
 
                     xpred = this->T(i+j-1,pars,tmpg)*xpred + I(i+j-1,pars,tmpg);
                     if(ep.longpredvars)
@@ -562,6 +565,7 @@ public:
             g.Ps[i] = this->P(i,pars, g);
         }
 
+        g.contrast += ep.additionalcontrastweight * contrastaddition(pars,g,ep);
         return g;
     }
 

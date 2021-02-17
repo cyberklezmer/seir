@@ -67,6 +67,7 @@ public:
            cout << m2csv(ret) << endl;
            throw "bad rank of F";
        }
+
        return ret;
     }
 
