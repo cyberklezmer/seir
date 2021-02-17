@@ -149,9 +149,9 @@ program g4 =
 };
 
 template <typename S, typename D, estimationmethod method>
-void ns(const program& prg)
-{ // epihigh.csv, epimiddle.csv
-    csv<','> c("../input/epinovac.csv");
+void ns(const program& prg, const string& name)
+{
+    csv<','> c("../input/" + name + ".csv");
     D dr;
 
     uncertain x0;
@@ -307,10 +307,10 @@ void ns(const program& prg)
 
         auto ep = prg.oep;
         seirfilter::G r = es.eval(rp,d, ep);
-        ofstream o("output1.csv");
+        ofstream o("output1"+name+".csv");
         r.output(o,false,add);
 
-        ofstream o7("output7.csv");
+        ofstream o7("output7"+name+".csv");
         r.output(o7,true,add);
 
         if(prg.outputx0)
@@ -354,7 +354,11 @@ int nw()
 
     try
     {
-        ns<hfourseir,fourdatareader,emwls>(g4);
+        ns<hfourseir,fourdatareader,emwls>(g4,"epi");
+        ns<hfourseir,fourdatareader,emwls>(g4,"epihigh");
+        ns<hfourseir,fourdatareader,emwls>(g4,"epimiddle");
+        ns<hfourseir,fourdatareader,emwls>(g4,"epinovac");
+
 //      ns<hsingleseir,singledatareader,emwls>(g);
     }
     catch (std::exception& e) {
@@ -383,31 +387,3 @@ int nw()
     return 0;
 }
 
-    /*
-     * ra,rs,ce,chospital,contrast
-    0.0183156,0.109894,400,1000,5.14174e+06,1.61255e+06,*
-    0.0183156,0.812012,400,1000,5.04717e+06,1.64281e+06,*
-    0.0183156,6,400,1000,4.98637e+06,1.8218e+06,*
-    0.0183156,44.3343,400,1000,4.91033e+06,2.77254e+06,*
-    0.0183156,327.589,400,1000,4.80851e+06,6.87904e+06,*
-    0.135335,0.109894,400,1000,3.59122e+06,1.65563e+06,*
-    0.135335,0.812012,400,1000,3.50965e+06,1.67872e+06,*
-    0.135335,6,400,1000,3.46867e+06,1.84728e+06,*
-    0.135335,44.3343,400,1000,3.4215e+06,2.79189e+06,*
-    0.135335,327.589,400,1000,3.34948e+06,6.87579e+06,*
-    1,0.109894,400,1000,2.78263e+06,1.82705e+06,*
-    1,0.812012,400,1000,2.70249e+06,1.84065e+06,*
-    1,6,400,1000,2.66391e+06,1.97411e+06,*
-    1,44.3343,400,1000,2.63557e+06,2.88801e+06,*
-    1,327.589,400,1000,2.58401e+06,6.91168e+06,*
-    7.38906,0.109894,400,1000,2.42311e+06,2.4312e+06,*
-    7.38906,0.812012,400,1000,2.33997e+06,2.4286e+06,*
-    7.38906,6,400,1000,2.29198e+06,2.46092e+06,*
-    7.38906,44.3343,400,1000,2.26582e+06,3.2046e+06,*
-    7.38906,327.589,400,1000,2.22393e+06,7.07433e+06,*
-    54.5982,0.109894,400,1000,2.38949e+06,3.95485e+06,
-    54.5982,0.812012,400,1000,2.31055e+06,3.94132e+06,
-    54.5982,6,400,1000,2.26907e+06,3.82706e+06,
-    54.5982,44.3343,400,1000,2.23649e+06,3.94778e+06,
-    54.5982,327.589,400,1000,2.21183e+06,7.09404e+06,*
-*/

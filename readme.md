@@ -11,3 +11,4 @@ To run or estimated with different data
 3. Change g4 (or perhaps g) accordingly in new.cpp
 4. Run procedure nw (new.cpp)
  
+To create vaccination scenarios, use vescan/s2alslpha, and copy the alphas to input/epi(?).csv
