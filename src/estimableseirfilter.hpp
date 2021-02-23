@@ -18,7 +18,7 @@ struct seirparaminit
     bool omit;
 };
 
-enum estimationmethod { emwls, emmle, emstdres, emwlsstd };
+enum estimationmethod { emwls, emmle, emstdres, emwlsstd, emwlsmle };
 
 template <estimationmethod method=emwls>
 class estimableseirfilter : virtual public seirfilter
@@ -42,72 +42,53 @@ public:
         return res;
     }
 
-    virtual double contrast(unsigned t, const vector<double>&, G& g, bool longpredtocontrast) const
+
+
+    virtual double contrast(unsigned t, const vector<double>& pars, G& g, evalparams ep) const
     {
-        if constexpr(method==emwls || method==emwlsstd)
+        double mlecoef = method == emwlsmle  ? -ep.additionalcontrastweight : 1.0;
+        g.icontrasts[t] = vector<double>(n(),0);
+        double s=0;
+        if constexpr(method==emwls || method==emwlsstd || method==emwlsmle)
         {
             vector<double> wa = weekave(t,g);
-            double s=0;
-            vector<double> ics(n(),0);
             for(unsigned i=0; i<n(); i++)
             {
                 double w = wa[i] < 10 ? 1.0 / 10 : 1.0 / wa[i];
                 double x = g.Y(t,i)-
-                        (longpredtocontrast
+                        (ep.longpredtocontrast
                            ?  g.predlong[t].x()[k()+i]
                           :g.pred[t].x()[k()+i]);
-                ics[i]=w * x * x;
+                g.icontrasts[t][i]=w * x * x;
                 s += w * x * x;
             }
-            g.icontrasts[t] = ics;
-            return s;
         }
-        else if constexpr(method==emmle)
+        if constexpr(method==emmle || method==emwlsmle)
         {
-            const uncertain& x = longpredtocontrast
+            const uncertain& x = ep.longpredtocontrast
                     ? g.predlong[t]: g.pred[t];
             dmatrix Vyy=x.var().block(k(),k(),n(),n());
             double det = Vyy.determinant();
             if(!det)
             {
+                cerr << "Wyy det = 0" << endl;
+                cerr << "Params" << endl;
+                for(unsigned i=0; i<pars.size(); i++)
+                   cerr << pars[i] << endl;
                 cerr << m2csv(Vyy) << endl;
                 throw( "Vyy det = 0!" );
             }
 
             dvector d =g.Y(t)-x.x().block(k(),0,n(),1);
-            vector<double> ics(n(),0);
 
             for(unsigned i=0; i<n(); i++)
-            {
-                ics[i] = d[i] / sqrt(Vyy(i,i));
-            }
+                g.icontrasts[t][i] += mlecoef * d[i] / sqrt(Vyy(i,i));
 
-            g.icontrasts[t] = ics;
-
-            return -(n()/2.0) * ::log(2*3.1415926)
+            s += mlecoef * (-(n()/2.0) * ::log(2*3.1415926)
                 -0.5 * ::log(det)
-                -0.5 * (d.transpose()*Vyy.inverse()*d)(0,0);
+                -0.5 * (d.transpose()*Vyy.inverse()*d)(0,0));
         }
-        else if(method==emstdres)
-            return 0;
-        else
-            throw "unknown method";
-/*        else
-        {
-            const uncertain& x = longpredtocontrast
-                    ? g.predlong[t]: g.pred[t];
-
-            vector<double> ics(n());
-
-            for(unsigned i=0; i<n(); i++)
-            {
-                unsigned j=k()+i;
-                double dd = g.Y(t)[i]-x.x()[j];
-                ics[i] = dd*dd / x.var()(j,j);
-            }
-            g.icontrasts[t] = ics;
-            return 0;
-        } */
+        return s;
     }
 
     virtual double contrastaddition(const vector<double>& params, const G& r ,
@@ -219,6 +200,7 @@ public:
         {
             case emwls:
             case emwlsstd:
+            case emwlsmle:
             case emstdres:
                 o.set_min_objective(llobj, this);
             break;

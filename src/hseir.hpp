@@ -243,8 +243,8 @@ public:
 //                * g.Z(t,DAYADJUST)
                 ;
 
-        double nw1 = 270;
-        double nw2 = nw1+6*7;
+        double nw1 = 312; // 270;
+        double nw2 = nw1+5*7;
         double at = g.abstime(t);
         double nwc = at < nw1 ? 1 :
                        ( at > nw2 ? params[newvarcoef]

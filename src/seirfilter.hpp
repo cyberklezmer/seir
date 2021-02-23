@@ -270,7 +270,7 @@ public:
         return uncertain(ret);
     }
 
-    virtual double contrast(unsigned /* t */, const vector<double>& /* params */, G& /*g*/, bool longpredtocontrast=false) const
+    virtual double contrast(unsigned /* t */, const vector<double>& /* params */, G& /*g*/, evalparams /* ep */ ) const
     {
         return 0;
     }
@@ -547,7 +547,7 @@ public:
 
                     if(computingcontrast)
                     {
-                        double c = contrast(i,pars,g,ep.longpredtocontrast);
+                        double c = contrast(i,pars,g,ep);
                         g.contrasts[i] = c;
                         g.contrast += c;
                     }
