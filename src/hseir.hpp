@@ -26,6 +26,7 @@ public:
                   prebeta,
                   betafactor,
                   ufactor,
+                  vfactor,
                   numparams
                 };
 
@@ -69,7 +70,7 @@ Pt(Ip,Hd) = params[iotas];
         Pt(Is,Hd) = params[iotas];
         Pt(Is,Dd) = params[mus];
         Pt(Iu,Hd) = params[ufactor] * params[iotas];
-        Pt(Iu,Dd) = params[ufactor] * params[mus];
+        Pt(Iu,Dd) = params[vfactor] * params[mus];
 
         Pt(Edelta,Iadelta) = params[sigma] * params[alpha];
         Pt(Edelta,Ipdelta) = params[sigma] * (1-params[alpha]);
@@ -169,9 +170,8 @@ public:
                varbfactor,
                ce,
                          firstdisp=ce,
-//               cp,
-//               ca,
-//               cs,
+                 cd,
+               cs,
                chospital,
                         lastdisp=chospital,
                racoef,
@@ -199,6 +199,7 @@ public:
                 = {hpartial::sigma,
                    hpartial::varsigma,
                    hpartial::ufactor,
+                   hpartial::vfactor,
                    hpartial::gammas,
                    hpartial::gammaa
                   };
@@ -277,20 +278,17 @@ public:
 
     virtual double vp(const vector<double>& params, unsigned i) const
    {
-auto cs = ce;
-auto ca = ce;
-auto cp = ce;
       static int p[hpartial::numstates ] =
     //    E,    Ia,   Ip,   Is,   Iu, R,
-       {  ce,   ca,   cp,   cs,   cs, -1,
+       {  ce,   ce,   ce,   cs,   cs, -1,
     //    Edelta, Iadelta, Ipdelta,  Isdelta,  Rdelta,
-          ce,     ca,      cp,       cs,       -1,
+          cd,     cd,      cd,       cd,       -1,
 
      //  Hdelta,    Rhdelta,   Ddelta,    Dhdelta,
          chospital, -1,        -1,        -1,
 
      //   Isd, Rd,      Hd,        Rhd,       Dd,     Dhd,
-          cs,  -1,      chospital, -1,        -1,     -1 };
+          cd,  -1,      chospital, -1,        -1,     -1 };
        unsigned ci = i % partial().k();
 
        if(p[ci]==-1)

@@ -45,28 +45,32 @@ program g =
     3*60, // time
     180, // offset
     {
-        {"v",26,0,2000,true},// (2.4022)
-        {"ce",76.4416,0,200000,true},// (-nan)
-        {"chospital",2645.99,0,1e+10,true},// (-nan)
-        {"racoef",0.0404206,0,100,true},// (-nan)
-        {"rscoef",0,0,100,true},// (-nan)
-        {"newvarcoef",1.93032,0,2,false},// (0.00115589)
-        {"omega",1.12837,0,10,false},// (0.00575875)
-        {"omega2",3.78227,0,10,false},// (0.0039305)
-        {"pdetcoef",0.910253,0,5,false},// (0.00081041)
-        {"thetacoef",0.00360103,0,0.3,false},// (1.81651e-05)
-        {"eta0",0.34586,0,0.6,false},// (0.000119443)
-        {"theta0",0.0113928,0,0.3,false},// (9.70025e-06)
-        {"sigma",0.1787,0,1,true},// (0.000102487)
-        {"varsigma",0.2212,0,1,true},// (0.000265662)
-        {"ufactor",0.999798,0,1,false},// (0.00598891)
-        {"gammas0",0.079,0,1,true},// (7.50544e-05)
-        {"gammaa0",0.12,0,1,true},// (0.00060824)
-        {"betafactor20",2.15731,0,6,false},// (0.00716627)
-        {"iotas20",0.00170979,0,1,false},// (5.2707e-06)
-        {"mus20",7.50367e-05,1e-10,1,false},// (2.62486e-07)
-        {"gammah20",0.0621688,0,1,false},// (6.81664e-05)
-        {"muh20",0.0201856,0,1,false},// (6.63307e-05)
+        {"v",26,0,2000,true},// (3.21024)
+        {"ce",1000.4416,0,200000,true},// (1.34536)
+        {"cd",5000.4416,0,200000,true},// (1.77379)
+        {"cs",5000,0,200000,true},// (1.37226)
+        {"chospital",10000,0,1e+10,true},// (154797)
+        {"racoef",0.0404206,0,100,true},// (0.00405914)
+        {"rscoef",0,0,100,true},// (0.000735808)
+        {"newvarcoef",1.91982,0,2,false},// (0.00136967)
+        {"omega",0.979377,0,10,false},// (0.0070846)
+        {"omega2",3.90656,0,10,false},// (0.00544055)
+        {"pdetcoef",1.02948,0,5,false},// (0.00133984)
+        {"thetacoef",0.00662959,0,0.3,false},// (2.55012e-05)
+        {"eta0",0.32817,0,0.6,false},// (0.000150757)
+        {"theta0",0.0125974,0,0.3,false},// (1.37679e-05)
+        {"sigma",0.1787,0,1,true},// (0.00013048)
+        {"varsigma",0.2212,0,1,true},// (0.000315217)
+        {"ufactor",0.998388,0,1,false},// (0.00815187)
+        {"vfactor",0.989032,0,1,false},// (0.177975)
+        {"gammas0",0.079,0,1,true},// (7.46637e-05)
+        {"gammaa0",0.12,0,1,true},// (0.000927073)
+        {"betafactor20",2.0629,0,6,false},// (0.00821637)
+        {"iotas20",0.00193727,0,1,false},// (6.88341e-06)
+        {"mus20",6.30074e-05,1e-10,1,false},// (6.08784e-06)
+        {"gammah20",0.0628073,0,1,false},// (7.76076e-05)
+        {"muh20",0.0208863,0,1,false},// (7.30548e-05)
+
     },
     {11725.7,1759.01,4755.83,1820.47,1395.16,33293.5,323.712,145.995,333.369,733.771,5743.53,47.7464,119.458,6.45025,35.7232,1643.46,10065.6,115.508,924.08,71.6217,301.49},
     {
@@ -81,7 +85,7 @@ program g4 =
     true, //bool output;
     false, //bool outputx0;
     false,// bool estimatex0;
-    true, // estimatevars
+    false, // estimatevars
     false, // grid
     //    unsigned firstcomputedcontrasttime=1;
     // unsigned longpredlag = 1;
@@ -101,12 +105,14 @@ program g4 =
 //      {"chospital",9450.84,0,1e+10,false},// (3590)
 //      {"racoef",0.0188203,0,1,false},// (0.000257411)
 //      {"rscoef",0.00185746,0,5,false},// (0.000125213)
-      {"v",26,0,2000,true},// (0.684041)
+      {"v",260,0,2000,true},// (0.684041)
       {"ce",290.7243,0,10000,false},// (0.744364)
+      {"cd",290.7243,0,10000,false},// (0.744364)
+      {"cs",290.7243,0,10000,false},// (0.744364)
       {"chospital",983.718,0,1e+10,false},// (50.6516)
-      {"racoef",2.50883e-05,0,10,false},// (7.90982e-05)
+      {"racoef",2.50883,0,10,false},// (7.90982e-05)
       {"rscoef",2.34452,0,10,false},// (0.0683497)
-      {"newvarcoef",1.99998,0,2,false},// (0.000739252)
+      {"newvarcoef",2.5,0,3,false},// (0.000739252)
       {"omega",0.628326,0,10,false},// (0.00809053)
       {"omega2",3.97747,0,10,false},// (0.00609176)
       {"pdetcoef",2.53453,0,5,false},// (0.00112397)
@@ -116,6 +122,7 @@ program g4 =
       {"sigma",0.1787,0,1,true},// (0.000162524)
       {"varsigma",0.2212,0,1,true},// (0.000213764)
       {"ufactor",0.301605,0,1,false},// (0.00469021)
+      {"vfactor",0.301605,0,1,false},// (0.00469021)
       {"gammas0",0.079,0,1,true},// (0.000101541)
       {"gammaa0",0.12,0,1,true},// (0.000448294)
       {"betafactor0",2.49083,0,6,false},// (0.0109714)
@@ -150,10 +157,19 @@ program g4 =
     // horzion = 152
 };
 
+inline dmatrix corrmatrix(const dmatrix& v)
+{
+    dmatrix res(v.rows(),v.cols());
+    for(unsigned i=0; i<v.rows(); i++)
+        for(unsigned j=0; j<v.cols(); j++)
+            res(i,j) = v(i,j) / sqrt(v(i,i)) / sqrt(v(j,j));
+    return res;
+}
+
 template <typename S, typename D, estimationmethod method>
 void ns(const program& prg)
-{ // epihigh.csv, epimiddle.csv epinovac.csv
-    csv<','> c("../input/epi.csv");
+{ // prezentace 24.2: epi65.csv, epi65next.csv, epi12.csv
+    csv<','> c("../input/epi65next.csv");
     D dr;
 
     uncertain x0;
@@ -192,7 +208,7 @@ void ns(const program& prg)
         clog << "contrast= " << es.estimate(prg.params,d,prg.eep, res,prg.timest) << endl;
 
         rp = vd(res.x());
-        clog << "{";
+        clog << "{"<< endl;
         for(unsigned i=0; i<prg.params.size(); i++)
         {
             clog << "{\"" << prg.params[i].name << "\","
@@ -202,6 +218,7 @@ void ns(const program& prg)
                     << endl;
         }
         clog << "}," << endl;
+clog<< m2csv(corrmatrix(res.var()));
     }
     else // prg.estimate
     {
@@ -351,7 +368,27 @@ void ns(const program& prg)
         clog << "// contrast = " << r.contrast << endl;
         clog << "// susceptible  " << es.abssusceptible(r.Ysize()-1,rp,r) << endl;
         clog << "// horzion = " << r.Ysize()-1 << endl;
-        clog << "T" << endl << m2csv(r.T(r.Ysize()-1).block(0,0,5,5)) << endl;
+
+
+        dmatrix T = r.T(r.Ysize()-1);
+        dvector x = r.est[r.Ysize()-1].x();
+        clog << "Flows" << endl;
+        for(unsigned j=0; j<es.k(); j++)
+            clog << "," << es.statelabel(j);
+        clog << endl;
+        for(unsigned j=0; j<es.k(); j++)
+            clog << "," << x[j];
+        clog << endl;
+        for(unsigned i=0; i<es.k(); i++)
+        {
+            clog << es.statelabel(i);
+            for(unsigned j=0; j<es.k(); j++)
+                clog << "," << T(i,j) * x[i];
+            clog << endl;
+        }
+
+
+        //        clog << "T" << endl << m2csv(r.T(r.Ysize()-1).block(0,0,5,5)) << endl;
 /*        dvector test(5*4);
         test.setConstant(1);
         for(unsigned i=0; i<100; i++)
@@ -375,8 +412,8 @@ int nw()
 
     try
     {
-//        ns<hfourseir,fourdatareader,emwls>(g4);
-      ns<hsingleseir,singledatareader,emwls>(g);
+        ns<hfourseir,fourdatareader,emwls>(g4);
+//      ns<hsingleseir,singledatareader,emwls>(g);
     }
     catch (std::exception& e) {
         std::cerr << e.what() << endl;
