@@ -168,8 +168,9 @@ inline dmatrix corrmatrix(const dmatrix& v)
 
 template <typename S, typename D, estimationmethod method>
 void ns(const program& prg)
-{ // prezentace 24.2: epi65.csv, epi65next.csv, epi12.csv
-    csv<','> c("../input/epi65next.csv");
+{ // ucitele: ucinovaclock.csv ucihhlllock.csv
+
+    csv<','> c("../input/ucilllllock.csv");
     D dr;
 
     uncertain x0;

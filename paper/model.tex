@@ -3,16 +3,10 @@
 \documentclass[english]{article}
 \usepackage[T1]{fontenc}
 \usepackage[latin9]{inputenc}
-\usepackage{babel}
-\usepackage{array}
-\usepackage{textcomp}
-\usepackage{multirow}
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{graphicx}
-\usepackage[unicode=true]
- {hyperref}
 
 \makeatletter
 
@@ -23,6 +17,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
 \theoremstyle{plain}
 \newtheorem{thm}{\protect\theoremname}
+\theoremstyle{remark}
+\newtheorem{rem}[thm]{\protect\remarkname}
 \theoremstyle{plain}
 \newtheorem{prop}[thm]{\protect\propositionname}
 \theoremstyle{definition}
@@ -30,8 +26,10 @@
 
 \makeatother
 
+\usepackage{babel}
 \providecommand{\examplename}{Example}
 \providecommand{\propositionname}{Proposition}
+\providecommand{\remarkname}{Remark}
 \providecommand{\theoremname}{Theorem}
 
 \begin{document}
@@ -97,31 +95,31 @@
 \global\long\def\barI{\overline{I}}%
 
 \title{SEIR Filter -- Stochastic Model of Pandemics}
-\author{Martin ¦míd, Ale¨ Antonín Kub\v{e}na, Jan Trnka, Vít Tu\v{c}ek, Milan
-Zají\v{c}ek,}
+\author{Martin ¦míd, Lud\v{e}k Berec, Ale¨ Antonín Kub\v{e}na, Jan Trnka,
+Vít Tu\v{c}ek, Milan Zají\v{c}ek,}
 \maketitle
 
 \section{Introduction}
 
-There are lots of epidemiological models at hand, most of them working
-well, simply because is not difficult to fit (nearly) exponential
-growth/decline and it is not difficult to make the growth factor dependent
-on various factors. What is difficult, however, is to distinguish
-the impact of the factors from random fluctuations. Moreover, as many
-counter-measures as well as their release come hand in hand, it is
-hard to distinguish their impact. In statistics, the former phenomenon
-is called insignificance, the latter either non-idetifiability (if
-the data do not allow to distinguish two parameters) or co-linearity
-(if the parameters cannot be distinguished with sufficient certainty).
-Last but not least, the epidemics is observed only indirectly through
-noisy and/or delayed data, which obstacle cannot be handled only by
-adding noise to the observations. Needless to say that, once these
-phenomenons are not taken into account or are handled insufficiently,
-wrong policy recommendations stem from the models.
+To cope with the present pandemic, there are lots of epidemiological
+models at hand. Most of them are working well, simply because is not
+difficult to fit (nearly) exponential growth/decline and it is not
+difficult to make the growth factor dependent on various covariates.
+What is difficult, however, is to distinguish the impact of the factors
+from random fluctuations. Moreover, as many counter-measures as well
+as their release come hand in hand, it is hard to distinguish their
+impact. In statistics, the former phenomenon is called insignificance,
+the latter either non-idetifiability (if the data do not allow to
+distinguish two parameters) or co-linearity (if the parameters cannot
+be distinguished with sufficient certainty). Last but not least, the
+epidemics is observed only indirectly through incomplete data. Needless
+to say that, once these phenomenons are not taken into account or
+are handled insufficiently, wrong policy recommendations stem from
+the models.
 
 Mathematical statistics disposes of tools to handle all significance,
 co-linearity and partial observability; however, to our best knowledge,
-there is no work is systematically doing so for compartment epidemiological
+there is no work systematically doing so for compartment epidemiological
 models. The goal of the present paper is to start filling this gap
 by proposing a general stochastic epidemiological model, which we
 call SEIR Filter.
@@ -129,73 +127,84 @@ call SEIR Filter.
 Our model is a discrete time discrete space one. Next we argue that
 this is the best choice for practical use.
 
-There is a large literature on continuous time diffusion models, see
-e.g. \cite{farnoosh2017stochastic} and the references therein. Yet
-these models are able to capture global properties of an epidemics
-and handle noise, their practical usage is limited as it is difficult
-to incorporate heterogeneity, caused by non-pharmaceutical intervention,
-into these models. Moreover, given discrete time data, discretization
-of these models is needed which does not inherit their favorable properties.
+There is a large literature on continuous time diffusion epidemiological
+models, see e.g. \cite{farnoosh2017stochastic} and the references
+therein. Yet these models are able to capture global properties of
+an epidemics and handle noise, their practical usage is limited as
+it is difficult to incorporate heterogeneity, caused by non-pharmaceutical
+interventions, into these models. Moreover, given discrete time data,
+discretizations of these models is needed which do not inherit their
+favorable properties.
 
 Another wide class of models are those with continuous time and discrete
-state space. In \cite{gibson1998estimating}, for instance, even an
-estimation procedure is developed for such a model. Yet these models
+state space. In \cite{gibson1998estimating}, for instance, such model
+together with an estimation procedure is developed. Yet these models
 are realistic, respecting integer sizes of the compartments, again
-there is a problem with their application in practice. When schools
-are closed, for instance, which time exactly should we change the
-transition matrix?
+there is a problem with their application in practice due to discrete
+nature of observed data.
 
 As we have premised, we regard discrete-time discrete-space stochastic
 models as the most practical. One of the models closest to our one
 is that by \cite{kucharski2020early} (or \cite{prem2020effect}).
 When estimating its parameters, the authors use Monte Carlo simulation
-to evaluate likelihood functions. We argue and demonstrate that parameters
-of these models can be estimated more straightforward way, as the
-likelihood (or other estimating) function can be computed exactly,
-which allows for quicker and more reliable estimation.
+to evaluate likelihood functions. We argue and demonstrate that the
+parameters of these models can be estimated more straightforward way,
+as the likelihood (or other estimating) function can be computed exactly,
+allowing for quicker and more reliable estimation.
 
 In addition to the tractability of the estimating functions, our model
 allows for closed form formulas for expected future compartment sizes
 and for reproduction number. We also give simple criteria for vanishing
 and explosion of the epidemics, as well as bounds of limiting expected
 sizes given stationary imports. All this allows various applications
-of the model, e.g. in optimal control of the pandemics.
+of the model, e.g. in optimal control of the pandemics, which we also
+demonstrate.
 
 After a rigorous probabilistic formulation of the model (Section \ref{sec:Model-Definition}),
 we discuss its basic probabilistic properties (Section \ref{sec:Model-Properties}),
 its autonomous sub-models and reproduction number (Section \ref{sec:Sub-models-and-Replication})
 and asymptotic properties (Section \ref{sec:Asymptotic-behavior}).
-Next, we discuss estimation of the model (Section \ref{sec:Estimation})
-and demonstrate its usage by its application to the COVID pandemics
-in Czech Republic 2020 (Section \ref{sec:Application-to-The}). Finally,
-we conclude the paper (Section \ref{sec:Conclusion}).
+Next, we introduce an age-cohort version of the model (Section \ref{sec:cohorts})
+and suggest a way of optimal control of the epidemics (Section \ref{sec:oc}).
+Further, we discuss estimation of the model (Section \ref{sec:Estimation}).
+Next, apply our model to the COVID pandemics in Czech Republic 2020
+(Section \ref{sec:Application-to-The}) and demonstrate its possible
+applications by the comparison of three vaccination scenarios (Section
+\ref{sec:Vaccination-Experiment}). Finally, we conclude the paper
+(Section \ref{sec:Conclusion}).
 
 \section{Model Definition}
 
-\label{sec:Model-Definition}Assume an infinite population, each individual
-of which is either susceptible, or finds himself in one of the compartments
-$S_{1},\dots,S_{k}$. Let $I_{t}\in\N_{0}^{k},$ $t\in\N_{0}^{+},$
-be an observable external inflow (import) of individuals into the
-compartments and let $Z_{t}\in\R^{n},$ $t\in\N_{0}^{+}$, be an observed
-exogenous process.
+\label{sec:Model-Definition}Assume a population of size $s\in\N$,
+where $s$ is large. Each individual of the population is either susceptible,
+or finds himself in one of the compartments $S_{1},\dots,S_{k}$.
+Let $I_{t}\in\N_{0}^{k},$ $t\in\N_{0}^{+},$ be a possibly hidden
+external inflow (import) of individuals into the compartments and
+let $Z_{t}\in\R^{p},$ $t\in\N_{0}^{+}$, be an observed exogenous
+process.
 
 For any $t\in\N_{0}$, let $X_{t}=(X_{t}^{1},\dots,X_{t}^{k})\in\N_{0}^{k},t\in\N_{0},$
-be a possibly hidden stochastic process of the sizes of the compartments
-$(1,\dots,k)$ which we define later. Let 
+be a possibly hidden stochastic process of the compartment sizes which
+we define later. Let 
 \[
 Y_{t}\in\R^{n},\qquad Y_{t}=FX_{t}+\epsilon_{t},\qquad t\in\N_{0},
 \]
 be a process of observations where $F$ is a deterministic $n\times k$
-matrix with rank $n$, and $\epsilon_{t}$ is a random vector. Denote
-$(\F_{t})_{t\geq0}$ and $(\G_{t})_{t\geq0}$ the filtrations induced
-by $(X,Y,I,Z)$, by $(Y,I,Z)$, respectively. The filtrations may
-be seen as information flows; in particular, $(\F_{t})$ represents
-all the information while $(\G_{t})$ the observable one. We assume
-that 
+matrix with rank $n$, and $\epsilon_{t}$ is a random errors vector. 
+
+Denote $(\F_{t})_{t\geq0}$ and $(\G_{t})_{t\geq0}$ the filtrations
+induced by $(X,Y,I,Z)$, by $(Y,Z)$, respectively -- these filtrations
+may be seen as information flows, $(\F_{t})$ representing all the
+information and $(\G_{t})$ the observable one. 
+
+We assume that 
 \[
-\E(\epsilon_{t+1}|\F_{t})=0,\qquad\var(\epsilon_{t+1}|\F_{t})=\mathrm{diag(}\Gamma_{t}X_{t}),\qquad t\in\N_{0},
+\E(\epsilon_{t+1}|\F_{t})=0,\qquad\var(\epsilon_{t+1}|\F_{t})=\mathrm{diag(}\Gamma_{t}(X_{t},X_{t}^{2})),\qquad t\in\N_{0},
 \]
-where $\Gamma_{t}\in\G_{t}$ is a random matrix.
+where $\Gamma_{t}$ is a $\G_{t}$-measurable affine linear function
+(i.e. $\Gamma_{t}(x,y)=\gamma_{t,0}+\gamma_{t,1}x+\gamma_{t,2}y$
+for some $\gamma_{t,0}\in\R^{k}$ and $\gamma_{t,1},\gamma_{t,2}\in\R^{k\times k}$
+where all $\gamma_{t,0},\gamma_{t,1}$ and $\gamma_{t,2}$ are $\G_{t}$-measurable). 
 
 We define $X$ recursively: We let $X_{0}$ to be a possibly random
 vector and, for any $t\in\N$, we put 
@@ -203,24 +212,40 @@ vector and, for any $t\in\N$, we put
 X_{t+1}=I_{t}+N_{t+1}+M_{1,t+1}+\dots+M_{k,t+1}.
 \]
 Here, $N_{t+1}\in\N_{0}^{k}$ is the inflow of domestically infected
-indivuduals (different from $I_{t}$) such that $N_{t+1}|\F_{t}\text{\ensuremath{\sim\Po(B_{t}X_{t})}}$
-where $B_{t}=(\beta_{t}^{ij})_{1\leq i,j\leq k}$, $B_{t}\in\G_{t}$
-(meaning that $B$ is a $(\G_{t})$-adapted process) is a random matrix
-and, for any vector $x$, $\Po(x)$ stands for a vector of independent
-Poisson variables with the intensities given by $x$. Further, for
-any $i$, $M_{i,t+1}\in\N_{0}^{k}$ is the distribution (not a probability
-one) of those, who found themselves in compartment $i$ at $t$, between
+individuals such that $N_{t+1}|\F_{t}\text{\ensuremath{\sim\mathrm{C\Po}(A_{t}X_{t},L)}}$
+where $A_{t}=(\alpha_{t}^{ij})_{1\leq i,j\leq k}$, $A_{t}\in\G_{t}$
+is a random matrix (the notation $A_{t}\in\G_{t}$ means that $A_{t}$
+is a $(\G_{t})$-adapted process) and, for any vector $x$, $\mathrm{CPo}(x,L)$
+stands for a vector of independent Compound Poisson variables with
+the intensities given by $x$ and the embedded distribution $L$.
+Observe that, by basic properties of Compound Poisson distribution,
+\[
+\frac{\var(N_{t+1}^{i}|\F_{t})}{\E(N_{t+1}^{i}|\F_{t})}=v\defined\frac{\E L^{2}}{\E L}
+\]
+ (with $\frac{0}{0}\defined\frac{\E L^{2}}{\E L})$, $t\geq0,1\leq i\leq k$.
+Further, for any $i$, $M_{i,t+1}\in\N_{0}^{k}$ is the distribution\footnote{Here, we do not mean a probability distribution, but the numbers of
+individuals having ended in individual compartments.} of those, who found themselves in compartment $i$ at $t$, between
 the compartments at $t+1$. In particular, $M_{i,t+1}^{j}$ (the $j$-th
 component of $M_{i,t+1}$) is the number of the individuals who transited
-from compartment $j$ to compartment $i$ from $t$ to $t+1$. Assuming
-the individuals to change their state according to a common transition
-matrix $P_{t}=(p_{t}^{ij})_{1\leq i,j\leq k}\in\G_{t}$ with the transitions
-being conditionally independent given $\F_{t},$ we get that $M_{i,t+1}$
-has a multinomial conditional probability distribution with parameters
-$X_{t}^{i}$ and $P_{t}^{(i)}$ where, for any matrix $A$, $A^{(i)}$
-is the $i$-th column of $A$. 
+from the compartment $j$ to the compartment $i$ between $t$ to
+$t+1$. Further we assume $M_{i,t+1}$, for any $i$, to follow Dirichlet
+Multinomial (DM) conditional distribution with parameters $\left(X_{t}^{i},\frac{p_{t}^{1,i}}{c_{i}},\dots,\frac{p_{t}^{k,i}}{c_{i}}\right)$
+where $P_{t}=(p_{t}^{ij})_{1\leq i,j\leq k}\in\G_{t}$ is a ``mean''
+transition matrix and $(c_{1},\dots,c_{k})$ are deterministic dispersion
+parameters. 
+\begin{rem}
+If we assumed the individuals to change their state according to $P_{t}$
+with the transitions being conditionally independent given $\F_{t},$
+then we would get $M_{i,t+1}|\F_{t}$ as Multinomial with parameters
+$X_{t}^{i}$ and $P_{t}^{(i)}$ where, for any matrix $\Sigma$, $\Sigma^{(i)}$
+is its $i$-th column. In practice, however, the assumption of the
+conditional independence, is unrealistic, as the course of infection
+differs between individuals and (due to mutations) tends to cluster.
+The standard way of coping with this situation is using $\mathrm{DM}$
+distribution. 
+\end{rem}
 
-The assumed flows of individuals are illustrated by the following
+The flow of individuals between states are illustrated by the following
 chart.
 \begin{center}
 \includegraphics[scale=0.3]{schema}
@@ -233,36 +258,99 @@ and the observation can be explained by the state of the system at
 $t$). Consequently,
 
 \[
-\left.X_{t+1}\right|\F_{t}\sim\bigcirc_{1\leq i\leq m}\mathrm{Multinomial}(X_{t}^{i},P_{t}^{(i)})\circ\Po(B_{t}X_{t})\circ\delta(\barI_{t}),
+\left.X_{t+1}\right|\F_{t}\sim\bigcirc_{1\leq i\leq k}\mathrm{DM}\left(X_{t}^{i},\frac{1}{c_{i}}P_{t}^{(i)}\right)\circ\mathrm{CPo}(A_{t}X_{t},L)\circ\delta(I_{t}),
 \]
 where $\bigcirc$ and $\circ$ stand for the summation of (mutually)
 independent random vectors.
 
+\begin{rem}
+The variability of the individual infectiousness may be naturally
+reflected by the choice of $L$. To demonstrate it, assume that only
+a single compartment (labeled $I$) is infectious, that all the new
+infections fall to a single compartment (labeled $E$), and the number
+of risk contacts of each infectious individual is Poisson. Let $t\geq0$
+and denote $N_{t+1,i}$ the number of the infections, caused by the
+$i$-th individual at $t$. 
+
+If the intensity of the contact distribution and the contagion probability
+were the same for all, equal to $c$, $p$, respectively, then it
+would be $N_{t+1,i}\sim\Po(cq)$, $i\in\N$; consequently, $N_{t+1}^{E}\sim\Po(\lambda X_{t}^{I})$,
+$\lambda=cq$, so we may put $\alpha_{t}^{EA}=\lambda$ and $L=\delta_{1}$,
+having $\E(N_{t+1}^{E}|\F_{t})=\mathrm{\var}(N_{t+1}^{E}|\F_{t})=\lambda X_{t}$.
+
+Now consider a more realistic situation in which the infectiousness
+randomly varies between individuals. A standard way of modeling this
+situation is assuming, for each $i$, that the intensity $\lambda_{i}$
+of $N_{t+1,i}$ is chosen from Gamma distribution, implying that $N_{t+1,i}$
+is negative binomial (see \cite{zhou2013negative}). In particular,
+once $\lambda_{i}\sim\Gamma(k,\theta)$, and $N_{t+1,i}|\lambda_{i}=\Po(\lambda_{i})$,
+we are gettomg that $N_{t+1,i}\sim\mathrm{NB}(k,p),$ $p=\frac{\theta}{1+\theta}$,
+with
+\begin{equation}
+\E N_{t+1,i}=\kappa\defined\theta k,\qquad\var(N_{t+1,i})=\kappa v,\qquad v=1+\frac{\kappa}{k}.\label{eq:ev}
+\end{equation}
+As the Negative Binomial distribution can be represented by a Compound
+Poisson one and as the sum of independent Compound Poisson distributions
+is Compound Poisson, we have that $N_{t+1}^{E}$ is Compound Poisson\footnote{In particular, $N_{t+1,i}=\mathrm{CPo}(k\ln(1+\theta),\mathrm{Log}(p))$,
+where $\mathrm{Log}$ is the Logarithmic distribution, see \cite{zhou2013negative}).
+Thus, $N_{t+1}^{E}\sim\mathrm{CPo}(X_{t}^{I}k\ln(1+\theta),\mathrm{Log}(p))$
+so we may put $\alpha_{t}^{EA}=k\ln(1+\theta)$, $L=\mathrm{Log}(p)$..} and it follows from (\ref{eq:ev}) that 
+\[
+\E(N_{t+1}^{E}|\F_{t})=\kappa X_{t},\qquad\mathrm{\var}(N_{t+1}^{E}|\F_{t})=\kappa X_{t}v
+\]
+\end{rem}
+
+\begin{rem}
+\label{rem:-v}\cite{endo2020estimating} claim that the total number
+$T$ of persons infected by a single COVID-infectious individual is
+$T\sim\mathrm{NB}($$K,P)$ where $K\doteq0.1$ and $P$ is such that
+$\E T=R_{0}$ where $R_{0}$ is the basic reproduction number. As
+$R_{0}$ of COVID is generally assumed to be around 2.5 and $\E T=K\frac{P}{1-P}$,
+it follows that $P\doteq\frac{25}{26}$. Consequently, the variance-to-mean
+ratio is $\tilde{v}\defined\frac{1}{1-P}\doteq26$. Assuming that
+the individual is infectious for $f$ days and that his contacts are
+restricted by a factor $\beta$, we may, in light of the Compound
+Poisson reformulation of $T$, conclude that the number $N_{t+1,i}$
+of daily infected is Compound Poisson with $\E N=\frac{\beta}{f}\E T,\var(N)=\frac{\beta}{f}\var(T)$,
+i.e. $N_{t+1,i}$ and consequently $N_{t+1}^{E}$ has the same variance-to-mean
+ratio as $T$, i.e. $v=\tilde{v}\doteq26$. 
+\end{rem}
+
+\begin{rem}
+For any $x\in\N_{0},c\geq0$ and $p\in[0,1]^{k}$ such that $\sum_{i=1}^{k}p^{i}=1$,
+we have 
+\[
+\E\left(\mathrm{DM}(x,\frac{p}{c})\right)=px=\E\left(\mathrm{Multinomial}(x,p)\right)
+\]
+and 
+\[
+\var\left(\mathrm{DM}(x,\frac{p}{c})\right)=[\mathrm{diag}(p)-pp^{T}]\frac{x+c}{1+c}x=\var(\mathrm{Multinomial}(x,p))\frac{x+c}{1+c},
+\]
+from which it is clear that $\mathrm{DM}(x,\frac{p}{c})\rightarrow\mathrm{Multinomial}(x,p)$
+as $c\rightarrow\infty$ and that the deviation of the Multinomial
+variance matrix grows with decreasing $c$.
+\end{rem}
+
+
 \section{Model Properties}
 
 \label{sec:Model-Properties}By probability calculus, we get that
-\begin{equation}
-\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]=\left[{E\atop F}\right](T_{t}X_{t}+I_{t}),\label{eq:moments}
-\end{equation}
-\[
-\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop F}\right]\Lambda_{t}(X_{t})\left[{E\atop F}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}X_{t}}\right),\qquad}t\geq0,
-\]
-where $E$ is the identity matrix and
-\[
-T_{t}\defined P_{t}+B_{t},\qquad\Lambda_{t}(X_{t})\defined\sum_{i=1}^{k}\mathrm{[diag}(P_{t}^{(i)})-P_{t}^{(i)}(P_{t}^{(i)}){}^{T}]X_{t}^{i}+\mathrm{diag}(B_{t}X_{t}),\qquad t\geq0.
-\]
-Note that 
-\[
-\Lambda_{t}(x)=\sum_{i=1}^{k}\Phi_{t,i}x^{i},\qquad\Phi_{t,i}\defined\mathrm{diag}(B_{t}^{(i)}+P_{t}^{(i)})-P_{t}^{(i)}(P_{t}^{(i)})^{T},\qquad t\geq0,x\in\R_{+}^{k},
-\]
-i.e. $\Lambda_{t}$ is linear in $x$.
-
+\begin{multline*}
+\E(X_{t+1}|\F_{t})=\E(T_{t}X_{t}+I_{t}|\F_{t})=\E\left(\left.\sum_{i=1}^{k}M_{t+1,i}+N_{t+1}+I_{t}\right|\F_{t}\right)\\
+\sum_{i=1}^{k}P_{t}^{(i)}X_{t}^{i}+(\E L)A_{t}X_{t}+I_{t}=T_{t}X_{t}+I_{t},
+\end{multline*}
+where, for any matrix $\Sigma,$ $\Sigma^{(i)}$ denotes its $i$-th
+column, and 
+\begin{align}
+T_{t} & \defined P_{t}+B_{t},\qquad B_{t}=(\beta_{t}^{i,j})_{1\leq i,j\leq k}\defined(\E L)A_{t},\qquad t\geq0.\label{eq:t}
+\end{align}
 Consequently, for any $t,s\in\N_{0},t>s$, 
 \begin{multline*}
-\E(X_{t}|\F_{s})=\E(T_{s,t-1}X_{s}+\sum_{\theta=s}^{t-1}T_{\theta+1,t-1}I_{\theta}|\F_{s})=\E(T_{s,t-1}|\F_{s})X_{s}+\sum_{\theta=s}^{t-1}\E(T_{\theta+1,t-1}I_{\theta}|\F_{s}),
+\E(X_{t}|\F_{s})=\E(T_{s,t-1}X_{s}+\sum_{\theta=s}^{t-1}T_{\theta+1,t-1}I_{\theta}|\F_{s})\\
+=\E(T_{s,t-1}|\F_{s})X_{s}+\sum_{\theta=s}^{t-1}\E(T_{\theta+1,t-1}I_{\theta}|\F_{s}),
 \end{multline*}
-where, for any matrix process $A$, $A_{s,t}\defined A_{t}\times\dots\times A_{s}$
-with $A_{s,s-1}\defined E$.
+where, for any matrix process $\Sigma$, $\Sigma_{s,t}\defined\Sigma_{t}\times\dots\times\Sigma_{s}$
+with $\Sigma_{s,s-1}\defined E$ where $E$ is the identity matrix.
 
 In the special case that 
 \begin{equation}
@@ -280,6 +368,24 @@ If, in addition, $\E(I_{\theta}|\G_{s})\equiv\mu$ for some $\mu\in\G_{s}$
 and $(E-T_{s})$ is invertible, the latter formula simplifies to
 \[
 \E(X_{t}|\G_{s})=T_{s}^{t-s}\E(X_{s}|\G_{s})+(E-T_{s})^{-1}(E-T_{s}^{t-s})\mu.
+\]
+As for variance, we have
+\begin{multline*}
+\var(X_{t+1}|\F_{t})=\sum_{i=1}^{k}\var(M_{t+1,i}|\F_{t})+\var(N_{t+1}|\F_{t})+\var(I_{t}|\F_{t})\\
+=\sum_{1\leq i\leq m}\var\left(\mathrm{DM}\left(X_{t}^{i},\frac{1}{c_{i}}P_{t}^{(i)}\right)\right)+\var(\mathrm{CPo}(A_{t}X_{t},L))+0\\
+=\sum_{i\leq t\leq m}\frac{X_{t}^{i}+c_{i}}{1+c_{i}}X_{t}^{i}[\mathrm{diag}(P_{t}^{(i)})-P_{t}^{(i)}(P_{t}^{(i)})^{T}]+\mathrm{diag}(vB_{t}X)\\
+=\Lambda_{t}(X_{t},X_{t}^{2})
+\end{multline*}
+where 
+\[
+\Lambda_{t}(x,y)\defined\sum_{i=1}^{k}\frac{y^{i}+x^{i}c_{i}}{1+c_{i}}[\mathrm{diag}(P_{t}^{(i)})-P_{t}^{(i)}(P_{t}^{(i)})^{T}]+\mathrm{diag}(vB_{t}x)
+\]
+(note that $\Lambda_{t}$ is linear in $x,y$). Consequently, 
+\begin{equation}
+\E\left[\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right]=\left[{E\atop F}\right](T_{t}X_{t}+I_{t}),\label{eq:mean}
+\end{equation}
+\[
+\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop F}\right]\Lambda_{t}(X_{t},X_{t}^{2})\left[{E\atop F}\right]^{T}+\mathrm{diag}\left({0_{k}\atop \Gamma_{t}(X_{t},X_{t}^{2})}\right),\qquad t\geq0.
 \]
 
 
@@ -299,11 +405,14 @@ to $k$). For any vector $x\in\R^{k}$, denote $\overline{x}$ its
 restriction to $(1,\dots,m)$ and, for any matrix $A\in\R^{k\times k}$,
 denote $\overline{A}$ its restriction to $(1,\dots,m)\times(1,\dots,m)$.
 
-Observe that $\barX$ follows its own version of our model, namely
-that 
+Observe that $\barX$ follows a slightly modified version of our model,
+namely 
 \[
-\left.\barX_{t+1}\right|\F_{t}\sim\bigcirc_{1\leq i\leq m}\mathrm{Multinomial}(\barX_{t}^{i},\barP_{t}^{(i)})\circ\Po(\barB_{t}\barX_{t})\circ\delta(\barI_{t}).
+\left.\barX_{t+1}\right|\F_{t}\sim\bigcirc_{1\leq i\leq m}\mathrm{DM}^{-}(\barX_{t}^{i},\frac{1}{c}\barP_{t}^{(i)},c)\circ\mathrm{CPo}(\barB_{t}\barX_{t},L)\circ\delta(\barI_{t}).
 \]
+where, for any $x\in\N_{0},\alpha\in\R_{+}^{m}$ and $c>0$, $\mathrm{DM}^{-}(x,\alpha,c)$
+is the marginal distribution of the first $m$ components of $\mathrm{DM}\left(x,\left[{\alpha\atop c-\sum_{i=1}^{m}\alpha^{i}}\right]\right)$.
+(by the aggregation property of $\mathrm{DM}$).
 
 For any $t$, we define the reproduction number $r_{t}$ (of a subepidemic
 $\{1,\dots,m\}$) as 
@@ -334,20 +443,19 @@ radius, the formula simplifies to
 \[
 \tilde{r}_{t}=\mathbf{1}^{T}\barB_{t-1}\left(\sum_{i=0}^{\infty}\barP_{t-1}^{i}\right)\E(\pi_{t}|\G_{t-1})=\mathbf{1}^{T}\barB_{t-1}(E-\barP_{t-1})^{-1}\E(\pi_{t}|\G_{t-1}).
 \]
-Note that, once $\overline{N}_{t}$ is not observed, there could be
-difficulties computing $\E(\pi_{t}|\G_{t-1})$ -- yet the estimate
-$\E(\pi_{t}|\G_{t-1})\doteq\nu(\barB_{t-1}\E(\barX_{t-1}|\G_{t-1})+\barI_{t-1})$
+Note that, once $\overline{N}$ and/or $\overline{I}$ are possibly
+not observed, there could be difficulties computing $\E(\pi_{t}|\G_{t-1})$
+-- yet the estimate $\E(\pi_{t}|\G_{t-1})\doteq\nu(\barB_{t-1}\E(\barX_{t-1}|\G_{t-1})+\E(\barI_{t-1}|\G_{t-1}))$
 seems a straightforward choice, it is generally not unbiased due to
 the normalization. This problem, however, vanishes if the imports
 and new infections all fall into a single state (typically called
-exposed), in which case $\pi_{t}\equiv(1,0,\dots,0)^{T}$.
+exposed and labeled $E$), in which case $\pi_{t}\equiv(1,0,\dots,0)^{T}$.
 
 \section{Asymptotic Behavior}
 
 \label{sec:Asymptotic-behavior}Keep assuming that $\{1,\dots,m\}$
-is subepidemics. The next Proposition states conditions for vanishing,
-explosion and ``stationary'' behavior of the subepidemic compartments
-sizes.
+is subepidemic. The next Proposition states conditions for vanishing,
+explosion and ``stationary'' behavior of the subepidemic.
 \begin{prop}
 \label{prop:as}(i) If $\barT_{t}\leq S$ component-wise, where S
 is deterministic with $\sigma\defined\rho(S)<1,$ and if $\E\barI_{t}=o(t^{-\alpha})$
@@ -404,33 +512,35 @@ and similarly for $R.$
 \label{exa:e1}Say there are five states $E$ -- exposed, $I_{a}$
 -- infectious asymptomatic, who will never show symptoms, $I_{p}$
 -- infectious pre-symptomatic, who will later show symptoms, $I_{s}$
--- infectious symptomatic, and $R$ -- removed, including recovered,
-dead, and infectious isolated. All the $I_{\bullet}$ states are equally
-infectious, i.e. $\beta_{t}^{Ex}=\beta_{t}$, $x\in\{I_{a},I_{p},I_{s}\},$
-where $\beta$ is a $\G_{t}$-adapted process. The probability that
-the exposed transits to $\{I_{a},I_{p}\}$ is $\sigma,$ the probability
-of completely asymptomatic course is $\alpha$, the probability of
-transition from $I_{p}$ to $I_{s}$ is $\varsigma$. Further, the
-probability of ending $I_{a}$ or $I_{s}$, by natural causes (recovery,
-end of infectiousness, death in case of $I_{s}$) is $\varrho_{a}$,
-$\varrho_{s}$, respectively. Finally, the probability that a symptomatic
-individual isolates himself is $\eta$ and the probability that the
-individual is isolated regardless of his state is $\theta_{t}$ for
-some $\G_{t}$-adapted process $\theta$. The situation is illustrated
-on the following Figure:
+-- infectious symptomatic, and $R$ -- removed, which includes the
+recovered, the dead, and the infectious isolated. We index the states
+by $e,a,p,s,r$. For simplicity we assume $v=1$ which means that
+the new infections are Poisson rather than Compound Poisson. All the
+infectious states are equally infectious, i.e. $\beta_{t}^{ex}=\beta_{t}$,
+$x\in\{a,p,s\},$ where $\beta$ is a $\G_{t}$-adapted process. The
+probability that the exposed transits to $\{a,p\}$ is $\sigma,$
+the probability of completely asymptomatic course is $\alpha$, the
+probability of transition from $I_{p}$ to $I_{s}$ is $\varsigma$.
+Further, the probability of ending $I_{a}$ or $I_{s}$, by natural
+causes (recovery, end of infectiousness, death in case of $I_{s}$)
+is $\varrho_{a}$, $\varrho_{s}$, respectively. Finally, the probability
+that a symptomatic individual isolates himself is $\eta$ and the
+probability that the individual finding herself in state $i$ is isolated
+is $\theta_{t}^{i}$ for some $\G_{t}$-adapted process $\theta^{i}$.
+The situation is illustrated on the following Figure: 
 \begin{center}
-\includegraphics[scale=0.3]{simple}
+\includegraphics[scale=0.3,bb = 0 0 200 100, draft, type=eps]{simple.eps}
 \par\end{center}
 
 If we neglect (small) joint probabilities of natural exits from the
 infectious states and the isolations, we get 
 \[
 P_{t}=\left[\begin{array}{ccccc}
-1-\sigma-\theta_{t} & 0 & 0 & 0 & 0\\
-\alpha\sigma & 1-\varrho_{a}-\theta_{t} & 0 & 0 & 0\\
-(1-\alpha)\sigma & 0 & 1-\varsigma-\theta_{t} & 0 & 0\\
-0 & 0 & \varsigma & 1-\varrho_{s}-\eta-\theta_{t} & 0\\
-\theta_{t} & \theta_{t}+\varrho_{a} & \theta_{t} & \theta_{t}+\eta+\varrho_{s} & 1
+1-\sigma-\theta_{t}^{e} & 0 & 0 & 0 & 0\\
+\alpha\sigma & 1-\varrho_{a}-\theta_{t}^{a} & 0 & 0 & 0\\
+(1-\alpha)\sigma & 0 & 1-\varsigma-\theta_{t}^{p} & 0 & 0\\
+0 & 0 & \varsigma & 1-\varrho_{s}-\eta-\theta_{t}^{s} & 0\\
+\theta_{t}^{e} & \theta_{t}^{a}+\varrho_{a} & \theta_{t}^{p} & \theta_{t}^{s}+\eta+\varrho_{s} & 1
 \end{array}\right],\qquad B_{t}=\left[\begin{array}{ccccc}
 0 & \beta_{t} & \beta_{t} & \beta_{t} & 0\\
 0 & 0 & 0 & 0 & 0\\
@@ -439,51 +549,57 @@ P_{t}=\left[\begin{array}{ccccc}
 0 & 0 & 0 & 0 & 0
 \end{array}\right]
 \]
-Clearly, we can put $m=4$ (the first four states are subepidemic),
+Clearly, we can put $m=4$ (the first four states form a sub-epidemic),
 getting 
 \[
-\barT_{t}=C(\beta_{t})-\theta_{t}E,\qquad C(\beta)=\left[\begin{array}{cccc}
-1-\sigma & \beta & \beta & \beta\\
+\barT_{t}=Q+\beta_{t}C-\mathrm{diag}(\theta_{t}),\qquad Q=\left[\begin{array}{cccc}
+1-\sigma & 0 & 0 & 0\\
 \alpha\sigma & 1-\varrho_{a} & 0 & 0\\
 (1-\alpha)\sigma & 0 & 1-\varsigma & 0\\
 0 & 0 & \varsigma & 1-\varrho_{s}-\eta
-\end{array}\right].
+\end{array}\right],\qquad C=\left[\begin{array}{cccc}
+0 & 1 & 1 & 1\\
+0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0
+\end{array}\right]..
 \]
-By the well known rule, we have $\rho(\barT_{t})=\rho(C(\gamma_{t}))-\theta_{t}$.
+Further we assume $\theta_{t}\defined\theta_{t}^{e}=\theta_{t}^{a}=\theta_{t}^{p}=\theta_{t}^{s}$,
+which yields, by the well known rule, $\rho(\barT_{t})=\rho(Q+\beta_{t}C)-\theta_{t}$.
 We consider two ways of decreasing the spectral radius: decreasing
-the infection rate $\beta_{t}$ (typically by some counter-epidemic
+the infection rate $\beta_{t}$ (typically by wide counter-epidemic
 measures) and increasing the isolation rate $\theta_{t}$ (e.g. by
-strengthening the tracing capacity).
+strengthening the testing and tracing capacity).
 
 Once there is a ``target'' spectral radius $\rho_{0},$ all the
 combinations of $\beta$ and $\theta$ yielding $\rho(\barT_{t})=\rho_{0}$
-fulfill $\rho_{0}+\theta-\rho(C(\beta))=0$ giving a ``marginal rate
-of substitiution'' $\theta(\beta)'=-\frac{\partial}{\partial\beta}\rho(C(\beta))$
+fulfill $\rho_{0}+\theta-\rho(Q+\beta_{t}C)=0,$which gives a ``marginal
+rate of substitiution'' $\theta(\beta)'=-\frac{\partial}{\partial\beta}\rho(Q+\beta_{t}C)$
 of the infectiousness by the isolation, i.e. how much we have to increase
 the isolation speed when we release the restrictions.
 \end{example}
 
 \begin{example}
-Assume the fraction $\nu$ of the population is non-compliant, which
-means that, once a restriction on social contacts is imposed, they
-apply it only partially. Assume that, without restrictions, the population
-is mixed which means that each individual, compliant or not, has,
-up to a constant, $(1-\nu)$ contacts with the compliant individuals
-and $\nu$ contacts with the non-compliant ones. Once there is a measure
-under which the compliant individuals restrict their opportunities
-to contacts by $\phi$, the non-compliant ones do so only to $f(\phi)>\phi$
-. As a result, the compliant ones will have, up to a constant, $\phi^{2}(1-\nu)$
-contacts with the compliant ones, $\phi f(\phi)\nu$ contacts with
-the non-compliant ones, while the non-compliant will have $\phi f(\phi)(1-\nu)$
-and $f(\phi)^{2}\nu$ contacts with the compliant, non-compliant,
-respectively.
+Assume there is a fraction $\nu$ of the population is non-compliant,
+which means that, once a restriction on social contacts is imposed,
+they apply it only partially. Assume that, without restrictions, the
+population is mixed which means that each individual, compliant or
+not, has, up to a constant, $(1-\nu)$ contacts with the compliant
+individuals and $\nu$ contacts with the non-compliant ones. Once
+there is a measure imposed under which the compliant individuals restrict
+their opportunities to contacts by $\phi$, the non-compliant ones
+do so only to $f(\phi)>\phi$ . As a result, the compliant ones will
+have, up to a constant, $\phi^{2}(1-\nu)$ contacts with the compliant
+ones, $\phi f(\phi)\nu$ contacts with the non-compliant ones, while
+the non-compliant will have $\phi f(\phi)(1-\nu)$ and $f(\phi)^{2}\nu$
+contacts with the compliant, non-compliant, respectively.
 
 Assuming a simple epidemic model with compartments $I_{c}$ - infected
 compliant, $I_{n}$ - infected non-compliant, and $R$ - removed,
 with the course of infection being the same for both the compartments
-such that $\beta_{t}^{1i}=\beta c_{i}$ where $\beta$ is a constant
-and $c_{i}$ is the number of contacts of the $i$-th sub-population,
-this gives 
+such that $\beta_{t}^{1i}=\beta c_{i}$, $i\in\{1,2\},$ where $\beta$
+is a constant and $c_{i}$ is the number of contacts of the $i$-th
+sub-population, this gives 
 \[
 P_{t}=\left[\begin{array}{ccc}
 1-\varrho & 0 & 0\\
@@ -526,8 +642,8 @@ For $\nu>0$ we get, by the Implicit function theorem,
 \]
 Note that the derivative depends neither on $r$ nor on $\varrho$
 . Thus we can easily compute how the non-compliance influences strictness
-of the necessary restrictions. For instance, we can get by the first-order
-Taylor expansion at $\nu=0$: 
+of the necessary restrictions. For instance, by the first-order Taylor
+expansion at $\nu=0$, we get 
 \[
 \phi(\nu)\doteq\phi_{0}+\nu\frac{f(\phi_{0})^{2}-\phi_{0}^{2}}{2\phi_{0}}=\phi_{0}\left(1-\frac{\nu}{2}\right)+\nu\frac{f(\phi_{0})^{2}}{2\phi_{0}}
 \]
@@ -535,53 +651,183 @@ roughly holding for $\nu$ close to zero.
 \end{example}
 
 
+\section{Cohort Model\label{sec:cohorts}}
+
+In the present Section, we assume the population to be split into
+$r$ (age) cohorts of sizes $s_{1},\dots,s_{r}$, $s_{1}+\dots+s_{r}=s$.
+The members of each cohort may be either susceptible or belong to
+one of $\kappa$ analogous compartments. Naturally assuming that individuals
+do not migrate between cohorts, we get the overall transition matrix
+as 
+\[
+P_{t}=\left[\begin{array}{cccc}
+P_{t}^{1} & 0 & \cdots & 0\\
+0 & P_{t}^{2} & \cdots & 0\\
+\vdots & \vdots & \ddots & 0\\
+0 & 0 & \cdots & P_{t}^{r}
+\end{array}\right]
+\]
+where $P_{t}^{i}$ are $\kappa\times\kappa$ cohort transition matrices,
+$1\leq i\leq\kappa$, $t\geq0$. Note that once there are dispersion
+parameters $c_{1}^{i},\dots,c_{\kappa}^{i}$ associated with each
+matrix $P_{t}^{i}$ (meaning that, once the $j$-th compartment of
+the $i$-th cohort is of size $x$, the transfers from the cohort
+to the cohort's compartments follow $\mathrm{DM}(x,\frac{(P^{i})^{(j)}}{c_{i}^{j}})$),
+the dispersion parameters of the overall model are $(c_{1}^{1},\dots,c_{\kappa}^{1},c_{1}^{2},\dots c_{\kappa}^{2},c_{1}^{3},\dots\dots,c_{\kappa}^{r}).$
+
+We assume that the contagions can happen across cohorts. Namely, the
+probability of contagion, i.e. the transfer of a susceptible individual
+to the $i$-th compartment of the $p$-th cohort, upon a risk contact
+with a member of the $j$-th compartment of the $q$-th cohort does
+not depend on $p$ or $q$, being equal to $\varpi_{t}^{ij}$. Further
+we assume that, on average, a member of the $p$-th cohort has $\nu^{pq}$
+risk contacts with the $q$-th cohort, assuming that the number of
+contacts with the infectious compartments (those with non-zero $\varpi_{t}^{i\bullet})$
+is equal. Under these assumption, the probability a transfer of a
+susceptible individual from cohort $p$ into the $i$-th compartment
+is roughly $e_{t}^{pi}\defined b\sum_{q=1}^{r}\sum_{j=1}^{k}\nu^{pq}\varpi_{t}^{ij}\frac{X_{tq}^{i}}{s_{q}}$,
+where $X_{tq}^{i}$ is the size of the $i$-th compartment of cohort
+$q$ and $b$ is a constant. Consequently, the total number the infections
+in the $i$-th compartment of the $p$-th cohort will be $s_{p}e_{t}^{pi}$,
+which gives 
+\[
+B_{t}=Q\otimes C_{t}
+\]
+where 
+\[
+Q=\left[\begin{array}{cccc}
+\nu^{11} & \nu^{12}\frac{s_{1}}{s_{2}} & \cdots & \nu^{1r}\frac{s_{1}}{s_{r}}\\
+\nu^{21}\frac{s_{2}}{s_{1}} & \nu^{22} & \cdots & \nu^{2r}\frac{s_{2}}{s_{r}}\\
+\vdots & \vdots & \ddots & \vdots\\
+\nu^{r1}\frac{s_{r}}{s_{1}} & \nu^{r2}\frac{s_{r}}{s_{2}} & \cdots & \nu^{rr}
+\end{array}\right],\qquad C_{t}=\left[\begin{array}{cccc}
+\varpi_{t}^{11} & \varpi_{t}^{12} & \cdots & \varpi_{t}^{1k}\\
+\varpi_{t}^{21} & \varpi_{t}^{22} & \cdots & \varpi_{t}^{2k}\\
+\vdots & \vdots & \ddots & \vdots\\
+\varpi_{t}^{k1} & \varpi_{t}^{k2} & \cdots & \varpi_{t}^{kk}
+\end{array}\right].
+\]
+
+
+\section{Optimal Control of the Epidemics\label{sec:oc}}
+
+Assume the setting of Example \ref{exa:e1} and assume that $X_{0}$
+is known. Our aim is to minimize the size of the epidemic at time
+$t$ given that we are ready to pay a given price $c_{0}$. We assume
+that, to achieve infection rate $\beta$, a cost $\gamma(\beta)$
+has to be paid where $\gamma$ is a strictly decreasing convex positive
+function defined on $(0,\beta_{0}]$ with $\gamma(\beta_{0})=0$ and
+$\gamma(0-)=\infty$. Further, to achieve the isolation rate $\theta_{t}^{i}$
+in the $i$-th compartment, the price $\delta(\theta_{t}^{i},X_{t}^{i})\defined d\theta_{t}^{i}X_{t}^{i}$
+has to be paid where $d$ is a constant. This reflects the real-life
+situation in which the cost of global restrictions does not depend
+on the infection size while the cost of isolation does, for instance
+through the number of call-center workers involved in tracing. 
+
+Our problem is to find 
+
+\[
+V_{0}(X_{0},c_{0})\defined\inf_{\sum_{\tau=0}^{t-1}[\gamma(\beta_{\tau})+\delta(\theta_{t}^{k},X_{t}^{k})+\dots+\delta(\theta_{t}^{k},X_{t}^{k})]\leq c_{0},\beta,0\leq\theta\leq q,\theta_{\tau}\in\F_{\tau},\beta_{\tau}\in\F_{\tau},1\leq\tau<t}\E(\mathbf{1}'X_{t})
+\]
+where $q$ is the diagonal of $Q.$ The problem may be rewritten by
+means of Bellman equations 
+\begin{align*}
+V_{\tau}(x,c) & =\inf_{\gamma(\beta)+d\theta^{k}x^{k}+\dots+d\theta^{k}x^{k}+y\leq c,\beta\geq0,\theta\geq0,y\geq0}\E(V_{\tau+1}(J,y)),\qquad0\leq\tau<t,
+\end{align*}
+\[
+V_{t}(x,c)=\mathbf{1}'x,
+\]
+\[
+J\sim\L(x,\beta,\theta)\defined\bigcirc_{1\leq i\leq m}\mathrm{Multinomial^{-}}(x^{i},Q^{(i)}-\Delta_{i}\theta^{i})\circ\mathrm{Po}(\beta Cx)
+\]
+where $\Delta_{i}$ is the vector with the unit component on the $i$-th
+place and zeros otherwise.
+
+Though the final problem is convex --
+\begin{multline*}
+V_{t-1}(x,c)=\inf_{\gamma(\beta)+d\theta^{1}x^{1}+\dots+d\theta^{m}x^{m}+y\leq c,0\leq\theta\leq q,\beta,y\geq0}\mathbf{1}'(Qx-\mathrm{diag}(\theta)x+\Delta_{e}\beta\sum_{i\neq e}x^{i})
+\end{multline*}
+-- its objective function is not jointly convex in $(u,v,x,c)$,
+so the convexity of $V_{t-1}$ is not guaranteed. Moreover, as neither
+the optimal solution nor the expectation of the objective functions
+of all but the last problem are analytically tractable, it is necessary
+to resort to approximations. To this end, we can use the sample mean
+approximation 
+\[
+V_{\tau}(x,c)\doteq\tilde{V_{\tau}}(x,c)
+\]
+ where $\tilde{V}_{t}=V_{t}$ and, recursively,
+\[
+V_{\tau}(x,c)\doteq\tilde{V_{\tau}}(x,c)\defined\inf_{\gamma(\beta)+d\theta^{k}x^{k}+\dots+d\theta^{k}x^{k}+y\leq c,\beta,\theta,y\geq0}\frac{1}{r}\sum_{i=1}^{r}\tilde{V}_{\tau+1}(J_{i},y)
+\]
+where $J_{1},\dots,J_{r}$ is an i.i.d. sample from $\L(x,\beta,\theta)$.
+
 \section{Estimation}
 
 \label{sec:Estimation}For any stochastic process $A$ and integers
-$s>t$, denote $\hat{A}_{s|t}=\E(A_{s}|\G_{t})$. When $T_{\tau}\in\G_{t},t<\tau\leq s-1$
-(which is trivially true if $s=t+1$), we get that
+$s\geq t$, denote $\hat{A}_{s|t}=\E(A_{s}|\G_{t})$. Let $s>t$.
+When $T_{\tau}\in\G_{t},t<\tau\leq s-1$ (which is trivially true
+if $s=t+1$), we get that
 
 \begin{multline*}
-\left[{\hat{X}_{s|t}\atop \hat{Y}_{s|t}}\right]=\E\left(\left.\E\left(\left.\left[{\hat{X}_{s}\atop \hat{Y}_{s}}\right]\right|\F_{s-1}\right)\right|\G_{t}\right)=\left[{E\atop F}\right]\left(T_{s-1}\hat{X}_{s-1|t}+\hat{I}_{s-1|t}\right)\\
+\left[{\hat{X}_{s|t}\atop \hat{Y}_{s|t}}\right]=\E\left(\left.\E\left(\left.\left[{X_{s}\atop Y_{s}}\right]\right|\F_{s-1}\right)\right|\G_{t}\right)=\left[{E\atop F}\right]\left(T_{s-1}\hat{X}_{s-1|t}+\hat{I}_{s-1|t}\right)\\
 =\left[{E\atop F}\right]\left(T_{t,s-1}X_{t}+\sum_{\theta=t}^{s-1}T_{\theta+1,s-1}\hat{I}_{\theta|t}\right),
 \end{multline*}
 \begin{multline*}
 W_{s|t}\defined\var\left(\left.X_{s}\right|\G_{t}\right)=\var\left(\left.\E\left(\left.X_{s}\right|\F_{s-1}\right)\right|\G_{t}\right)+\E\left(\left.\var\left(\left.X_{s}\right|\F_{s-1}\right)\right|\G_{t}\right)\\
-=\var\left(T_{s-1}X_{s-1}+I_{s-1}|\G_{t}\right)+\E\left(\left.\Lambda_{s-1}(X_{s-1})\right|\G_{t}\right)\\
-=T_{s-1}W_{s-1|t}T_{s-1}^{T}+2T_{s-1}\cov(X_{s-1},I_{s-1}|\G_{t})+\var\left(I_{s-1}|\G_{t}\right)+\Lambda_{s-1}(\hat{X}_{s-1|t})
+=\var\left(T_{s-1}X_{s-1}+I_{s-1}|\G_{t}\right)+\E\left(\left.\Lambda_{s-1}(X_{s-1},X_{s-1}^{2})\right|\G_{t}\right)\\
+=T_{s-1}W_{s-1|t}T_{s-1}^{T}+2T_{s-1}\cov(X_{s-1},I_{s-1}|\G_{t})+\var\left(I_{s-1}|\G_{t}\right)\\
++\Lambda_{s-1}(\hat{X}_{s-1|t},\mathrm{diag}(W_{s-1|t})+\hat{X}_{s-1|t}^{2})
 \end{multline*}
-and
-\[
-V_{s|t}\defined\var\left(\left.{X_{s}\atop Y_{s}}\right|\G_{t}\right)=\var\left(\left.{X_{s}\atop FX_{s}+\epsilon_{s}}\right|\G_{t}\right)=\left[{E\atop F}\right]W_{s|t}\left[{E\atop F}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{s-1}\hat{X}_{s-1|t}}\right)}
-\]
+(we have used linearity of $\Lambda_{s-1}$, thanks to which $\E(\Lambda_{s-1}(\hat{X}_{s-1|t},X_{s-1}^{2})|\G_{t})=\Lambda_{s-1}(\E(X_{s-1}|\G_{t}),\E(X_{s-1}^{2}|\G_{t}$)),
+and the well known formula $\var(X)=\E X^{2}-(\E X)^{2})$. Consequently,
+\begin{multline*}
+V_{s|t}\defined\var\left(\left.{X_{s}\atop Y_{s}}\right|\G_{t}\right)=\var\left(\left.{X_{s}\atop FX_{s}+\epsilon_{s}}\right|\G_{t}\right)\\
+=\left[{E\atop F}\right]W_{s|t}\left[{E\atop F}\right]^{T}+\mathrm{diag}\left({0_{k}\atop \Gamma_{s-1}(\hat{X}_{s-1|t},\mathrm{diag}(W_{s-1|t})+\hat{X}_{s-1|t}^{2})}\right)
+\end{multline*}
 Unfortunately, due to the non-Gaussianity, we have analytical formulas
-neither for $X_{t|t}$ nor for $\mathrm{W_{t|t}}$, so we can formulate
-neither the likelihood function nor a least square estimate. Two,
-from the computational point of view equivalent, ways to cope with
-this are using estimates of the conditional expectation and variance,
+for none of $X_{t|t}$ $I_{t|t}$ and $\mathrm{W_{t|t}}$, so we can
+formulate neither the likelihood function nor a least square estimate.
+Two, from the computational point of view equivalent, ways to cope
+with this are using estimates of the conditional expectation and variance,
 or normally approximating the residuals. We go the latter way: in
 the present Section, we assume that $\left.\left[{X_{t+1}\atop Y_{t+1}}\right]\right|\F_{t}$
-is normal with mean given by (\ref{eq:moments}) and 
+is normal with mean given by (\ref{eq:mean}) and 
 \[
-\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop F}\right]\Lambda_{t}(X_{t}\vee0)\left[{E\atop F}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}(X_{t}\vee0)}\right)}
+\var\left(\left.{X_{t+1}\atop Y_{t+1}}\right|\F_{t}\right)=\left[{E\atop F}\right]\Lambda_{t}(X_{t}\vee0,X_{t}^{2})\left[{E\atop F}\right]^{T}+\mathrm{diag\left({0_{k}\atop \Gamma_{t}(X_{t}\vee0,X_{t}^{2})}\right)}
 \]
- Given this assumption, we have, by the well known formula (see e.g.
-\cite{Eaton07}), 
+Moreover, we assume that $I_{t}\in\G_{t},t\geq0$ (i.e. the import
+is observable). Given these assumptions, we have, by the well known
+formula (see e.g. \cite{Eaton07}), 
 \begin{multline*}
-\hat{X}_{t|t}=I_{t-1}+\hat{X}_{t|t-1}+K_{t}\left(Y_{t}-\hat{Y}_{t|t-1}\right)\\
-K_{t}\defined V_{t|t-1}^{XY}(V_{t|-1}^{YY})^{-1}=W_{t|t-1}F^{T}D_{t}^{-1},\qquad D_{t}=FW_{t|t-1}F^{T}+\mathrm{diag}(\Gamma_{t}\hat{X}_{t|t-1})
+\hat{X}_{t|t}=I_{t-1}+\hat{X}_{t|t-1}+K_{t}\left(Y_{t}-\hat{Y}_{t|t-1}\right),\qquad K_{t}\defined\tilde{V}_{t|t-1}^{XY}(\tilde{V}_{t|-1}^{YY})^{-1}
 \end{multline*}
 
 \begin{multline*}
-W_{t|t}=V_{t|t-1}^{XX}-V_{t|t-1}^{XY}(V_{t|t-1}^{YY})^{-1}V_{t|t-1}^{YX}=W_{t|t-1}-W_{t|t-1}F^{T}D_{t}^{-1}FW_{t|t-1}
+\var(X_{t}|\G_{t})=\tilde{V}_{t|t-1}^{XX}-\tilde{V}_{t|t-1}^{XY}(\tilde{V}_{t|t-1}^{YY})^{-1}\tilde{V}_{t|t-1}^{YX}
 \end{multline*}
-Note that $K_{t}$ may be seen as a conditional version of a Kalman
-gain matrix.
+where $\tilde{V}_{s|t}\defined\var(\left[{X_{s}\atop Y_{s}}\right]|\G_{t})$
+given the normal approximation. Note that $K_{t}$ may be seen as
+a conditional version of the Kalman gain matrix. 
+
+If $\P[\hat{X}_{t}<0]$ is negligible (which is typically true when
+modeling large epidemics), then we can neglect truncation in the formula
+for the variance approximate $\tilde{V}_{t|s}\doteq V_{t|s},$which
+further gives 
+
+\begin{multline*}
+K_{t}\doteq W_{t|t-1}F^{T}D_{t}^{-1},\qquad D_{t}=FW_{t|t-1}F^{T}+\mathrm{diag}(\Gamma_{t}\hat{X}_{t|t-1})
+\end{multline*}
+
+\begin{multline*}
+W_{t|t}\doteq W_{t|t-1}-W_{t|t-1}F^{T}D_{t}^{-1}FW_{t|t-1}
+\end{multline*}
 
 Assume that $F=F(\Theta_{0}),$$P_{t}=P_{t}(\Theta_{0})$, $B_{t}=B_{t}(\Theta_{0})$,
-$\Gamma_{t}=\Gamma_{t}(\Theta_{0})$ and $I_{t}=I_{t}(\Theta_{0})$
-where $\Theta_{0}\in\R^{r}$ is an unknown parameter. For its estimation,
-it is possible to to use either nonlinear least squares, i.e. 
+$\Gamma_{t}=\Gamma_{t}(\Theta_{0})$ and $I_{t}=I_{t}(\Theta_{0})$,
+and $c=c(\Theta_{0})$, where $\Theta_{0}\in\R^{r}$ is an unknown
+parameter. For its estimation, it is possible to use either nonlinear
+least squares, i.e. 
 \[
 \hat{\Theta}=\arg\min\sum_{t}(Y_{t}-\hat{Y}_{t|t}(\Theta))^{T}U_{t}(Y_{t}-\hat{Y}_{t|t}(\Theta))
 \]
@@ -592,36 +838,277 @@ where $U_{t}\in\G_{t-1}$ is a suitable weighting matrix, or
 Both these estimators are consistent and asymptotically normal under
 some conditions, see \cite{Jacob10}, \cite{jacob2013generalized},
 respectively. Verifying these conditions for our model is, however,
-beyond the scope of this short technical report and remains as topic
-of a future research. Note also that our proof of Proposition \ref{prop:as}
-is not valid for the approximate model, as $\barX$ is not necessarily
-positive here.
+beyond the scope of this introductory study and remains as topic of
+a future research. 
 
-\section{Application to The COVID Pandemics in Czech Republic}
+It should be noted that our proof of Proposition \ref{prop:as} is
+not valid for the approximate model, as $\barX$ is not necessarily
+positive given the Normal approximation.
+
+\section{Application to The COVID Pandemics in the Czech Republic}
 
 \label{sec:Application-to-The}We applied our model to the data from
-the first and second wave of the pandemics in the Czech Republic between
-February and November of 2020. We considered a generalized version
-of the model from Example \ref{exa:e1}, compartments of which are
-shown in the following Picture:
+the pandemics in the Czech Republic between February 2020 and January
+2021. We considered a widely generalized version of the model from
+Example \ref{exa:e1}, compartments of which are shown in Figure \ref{fig:big}:
 \begin{center}
-\includegraphics[scale=0.3]{bigpng}
+\includegraphics[scale=0.3]{big}
 \par\end{center}
 
-To the compartments from Example \ref{exa:e1} we added their ``detected''
-versions, distinguishing detection when being asymptomatic (subscript
-$\delta$) and when being symptomatic (subscript $d$). Moreover,
-for both the symptomatic and the asymptomatic course, we added the
-states in which the individuals are RNA positive, but not infectious
-(denoted by $J$). We also distinguish two ``removed'' states: recovered
-($R$) and dead ($D$). All the $J$ and $R$ states have three versions:
-undetected, detected when asymptomatic and detected when symptomatic.
-Assuming that once the undetected course ends by death, the detection
-takes place before the time of death, we have only two death states:
-detected when asymptomatic and detected when symptomatic.
+\label{fig:big}
 
-We use the following parameters of the disease, obtained from the
-literature:
+To reflect the fact that many cases are (intentionally) undetected,
+we added the compartment $I_{u},$ members of which can be detected
+only if they get to hospital or die, otherwise they never undergo
+testing. Further, to all the compartments from Example \ref{exa:e1}
+we added their ``detected'' versions, distinguishing detection when
+being asymptomatic (subscript $\delta$) or symptomatic (subscript
+$d$). We distinguish three ``removed'' states: recovered ($R$),
+hospitalized ($H$) and dead ($D$). Assuming that each individual
+who gets to the hospital is detected upon entry, we have two versions
+of $H$ states: detected when symptomatic ($H_{d}$) and detected
+when asymptomatic ($H_{\delta})$. Similarly we assume that each dead
+is detected and we distinguish whether the individual dies in- or
+outside of hospital; consequently, we have four ``dead'' states:
+$D_{hd},D_{d},$$D_{h\delta}$ and $D_{\delta}.$ The case of $R$
+is analogous with the exception that recovery can happen without detection,
+so we have five versions: $R,$$R_{dh}$, $R_{d},$$R_{\delta h}$,
+and $R_{\delta}.$ 
+
+We distinguish four age cohorts: $0$ to $19$ years, $20$ to 64
+years, $65$ to $79$ years and more than $80$ years; consequently,
+having four compartments for each state, we have $4\times21=84$ compartments
+in total. 
+
+Some transition parameters (components of $P_{t})$ are common for
+the compartments (black symbols in Figure \ref{fig:big}) and partially
+specific for each compartment (blue symbols). Some parameters are
+constant in time, some (those with index $t$) are time varying. The
+values of some parameters were externally determined, some were estimated.
+The detailed description of parameters, way of their determination,
+computation or estimation, and their estimated values may be found
+in Appendix. Here we only mention that we take
+\[
+\theta_{t}=\vartheta_{0}+\vartheta_{1}q_{t},
+\]
+where $q_{t}$ is the observed probability, that an infectious individual
+is accepted to hospital without being previously detected, which,
+as of February 2021, serves as an input of the national counter-epidemic
+system, and, by the Bayes rule, it is, up to a constant, equal to
+the overall detection probability. The rate $\pi_{t}$ is set so as
+the the detection probability holds in the model (see the Appendix). 
+
+The normalized ``mixing matrix'' $Q$ has been computed from the
+estimate of the overall contact matrix in the Czech by \cite{prem2017projecting},
+see the Appendix. 
+
+In line with \cite{pollock2020asymptomatic}, reporting $3-25$ tines
+lower secondary attack rate of asymptomatic individuals, we assume
+that the probability of infection by $I_{a}$ is four-times less in
+comparison with $I_{p},$$I_{s}$ and $I_{u},$ we assume the dependence
+of infectiousness on the contact restriction and personal protection,
+and we reflect the natural immunization. Namely, we put
+\[
+\varpi_{t}^{EI_{s}}=\varpi_{t}^{EI_{\acute{u}}}=\varpi_{t}^{EI_{s}}=\varpi_{t},\qquad\varpi_{t}^{EI_{a}}=\frac{1}{4}\varpi_{t},\qquad\varpi_{t}^{\bullet}=0\text{ otherwise,}
+\]
+\begin{equation}
+\varpi_{t}=g_{t}h_{t}\upsilon_{t-7}p_{t-7}\label{eq:gamma}
+\end{equation}
+where $\upsilon_{t}$ is the average number of risk contacts and $p_{t}$
+is the reduction caused by personal protection, $h_{t}\defined1-\frac{\sum_{i=1}^{k}\hat{X}_{t|t}^{i}}{s}$
+is the adjustment for immunization (we assume that once infected cannot
+be infected again) and $g_{t}$ is the adjustment for new mutation,
+see Appendix for details. 
+
+The values $\upsilon_{t}$ and $p_{t}$, were taken from \cite{paqcovid}
+which is a longitudinal study, inquiring a panel of 3000 respondents
+about their (weekly) risk contacts, observance of several personal
+protection measures (see Appendix), and some other variables. While
+the value $\upsilon_{t}$ is being directly questioned by the survey,
+we compute the level $p_{t}$ of personal protection as $p_{t}=\omega_{0}\exp\{-\omega_{e}e_{t-7}-\omega_{f}f_{t-7}\}$
+where $e_{t}$ is a certain linear combination of observation rates
+of various personal protective measures, $f_{t}$ is the reported
+level of fear caused by the pandemic and $\omega_{0},\omega_{e}$
+and $\omega_{f}$ are constants - see Appendix for further explanation.
+
+For better comparison with other models, we use normalized version
+of the personal contacts level $w_{t}\defined\frac{\upsilon_{t}}{\upsilon_{0}}$
+where $\upsilon_{0}$ is the pre-pandemic value of $\upsilon,$ so
+we have
+\[
+\varpi_{t}=g_{t}h_{t}w_{t-7}\exp\{-\omega_{e}e_{t-7}-\omega_{f}f_{t-7}\}
+\]
+up to constant multiplication, where the corresponding constant becomes
+part of estimated parameters $b_{0},b_{20},b_{65}$ and $b_{80}$ 
+
+As for the dispersion parameters, we assume $v=26$ (see Remark \ref{rem:-v})
+and, for each cohort $i,$ $c_{x}^{i}\equiv c_{h}$, $x\in\{H_{d}^{i},H_{\delta}^{i}\}$
+(all ``hospital'' states) and $c_{x}^{i}\equiv c_{a}$ otherwise
+-- both $c_{h}$ and $c_{a}$ are estimated. This restriction of
+the parameter space was chosen in order to avoid overparametrization,
+but to reflect the larger variability of incidences and hospitalizations
+in comparison with the mortality data (note that dead mostly come
+from hospitals). Note also that for terminal states the dispersion
+parameters have no effect, as their ``target'' distribution is Dirac.
+
+We use the following daily data series: 
+\begin{description}
+\item [{$\tilde{I}^{0},\tilde{I}^{20},\tilde{I}^{65},\tilde{I}^{80}$}] -
+imports to individual cohorts,
+\end{description}
+and, as observations (variables $Y$): 
+\begin{description}
+\item [{$C^{A},C^{S}$}] - incidences of asymptomatic, symptomatic, respectively
+\item [{$C^{0},C^{20},C^{65},C^{80}$}] - incidences in individual cohorts
+\item [{$D^{0},D^{20},D^{65},D^{80}$}] - deaths in individual cohorts
+\item [{$H^{y},H^{o}$}] - admissions to hospitals of individuals from
+the first two cohorts, second two cohorts, respectively
+\item [{$R^{y},R^{o}$}] - number of released from hospitals of the first/second
+two cohorts
+\item [{$D^{y},D^{o}$}] - dead in hospitals of the first/second two cohorts
+\item [{$\Delta^{y},\Delta^{o}$}] - dead outside hospitals of the first/second
+two cohorts
+\end{description}
+The data come from the public repository of the Ministry of Health
+of the Czech Republic and from the The Institute of Health Information
+and Statistics of the Czech Republic, where the former is publicly
+available while the latter is available only to research institutions.
+See Figure {[}fig:inputs{]} for overview. 
+
+The data had to be per-processed. First of all, series $C$, $H$
+and $R$, showing strong weekly pattern, have been de-seasoned. Second,
+as the total reported incidence exceeds by $2$ percent the personal
+level data (probably because details are not always known), we took
+the former as decisive. Next, as the reports of symptomatic an asymptomatic
+results of tests give slightly less total then the incidence, we took
+only ratios from the former multiplied by titak incidences as $C^{a}$
+and $C^{s}$ Finally, as the total reported number of actually hospitalized,
+which we denote by $L$, exceeds (by units of per-cents) the totals
+from the anonymized hospitalization data, we adjusted series $H$
+and $R$ so that $L\doteq H-R$ (doing it exactly is impossible, as
+plain multiplication could cause unrealistic values of $H$ and $R$).
+
+The matrix $F$ transferring compartment sizes $X$ to observables
+$Y$, is zero-one. Which components are one can be paritally devised
+from Figure \ref{fig:big}, its exact definition finds itself in Appendix.
+The lack of a row of $F$ corresponding to $C^{A}$ is intentional
+as $C^{A}$ is redundant (equal to $C^{0}+C^{20}+C^{65}+C^{80}-C^{S}$)
+and would cause linear dependence in $F$.
+
+Assuming the imports only to the state $E$, we take, 
+\[
+I_{t}^{i}=\tilde{I}_{t+8}^{i}
+\]
+for each cohort $i$ (the time-shift reflects the delay in reporting).
+
+Reflecting the notorious unreliability of incidence data, we put 
+\[
+\Gamma_{t}(x,y)=\mathrm{diag}(\gamma_{s},\gamma_{c},\gamma_{c},\gamma_{c},\gamma_{c},0,\dots,0)Fx
+\]
+where $\gamma_{s}$ and $\gamma_{c}$ are estimated parameters (note
+that the first five rows of $F$ correspond to $C^{S},C^{0},C^{20},C^{65},C^{80}$
+respectively.
+
+For estimation, we used Weighted least squares applied to the seven
+day forecasts with weekly average increments as weights: 
+\[
+U_{t}=\mathrm{diag}\left(\left(\frac{Y_{t}^{i}-Y_{(t-7)\vee0}^{i}}{7\wedge t}\vee5\right)_{i=1}^{n}\right),\qquad t>0.
+\]
+Due to the possibly different nature of the first wave (until May)
+and irregular behavior of the pandemic in summer (caused by small
+incidence with local outbursts), we used only data from October onward
+for the (final) estimation. To get ``reasonable'' initial state
+for our estimate, we roughly estimated the model for the whole period
+of the pandemic and took its state from the end of August as the initial
+state for the final estimation; the WLS estimate, however, was computed
+only from period October 1, 2020 till January 21, 2121 (to minimize
+the influence of the initial value). 
+
+Unfortunately, the estimation did not directly lead to quality results.
+The reason was that running the minimization with free $c_{u},c_{d},\gamma_{s}$
+and $\gamma_{c}$ (dispersion) parameters tends to underestimate forecast
+variances, which fact subsequently leads to unrealistically narrow
+confidence bounds. In order to get more realistic variances, we, by
+a grid search, adjusted the risk parameters so that the variance of
+standardized (one day forecast) residuals were close to one, then
+re-estimated the model by WLS with the adjusted risk parameters fixed.
+Yet the value of the new WLS minimum is about 6 percent higher than
+the original one, the variances in the new model are realistic. Finding
+a fully automatic estimation procedure getting realistic variances,
+perhaps by regularization with respect to variance of residuals, is
+a challenging topic of future research. The C++ code for the WLS estimation,
+emplying NLopt library for minimization, is available on https://github.com/cyberklezmer/seir/tree/ejor. 
+
+The standardized residuals of seven-day predictions (i.e. the residuals
+divided by the standard error of the estimate) for the individual
+observables, may be seen in Figure fig:residuals. Figure fig:forecasts,on
+the other hand, shows the predictions fit of the total incidence $C_{t}\defined C_{t}^{0}+C_{t}^{20}+C_{t}^{65}+C_{t}^{80},$
+the total number of deaths $D_{t}\defined D_{t}^{0}+D_{t}^{20}+D_{t}^{65}+D_{t}^{80}$
+and the actual occupancy of hospitals $L_{t}\defined H_{t}^{y}+H_{t}^{o}-R_{t}^{y}-R_{t}^{o}.$
+For each variable, the left-hand graph shows the fit of the (in-sample)
+seven day predictions, the right-hand graph the (out of sample) predictions
+for 14 days following Jan 21. 
+
+\section{Vaccination Experiment}
+
+\label{sec:Vaccination-Experiment}Finally, as a demonstration of
+applicability of our model, we evaluated outcomes of three vaccination
+scenarios
+\begin{description}
+\item [{novac}] The infectiousness $\varpi_{t}$ increases by 50\% on January
+22 (by emergence of a new mutation and/or release of the counter-epidemic
+measures) and keeps being constant until the end of May 
+\item [{elderly}] The infectiousness rises as above, but 30000 shots of
+vaccine a day will start to be applied on February 1st. Vaccines are
+distributed to the cohort 80+ first and, as late as all the cohort
+is vaccinated, vaccines start to be given to cohort 65-79. After 35
+days, each vaccinated individual gets a second shot (these shots do
+not count to the daily number 30000). 
+\item [{middle}] The situation is the same as in ``elderly'' scenario
+with the difference that only 15000 vaccines a day are given to the
+oldest, the rest are gien to cohort 20-64 (perhaps infrastructural
+workers).
+\end{description}
+As for the vaccine effect, we (conservatively) assume that vaccinated
+individuals can be infected the same way as if they were not vaccinated;
+however, the probability of the asymptomatic course rises: 14 days
+after the first shot to $0.9$ for the first two cohorts (0-64), or
+to 0.7 for those who are older than 65. After 14 days from the second
+shot, the probability further rises to 0.8, 0.95, respectively.
+
+The results of simulation are shown in Figure TBD and Table TBD. Not
+surprisingly, vaccination saves all the infections, deaths and hospital
+beds. Prioritizing the older saves lives and beds, however, adds infections
+(which partially due to greater efficiency of the vaccine for the
+younger cohorts, maybe also due to greater number of contacts of the
+young). The most important message, however, is that vaccination is
+not a ``silver bullet'' solving everything -- there still large
+number of dead with vaccination, which could be saved if the infectiousness
+was reduced, too, perhaps by some unpopular measures.
+
+.
+
+\section{Conclusion}
+
+\label{sec:Conclusion} We presented a stochastic epidemic model,
+formulated its basic properties and suggested way of its estimation,
+all demonstrated by a real-life examples. We demonstrated that our
+model has good prediction power. They are, however, many things to
+be done. Most importantly, a reliable automatic estimation procedure
+should be suggested, guaranteeing good fit of both means and variances.
+Second, regularity conditions which would assure asymptotic properties
+should be formulated, yet it can be a difficult task.. However, even
+as it is, it can be immediately used for statistically correct modeling
+of the epidemics. 
+
+\bibliographystyle{plain}
+\bibliography{/home/martin/Documents/s/smid,covid_m}
+
+
+\section*{Parameters of the Czech Republic Model}
+
+The following Table lists the values, serving for computation of the
+former.
 
 \begin{center}
 \begin{tabular}{lll} \hline Par.&	description&	Source \\ \hline\hline 
@@ -634,10 +1121,6 @@ $m_a=4$ & expected duration of presymptomatic period
 \\
  $m_i = 8$ & expected duration of infectiousness 
 	&	\cite{Wolfel2020virological}	\\ 
- $m_y=22.6$ &
-expected duration of RNA positivity for asymptomatic	& \cite{noh2020asymptomatic}
-\\
-$m_s=25.2$ & expected duration of RNA positivity for asymptomatic &	 	\cite{noh2020asymptomatic}	
 %\\ 
 % r=0.018 & case fatality ratio & \cite{he2020estimation}
 	\\ \hline \end{tabular} \end{center}
@@ -651,100 +1134,48 @@ $\sigma=1-\exp\{-1/m_E\}$
 \\
 $\varsigma = 1-\exp\{-\frac{1}{m_a}\}$ 
 \\
-$\delta_s=1-\exp\{-\frac{1}{m_s}\}$ 	\\ 
-$\delta_a = 1-\exp\{-\frac{1}{m_i+m_a}\}$ \\
- $\iota_a = 1-\exp\{-\frac{1}{m_y-m_i-m_a}\}$ 
-\\
-$\iota_s = (1-r)(1-\exp\{\frac{1}{m_s-m_i-m_a}\})$\\ 
+$\gamma_s=1-\exp\{-\frac{1}{m_s}\}$ 	\\ 
+$\gamma_a = 1-\exp\{-\frac{1}{m_i+m_a}\}$ \\
 $\mu$ - estimated \\
 %\\
 % $\mu=r(1-\exp\{\frac{1}{m_s-m_i-m_a}\})$
 	\\ \hline \end{tabular} 
 \end{center}
 
-Similarly as in the Example, we assumed equal infectiousness $\beta_{t}$
-for all the infectious states $I_{a},I_{p},I_{s}$, varying in time:
-\begin{equation}
-\beta_{t}=\beta c_{t}p_{t}\label{eq:gamma}
-\end{equation}
-where $\beta$ is an (estimated) constant, $c_{t}$ is the contact
-reduction (with $c_{0}=1$) and $p_{t}$ is the reduction caused by
-personal protection.
+y
 
-The ``removal'' are $\eta$ and $\theta$, which both are also time-varying.
-Reflecting the weekly pattern of reporting, we assume 
-\[
-\theta_{t}=\phi_{t+1}\theta,\qquad\eta_{t}=\phi_{t+1}\eta
-\]
-where $\phi_{t}$ is the adjustment for the day of the week, having
-different values for different weekdays and being computed in a standard
-way from $\ln R_{t}$ where $R_{t}$ is the total number of positive
-cases.\footnote{In particular we assume $\Delta R_{t}=\phi_{t}\Delta r_{t}$ where
-$r$ is a ``trend'' without oscillations and $\prod_{i=1}^{7}\phi_{i}=1$,
-which gives $\ln(\Delta R_{t})=\ln(\phi_{t})+\ln(\Delta r_{t})$ and
-$\sum_{i=1}^{7}\ln\phi_{i}=0$. Assuming $r$ to be locally linear,
-we estimate $\ln\phi_{t}=\frac{1}{4}\sum_{i=1}^{4}\left(\ln(\Delta R_{t-7i})-\frac{1}{7}\sum_{j=-3}^{3}\ln(\Delta R_{t-7i+j})\right)-\frac{1}{18}\sum_{i=1}^{28}\ln(\Delta R_{t-i})$} The following graph illustrates de-seasoning we made:
-\begin{center}
-\includegraphics[scale=0.5]{dayadjust}
-\par\end{center}
+y
 
-We use three data series as observations: the daily numbers of detected
-cases, distinguished between symptomatic (S), asymptomatic ($A$)
-and daily numbers of dead ($D)$, i.e.
-\[
-Y_{t}=\left[\begin{array}{c}
-A_{t}\\
-S_{t}\\
-D_{t}
-\end{array}\right].
-\]
-As for the transformation matrix $F$, we put $F=(f^{ij})$ where
-$f^{1i}$is one/zero if the state $i$ is/is not \emph{detected asymptomatic
-on }the Figure above, and similarly with $f^{2i}$ -- \emph{detected
-symptomatic} and $f^{3i}$ -- \emph{dead}.
+y
 
-Assuming the imports only to the state $E$, we take 
-\[
-I_{t}=r_{t}M_{t+8}
-\]
-where $M_{t}$ is the number of detected with the indicated infection
-abroad and $r_{t}$ is a multiplication factor. We took $r_{t}=\iota$
-for $t<30$ (the first month), where $\iota$ is an unknown parameter;
-this allowed us to reflect the excess numbers of dead in comparison
-with the detected, which suggests that many of the cases remained
-unnoticed in the beginning of the pandemics. For the next months of
-the pandemics, we took $r_{t}=\frac{1}{1-\alpha}$ to reflect the
-fact that the fraction $\alpha$ of imports will remain asymptomatic.
+The parameters, not included in Table \ref{tab:params}
+are $\theta_{t}$, which is defined by \ref{eq:theta},
+$\pi_{t}$, which we define later, and $\varpi_{t}$ which is defined
+by (\ref{eq:varpi}) but with owing explanation how
+$p_{t}$ is computed.
 
-The following graphs show the time series we mentioned.
-\begin{center}
-\begin{tabular}{|c|c|}
-\hline 
-\includegraphics[scale=0.3]{A} & \includegraphics[scale=0.3]{S}\tabularnewline
-\hline 
-\hline 
-\includegraphics[scale=0.3]{D} & \includegraphics[scale=0.3]{M}\tabularnewline
-\hline 
-\end{tabular}
-\par\end{center}
+The quantity $\pi_{t}$ is set so that the overall detection probability,
+which we estimate by $\delta q_{t}$ where $q_{t}$ is discussed in
+the main text and $\delta$ is an estimated parameter. If we assume
+that, through time, the states of an individual follows a \emph{continuous-time}
+Markov chain with transition matrix given by parameters, listed in
+Figure \ref{fig:big}, then the probability of detection
+(excluding the cases when an undetected arrives to hospital or dies)
+is
+\begin{multline*}
+d_{t}\defined\P[E\rightarrow E_{\delta}\vee E\rightarrow I_{a}\rightarrow I_{a\delta}\vee E\rightarrow I_{p}\rightarrow I_{p\delta}\vee E\rightarrow I_{p}\rightarrow I_{s}\rightarrow I_{sd}]\\
+=\frac{\theta_{t}}{\theta_{t}+\sigma}+\frac{\alpha\sigma}{\theta_{t}+\sigma}\frac{\theta_{t}}{\theta_{t}+\gamma_{a}}+\frac{(1-\alpha)\sigma}{\theta_{t}+\sigma}\left(\frac{\theta_{t}}{\theta_{t}+\varsigma+\iota_{s}}+\frac{\pi_{t}\varsigma}{\theta_{t}+\varsigma+\iota_{s}}\cdot\frac{\eta}{\eta+\gamma_{s}+\mu_{s}+\iota_{s}}\right);
+\end{multline*}
+by putting $d_{t}=\delta q_{t}$, we get $\pi_{t}$ (trimming when
+$\pi_{1}$ falls outside $[0,1]$).
 
-To compute $c_{t}$ and $p_{t}$ we used \cite{paqcovid} which is
-a longitudinal study, inquiring a panel of 3000 respondents about
-their (weekly) intense contacts, observance of several personal protection
-measures (see the Table below), and some other variables. Using this,
-we compute $c_{t}=\frac{C_{t-\Delta}}{C_{0}}$ where $C_{t}$ is the
-average reported number of contacts people had at a given time (the
-weekly reponses values are linearly interpolated assuming the responded
-values on Wednesdays) and $\Delta$ is an unknown parameter, reflecting
-our lack of knowledge concerning a delay.
-
-With determining the level of personal protection $p_{t}$, the situation
-is more complicated, as the study monitors observance of several protective
-measures. However, if we assume that the $i$-th measure reduces the
-probability of infection by $\lambda_{i}$, we get that, denoting
-$\pi_{t}^{i}$ the average observance of the $i$-th measure among
-the respondents at $t$, that the average reduction brought by the
-the measure will be $(1-\pi_{t}^{i})\times1+\pi_{t}^{i}(1-\lambda^{i})=1-\pi_{t}^{i}\lambda^{i}.$
+To evaluate the level of personal protection $p_{t}$ is difficult
+task, as the study \cite{paqcovid} monitors observance of several
+protective measures. However, if we assume that the $i$-th measure
+reduces the probability of infection by $\lambda_{i}$, we get that,
+denoting $\pi_{t}^{i}$ the average observance of the $i$-th measure
+among the respondents at $t$, that the average reduction brought
+by the the measure will be $(1-\pi_{t}^{i})\times1+\pi_{t}^{i}(1-\lambda^{i})=1-\pi_{t}^{i}\lambda^{i}.$
 This gives total reduction
 \[
 p_{t}\defined\prod_{i=1}^{q}(1-\pi_{t}^{i}\lambda^{i}).
@@ -752,11 +1183,10 @@ p_{t}\defined\prod_{i=1}^{q}(1-\pi_{t}^{i}\lambda^{i}).
 where $q$ is the number of measures. Unfortunately, $\lambda_{i}$
 are unknown and their estimation would bring a serious danger of over-fitting
 and/or co-linearity (series $\pi_{t}^{1},\dots,\pi_{t}^{q}$ are almost
-perfectly co-related). To overcome this difficulty, we applied factor
-analysis to $(C_{t},\pi_{t}^{1},\dots,\pi_{t}^{q})$ on the respondent
-level, treating the responses in different times as separate observations.
-As a result, we extracted two main factors as shown in the following
-Table
+perfectly corelated). To overcome this difficulty, we applied factor
+analysis to $(\upsilon_{t},\pi_{t}^{1},\dots,\pi_{t}^{q})$ on the
+respondent level, treating the responses in different times as separate
+observations. As a result, we extracted two following main factors:
 
 \begin{center}
 \begin{tabular}{lll}
@@ -779,110 +1209,28 @@ $0.084$ & $-0.517$ & $C_t$
 
 It can be seen that, while the first factor speaks more about contacts,
 the second one concerns personal protection, lacking connection with
-$C$. Being interested in the protection, we approximate 
+$\upsilon$. Being interested in the protection, we approximate 
 \[
-\pi_{t}^{i}\doteq\overline{\pi}_{t}^{i}+\nu_{t}f_{t}
+\pi_{t}^{i}\doteq\overline{\pi}_{t}^{i}+\nu_{t}e_{t}
 \]
 where $\overline{\pi}_{t}^{i}$ is the average of $\pi_{t}^{i}$ over
-time and respondents, $\nu_{t}$ is a constant and $f_{t}$ is average
+time and respondents, $\nu_{t}$ is a constant and $e_{t}$ is average
 of the second factor over respondents at $t$. Having that. we could
 approximate 
 \begin{multline*}
-p_{t}\doteq\prod_{i=1}^{q}(1-\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}f_{t}))=\exp\left\{ \sum_{i=1}^{q}\ln(1-\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}f_{t}))\right\} \\
-\doteq\exp\left\{ -\sum_{i=1}^{q}\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}f_{t})\right\} =\omega_{0}\exp\left\{ -\omega_{1}f_{t}\right\} 
+p_{t}\doteq\prod_{i=1}^{q}(1-\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}e_{t}))=\exp\left\{ \sum_{i=1}^{q}\ln(1-\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}e_{t}))\right\} \\
+\doteq\exp\left\{ -\sum_{i=1}^{q}\lambda^{i}(\overline{\pi}_{t}^{i}+\nu_{t}e_{t})\right\} =\omega_{0}\exp\left\{ -\omega_{e}e_{t}\right\} 
 \end{multline*}
-where $\omega_{0},\omega_{1}\geq0$. Consequently, we take 
-\[
-\beta_{t}=bc_{t}\exp\left\{ -\omega_{1}f_{t}\right\} ,\qquad b=\beta\omega_{0}.
-\]
+where $\omega_{0},\omega_{e}\geq0$. Similarly we can evaluate (assumed)
+reduction caused by the average reported fear $f_{t}$ of infection,
+giving (\ref{pdef}). 
 
-Not assuming additional errors of observations, we $\Gamma_{t}\equiv0$.
-
-For estimation, we used Weighted least squares with weights 
-\[
-U_{t}=\mathrm{diag}\left(\frac{1}{\max(\overline{r}_{t},20)},\frac{1}{\max(\overline{r}_{t},20)},\frac{1}{\max(\overline{d}_{t},5)}\right)
-\]
- where $\overline{r}_{t}$ is the weekly average of reported positive
-over past week and $\overline{d}_{t}$ is the weekly average of dead.
-
-The results of the estimation, based on data from February 24th to
-November 5th, 2020, can be seen in the following Table:
-
-\begin{center}
-\begin{tabular}{lcccc}									 	&	Estimate	&	Std. Error	&	z	&	Significance	\\ \hline $\iota$	&	$0$	&	$0.204$	&	$0$	&	$1^{***}$	\\ $b_{0}$	&	$0$	&	$0.302$	&	$0$	&	$1^{***}$	\\ $\omega_{1}$	&	$2.30022$	&	$1.004$	&	$2.291$	&	$0.022^{*}$	\\ $\Delta$	&	$5.14679$	&	$0.314$	&	$16.39$	&	$0^{***}$	\\ $\mu$	&	$0.00198165$	&	$0$	&	$5.722$	&	$0^{***}$	\\ $\theta$	&	$0.0347199$	&	$0$	&	$257.228$	&	$0^{***}$	\\ $\eta$	&	$0.644159$	&	$0.005$	&	$142.484$	&	$0^{***}$	\\   \end{tabular} \end{center}									 
-
-Yet the standard errors and significance are only indicative here
-(we did note verify regularity conditions), the result suggest a good
-fit.
-
-The following graphs show standardized residuals, standardized mean
-absolute errors of a one day ahead prediction and the predictions
-of weekly amounts. The red lines stand for predictions, the blue ones
-for actual data.
-\begin{center}
-\begin{tabular}{|c|c|c|c|}
-\hline 
- & Standardized residuals & Stamdardized MAE & Seven-day prediction\tabularnewline
-\hline 
-\hline 
-$A$ & \includegraphics[scale=0.4]{ar} & \includegraphics[scale=0.35]{a1} & \includegraphics[scale=0.25]{a7}\tabularnewline
-\hline 
-$S$ & \includegraphics[scale=0.4]{sr} & \includegraphics[scale=0.35]{s1} & \includegraphics[scale=0.25]{s7}\tabularnewline
-\hline 
-$D$ & \includegraphics[scale=0.4]{dr} & \includegraphics[scale=0.35]{d1} & \includegraphics[scale=0.25]{d7}\tabularnewline
-\hline 
-\end{tabular}
-\par\end{center}
-
-The residuals are standardized in the sense that the actual residual
-is divided by the standard deviation of the one-day ahead prediction
-(its square is found on the diagonal of the $V_{t\text{|}t-1})$.
-The MAEs are standardized divided by the weekly averages, i.e. they
-estimate in fact the MAEs of the relative increments. The predictions
-are in-sample in the sense that they use parameters originated from
-the estimation over the whole period; however, the predictions are
-always based only on the data available at the moment of prediction.
-
-These results clearly show limitations of the present simple parametrization
-of the model. First of all, the ``standardized'' residuals are far
-from having unit variance which means that the actual variance of
-the observations is much bigger than that predicted by the model,
-the problem being more severe with the reported infections and less
-severe with deaths. It is clear that assuming a non-zero $\Gamma_{t}$
-(i.e. observation errors), can make the variances right; then, however,
-the prediction errors increase; resolving this puzzle is a topic for
-the future research.
-
-It is also clear from the graphs that, the model tends to over-estlimate
-reported infections between the individual waves. This can be naturally
-attributed to better tracing when numbers are low. In addition, asymptomatic
-numbers are over-estimated even during the first wave. A natural solution
-here is to assume a variable rates $\theta$, which was proved to
-increase the prediction power,\footnote{In the \href{https://www.bisop.eu/?p=322}{Situation report 44 by BISOP}
-, for instance, $\theta_{t}$ was approximated by a piece-wise linear
-function with kinks at 24/02/20, 16/03/20, 26/04/20. 04/07/20, 06/08/20,
-16/09/20 and 27/10/20 and taking values $\theta_{0},\dots,\theta_{6}$
-at these points. We got the following parameters by ML estimation:
-
-\begin{center}
-\begin{tabular}{lcccc}									 	&	Estimate	&	Std. Error	&	z	&	Significance	\\ \hline $\iota$	&	$9.96795$	&	$0.801$	&	$12.441$	&	$0^{***}$	\\ $b$	&	$0.618509$	&	$0.035$	&	$17.539$	&	$0^{***}$	\\ $\alpha$	&	$0.549047$	&	$0.026$	&	$21.402$	&	$0^{***}$	\\ $\omega_{1}$	&	$0.550946$	&	$0.061$	&	$8.986$	&	$0^{***}$	\\ $\theta_0$	&	$0.0194497$	&	$0.015$	&	$1.317$	&	$0.0939^{*}$	\\ $\theta_1$	&	$0.00402584$	&	$0.003$	&	$1.318$	&	$0.0937^{*}$	\\ $\theta_2$	&	$0.0204434$	&	$0.006$	&	$3.346$	&	$0.0004^{***}$	\\ $\theta_3$	&	$0.0260418$	&	$0.004$	&	$5.789$	&	$0^{***}$	\\ $\theta_4$	&	$0.0248783$	&	$0.004$	&	$6.784$	&	$0^{***}$	\\ $\theta_5$	&	$0.00966628$	&	$0.001$	&	$16.701$	&	$0^{***}$	\\ $\theta_6$	&	$0.0221601$	&	$0.001$	&	$14.897$	&	$0^{***}$	\\ $\eta$	&	$0.624971$	&	$0.007$	&	$89.31$	&	$0^{***}$	\\ \hline \end{tabular}
-\end{center}									 } but it can bring a danger of over-fitting.
-
-\section{Conclusion}
-
-\label{sec:Conclusion} We presented a stochastic epidemic model,
-formulated its basic properties and suggested way of its estimation,
-all demonstrated by a real-life example. They are, however, things
-to be done, in the first place formulation of regularity conditions
-which would assure desirable. asymptotic properties. Another issue
-to deal with is the underestimation of the variances of $X$ and or
-$Y$; the most probable reason for this is that the actual infection
-is not Poisson but rather the arrival of new cases is stochastically
-dependent. However, even as it is, it can be immediately used for
-statistically correct modeling of an epidemics.
-
-\bibliographystyle{plain}
-\bibliography{/home/martin/Documents/s/smid,covid_m}
+As for the adjustment $g_{t}$ for the new virus variants, we assume
+$g_{t}=1$ up to November 20, 2020, $g_{t}=\nu$, where $\nu$ is
+an (estimated) parameter, since January 1, 2021, and that $g_{t}$
+is linearly interpolated between the dates. Yet the dates do not correspond
+to the common knowledge about mixing of the British variant, they
+come from a regression estimate of the reproduction number by $\upsilon$.
 
 \end{document}
 
@@ -995,332 +1343,6 @@ p^{ss}'(\iota)=\frac{f_{\iota}}{f_{ss}}
 x
 
 x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-Let $Y_{t}\in\mathbb{N}^{k+1}$ be the state vector. For $s\neq E$,
-$Y_{t}^{s}|Y_{t-1}=\sum_{j}\Bi(Y_{t-1}^{j}M_{t}^{s,j})$ and\textasciiacute{}
-$\epsilon_{t}^{E}|Y_{t-1}=\Bi(Y_{t-1}^{E},P_{t}^{E,E})+\Bi(N,\sum_{s\neq E}\frac{Y_{t-1}^{s}}{N}\iota_{t}^{s})\doteq\dots+\mathrm{Po}(\sum_{s\neq E}Y_{t-1}^{s}\iota_{t}^{s})$
-i.e.
-\[
-Y_{t}=M_{t}Y_{t-1}+\epsilon_{t}
-\]
- where
-\[
-\var(\epsilon_{t}^{E}|Y_{t-1})=Y_{t-1}^{E}M_{t}^{E,E}(1-M_{t}^{E,E})+\sum_{j\neq E}M_{t}^{s,j}Y_{t-1}^{j},\qquad\var(\epsilon_{t}^{s}|Y_{t-1})=\sum_{j}M_{t}^{s,j}(1-M_{t}^{s,j})Y_{t-1}^{j}
-\]
-Further, 
-\[
-\Delta R_{t}|Y_{t-1}^{j}\sim\sum_{j\leq k+1}\Bi(Y_{t-1}^{j},P_{t}^{j,R})
-\]
-Nearly clearly, 
-\[
-\Delta R_{t}=\tau(t)+\mathcal{E}_{t},\qquad\tau(t)=N_{t}M_{t-1}\dots M_{1}Y_{0},\qquad N_{t}=(P_{t}^{E,R},\dots,P_{t}^{S_{k},R})
-\]
-where, $\mathcal{\E E}_{t}=0$ and hopefully, $\var(\mathcal{E}_{t}|\Delta R_{1},\dots,\Delta R_{t-1})$
-is proportional to $Y_{t-1}^{R}$ (maybe can be computed when residuals
-are approximated by normal ones).
-
-The contagion probability is assumed to fulfill 
-\[
-\iota_{t}=\beta c_{t}(1-am_{t})
-\]
-where $\beta,\mu$ are parameters constant, $c_{t}$ is the contact
-restriction and $m_{t}$ is the rate of self-protecting activities.
-
-To stop epidemic growing, we need 
-\[
-\|T_{t}\|\leq1
-\]
-we can determine set of $c$ and $m$'s fulfilling this.
-\begin{proof}
-Further we have
-
-\begin{multline*}
-\var(X_{t})=\E(\var(X_{t}|\G_{0}))+\var(\E(X_{t}|\G_{0}))\\
-=\E(\underbrace{\var\left(M_{t-1}+T_{t-1}X_{t-1}|\G_{0}\right)}_{\preceq\var(M_{t-1}+T_{t-1}X_{t-1})})+\underbrace{\E\Lambda(\E(X_{t-1}|\G_{0}))}_{=\Lambda_{t}(\E(X_{t-1}))}+\var(M_{t-1}+T_{t-1}X_{t-1})\\
-\preceq2\var(M_{t-1}+T_{t-1}X_{t-1})+\Lambda(\E(X_{t-1}))\\
-\preceq4\var(M_{t-1})+4\var(T_{t-1}X_{t-1})+\Lambda(\E(X_{t-1}))\\
-\preceq4\var(M_{t-1})+4T_{t-1}\var(X_{t-1})T_{t-1}^{T}+k\|T\|\|x\|\E(X_{t-1}))
-\end{multline*}
-as
-\[
-\|\Lambda_{t}(x)\|_{1}\leq\mathrm{\|\sum_{k}diag}(\iota_{t}^{i}??+p_{t}^{i})x^{i}\|_{t}\leq k\|T\|\|x\|
-\]
-(laer, we have $\Lambda_{t}(\E(X_{t-1}))\rightarrow0$.)
-\end{proof}
-
-\subsection*{Variance}
-\begin{proof}
-By the parallerogram inequalitiex (Luke¨ rovn. pravidlo, Clarkson),
-we have 
-\[
-\var(M_{t-1}+T_{t-1}X_{t-1})\leq2\var(M_{t-1})+2\var(T_{t-1}X_{t-1})=
-\]
-we have 
-\[
-\var(T_{t-1}X_{t-1})=T_{t-1}\var(X_{t-1})T_{t-1}^{T}
-\]
-\end{proof}
-
-\section*{Old}
-
-Compartments
-\begin{description}
-\item [{$S$}] - suspectible (constant for simplicity)
-\item [{$E$}] - exposed noninfectious
-\item [{$A$}] - asymptotic
-\item [{$I$}] - symptomatic
-\item [{$P$}] - reported
-\item [{$R$}] - removed
-\end{description}
-Transition Matrix $ $
-
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
-\hline 
- & S & E & A & I & P & R &  & \tabularnewline
-\hline 
-\hline 
-\multirow{1}{*}{S} & $1-\dots$ & $\kappa_{t}(\epsilon_{A}A+\text{\ensuremath{\epsilon_{I}}}I)$ &  &  &  &  &  & \tabularnewline
-\hline 
-E &  & $1-\dots$ & $\alpha$ &  &  &  &  & \tabularnewline
-\hline 
-A &  &  & $1-\dots$ & $\iota$ & $\pi_{A}$ & $\rho_{A}$ &  & \tabularnewline
-\hline 
-I &  &  &  & $1-\dots$ & $\pi_{I}$ & $\rho_{I}$ &  & \tabularnewline
-\hline 
-P &  &  &  &  & 1 &  &  & \tabularnewline
-\hline 
-R &  &  &  &  &  & 1 &  & \tabularnewline
-\hline 
- &  &  &  &  &  &  &  & \tabularnewline
-\hline 
-\end{tabular}
-
-Beginning of epidemic -$|S|$ very large
-
-Equations
-\[
-E_{t}=(1-\alpha)E_{t-1}+\epsilon_{A}A_{t-1}+\epsilon_{I}I_{t-1}-\alpha+\eta_{t,E}
-\]
-\begin{align*}
-A_{t} & =(1-\iota-\pi_{A}-\rho_{A})A_{t-1}+\alpha E_{t-1}+\eta_{t,A}
-\end{align*}
-\begin{align*}
-I_{t} & =(\pi_{A}+\rho_{A})I_{t-1}+\gamma+\eta_{t,I}
-\end{align*}
-\[
-\Delta P_{t}=\pi_{A}A_{t-1}+\pi_{I}I_{t-1}+\eta_{t,P}
-\]
-
-$\eta_{t,E}|\F_{t-1}\dot{\sim}\text{\ensuremath{\mathcal{N}(0,(1-\alpha)E_{t-1}+\epsilon_{A}A_{t-1}+\epsilon_{I}I_{t-1}),}etc.}$
-
-Up to observed (removed may be modeled separately):
-\[
-\left[\begin{array}{c}
-E\\
-A\\
-I\\
-P
-\end{array}\right]=\underbrace{\left[\begin{array}{cccc}
-\omega_{E} & \iota_{t}\epsilon_{A} & \iota_{t}\epsilon_{I} & 0\\
-\alpha & \omega_{A} & 0 & 0\\
-0 & \iota & \omega_{I} & 0\\
-0 & \pi_{A} & \pi_{I} & 0
-\end{array}\right]}_{M_{t}}\left[\begin{array}{c}
-E\\
-A\\
-I\\
-P
-\end{array}\right]+\eta_{t}
-\]
-
-\[
-P_{t}=(0,0,0,1)M_{t}M_{t-1}....M_{0}(\alpha,0,0,0)+\mathcal{E}_{t}
-\]
-
-where $\alpha$ is an initial seed. Can be rewritten as 
-\[
-\Delta P_{t}=\tau(t)\alpha+\mathcal{E}_{t}
-\]
-
-In particular
-
-\[
-\tau(0)=a
-\]
-
-The system can be estimated by MLE\end{document}
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-x
-
-We have
-
-$A$ unobserved.
-
-We have
-\[
-A_{t}=\underbrace{(1+\mu_{t}-\gamma_{A}-\iota)}_{\theta_{t}}A_{t-1}+\nu I_{t-1}^{k}+\eta_{A,t}
-\]
-
-we rewrite
-
-\begin{multline*}
-A_{t}=\theta_{t}A_{t-1}+\nu I_{t-1}^{k}+\eta_{A,t}=\theta_{t}(\theta_{t-1}A_{t-2}+\nu I_{t-2}^{k}+\eta_{A,t-1})+\nu I_{t-1}^{k}+\eta_{A,t}\\
-=Z_{t}+\epsilon_{t},\\
-Z_{t}=(\theta_{1}\times\dots\times\theta_{t})\alpha_{0}+\nu\sum_{\tau=1}^{t-1}(\theta_{\tau+2}\times\dots\times\theta_{t})I_{\tau}^{k}=\theta^{s\wedge t}\theta_{1}^{(t-s)\wedge0}\alpha_{0}+\nu\sum_{\tau=1}^{t-1}\theta^{(s-(\tau+1))\wedge0}\theta_{1}^{t-(s\vee\tau+1)}\\
-\epsilon_{t}=\sum_{\tau=1}^{t}(\theta_{\tau+1}\times\dots\times\theta_{t})\eta_{A,t}
-\end{multline*}
-where $\alpha_{0}=A_{0}$ (to be estimated) $Z$ may be evaluated
-recursively (assuming $I_{0}=0$): 
-\[
-Z_{0}=\alpha_{0},Z_{1}=\theta_{1}\alpha_{0}+\nu I_{0},Z_{2}=\theta_{2}\theta_{1}\alpha_{0}+\theta_{2}\nu I_{0}+\nu I_{1},\dots Z_{t}=\theta_{t}Z_{t-1}+\nu I_{t-1}
-\]
-
-This gives 
-\[
-\Delta I_{t}=\gamma+e_{t},\qquad e_{t}=\iota\epsilon_{t-1}+\eta_{I,t}
-\]
-It is not easy to compute $\var(e|\G_{t-1})$ (possible in normal
-case via well known formula for conditional distribution, no time
-here for this). So we dare to estimate the variances by $\var(\bullet_{t}|\F_{\t-1}),$
-which equals to those of etas.
-
-Let $s$ be the threshold when different policy started to be applied.
-
-Summary of parameters
-
-\subsubsection*{%
-\begin{tabular}{|c|c|c|c|}
-\hline 
- &  &  & \tabularnewline
-\hline 
-\hline 
-$\iota\alpha_{0}$ &  &  & \tabularnewline
-\hline 
-$\theta$ & $1+\mu-\gamma_{A}-\iota$ & $\theta_{t}=\theta$ for $t<s$ & \tabularnewline
-\hline 
-$\theta_{1}$ &  & $\theta_{t}=\theta_{1}$ for $t\protect\geq s$ & \tabularnewline
-\hline 
-$\iota\nu$ &  &  & \tabularnewline
-\hline 
- &  &  & \tabularnewline
-\hline 
- &  &  & \tabularnewline
-\hline 
-\end{tabular}
-\[
-\]
-Estimation}
-
-MLE. Loglikelihood
-\[
-C-\frac{1}{2w}\sum_{i=1}^{T}(Y_{t}-\Delta I_{t})^{2}
-\]
-\[
-Y_{t}=\gamma=\iota\alpha_{0}\theta^{s\vee}\theta_{1}^{(t-1-s)\vee0}+\iota\nu\sum_{\tau=1}^{t-2}\theta^{(s-(\tau+1))\wedge0}\theta_{1}^{t-1-(s\vee\tau+1)}
-\]
-derivatives by the multipliers clear, by thetas recursively: by $\theta$:
-\begin{align*}
-Y'_{0} & =0,\qquad Y'_{1}=\begin{cases}
-\iota\alpha_{0}(=Y_{\tau-1}) & s\geq1\\
-0 & s<1
-\end{cases},\qquad
-\end{align*}
-
-\[
-Y'_{\tau}=(\theta_{\tau}Y_{\tau-1}+\iota\nu I_{\tau-1})'=\begin{cases}
-Y_{\tau-1}+\theta Y'_{\tau-1} & \tau\leq s\\
-\theta_{1}Y'_{\tau-1} & \tau>s
-\end{cases}
-\]
-and by $\theta_{1}:$
-\[
-Y'_{0}=\dots=Y'_{s}=0
-\]
-
-\[
-Y'_{s+1}=Y_{s},\qquad Y'_{\tau}=Y_{\tau-1}+\theta_{1}Y'_{\tau-1},\tau>s+1\text{}
-\]
-
-
-\section*{Apokryfy}
-
-By Pavuo, chart 1:
-
-\begin{tabular}{|c|c|c|c|}
-\hline 
- &  &  & \tabularnewline
-\hline 
-\hline 
-$\mu$ & infection of $A$ per day & $1$ & \tabularnewline
-\hline 
-$\nu$ & of $I$ per day & 0.2 & \tabularnewline
-\hline 
-$\iota$,$\gamma_{A}$ & transitions from $A$ & $\frac{\iota}{\iota+\gamma_{a}}=0.7$ $\iota=5^{-1}$ $\rightarrow$$\gamma_{A}=\frac{1}{12}$ & \tabularnewline
-\hline 
-$\delta,\gamma_{i}$ & from I & $\frac{\delta}{\delta+\gamma_{i}}=\frac{15}{70}$ ,$\delta+\gamma_{i}=\frac{1}{7}$
-$\rightarrow$$\delta=0.03,\gamma=\text{\textasciiacute0.11}$ & \tabularnewline
-\hline 
-$\phi,\gamma_{C}$ & from $C$ & $\frac{\phi}{\phi+\gamma_{C}}=\frac{1}{3}$,$\phi+\gamma_{C}=\frac{1}{5}\rightarrow\phi=\frac{1}{15},\gamma_{C}=\frac{2}{15}$ & \tabularnewline
-\hline 
- &  &  & \tabularnewline
-\hline 
-\end{tabular}
-
-$\left[\begin{array}{cccc}
-p^{s,E}(1-p^{s,E}) & p^{s,I_{1}}p^{s,E}\\
-+p^{s,E}p^{s,I_{1}} & p^{s,I_{1}}(1-p^{s,I_{1}}\\
-\\
- &  &  & p^{s,R}(1-p^{s,R})
-\end{array}\right]$
-
-$p^{s,E}=0,s\neq E$ and let $p^{R,R}=1$ ($R$ is terminal). Then,
-assuming CI, we have
-
-\section*{Apokryfy}
 
 Denote $M_{t}=\E(X_{t},Y_{t}|\G_{t-1})$ and $V_{t}=\var(X_{t},Y_{t}|\G_{t-1})$.
 As, given normal approximation,we get
