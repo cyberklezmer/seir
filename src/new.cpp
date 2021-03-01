@@ -112,7 +112,9 @@ program g4 =
       {"chospital",983.718,0,1e+10,false},// (50.6516)
       {"racoef",2.50883,0,10,false},// (7.90982e-05)
       {"rscoef",2.34452,0,10,false},// (0.0683497)
-      {"newvarcoef",2.5,0,3,false},// (0.000739252)
+      {"newvarcoef",2.5
+//* 1.2 / 1.4
+       ,0,3,false},// (0.000739252)
       {"omega",0.628326,0,10,false},// (0.00809053)
       {"omega2",3.97747,0,10,false},// (0.00609176)
       {"pdetcoef",2.53453,0,5,false},// (0.00112397)
@@ -168,8 +170,8 @@ inline dmatrix corrmatrix(const dmatrix& v)
 
 template <typename S, typename D, estimationmethod method>
 void ns(const program& prg)
-{ // prezentace 24.2: epi65.csv, epi65next.csv, epi12.csv
-    csv<','> c("../input/epi65next.csv");
+{ // ../input/epivladapes.cs
+    csv<','> c("../input/epi.csv");
     D dr;
 
     uncertain x0;

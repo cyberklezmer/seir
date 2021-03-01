@@ -245,7 +245,7 @@ public:
                 ;
 
         double nw1 = 312; // 270;
-        double nw2 = nw1+5*7;
+        double nw2 = nw1+7*7;
         double at = g.abstime(t);
         double nwc = at < nw1 ? 1 :
                        ( at > nw2 ? params[newvarcoef]
