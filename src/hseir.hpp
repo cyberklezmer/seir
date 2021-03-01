@@ -162,7 +162,7 @@ class hcohortseir: public cohortseir<hpartial>
 {
 public:
     enum excolumns {I0,	I20,	I65,	I80,
-                     DAYADJUST,PDET,REDUCTIONMEAN,REDUCTIONMEDIAN,FEAR,BETAFACTOR,
+                     DAYADJUST,PDET,REDUCTIONMEAN,REDUCTIONMEDIAN,FEAR,BETAFACTOR,BFACTOR,
                      ALPHA0, ALPHA20, ALPHA65, ALPHA80,
                      numexcolumns};
 
@@ -177,9 +177,9 @@ public:
                racoef,
                rscoef,
                         lastvar=rscoef,
-               newvarcoef,
+//               newvarcoef,
                omega,
-               omega2,
+//               omega2,
                pi,
                thetacoef,
                eta0,
@@ -244,16 +244,10 @@ public:
 //                * g.Z(t,DAYADJUST)
                 ;
 
-        double nw1 = 312; // 270;
-        double nw2 = nw1+5*7;
-        double at = g.abstime(t);
-        double nwc = at < nw1 ? 1 :
-                       ( at > nw2 ? params[newvarcoef]
-                             : 1+(params[newvarcoef]-1) * (at-nw1) / (nw2-nw1));
         preparams[hpartial::prebeta]
-           = nwc * g.Z(t,REDUCTIONMEAN)
-                * exp(-params[omega] * g.Z(t,BETAFACTOR))
-* exp(-params[omega2] * g.Z(t,FEAR));
+           = g.Z(t,REDUCTIONMEAN) * g.Z(t,BFACTOR)
+                * exp(-params[omega] * g.Z(t,BETAFACTOR));
+//* exp(-params[omega2] * g.Z(t,FEAR));
 //                * (1-params[omega2] * g.Z(t,FEAR));
 
 
