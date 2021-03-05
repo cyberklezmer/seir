@@ -1,4 +1,4 @@
-#ifndef SEIRFILTER_HPP
+    #ifndef SEIRFILTER_HPP
 #define SEIRFILTER_HPP
 
 
@@ -255,7 +255,7 @@ public:
         bool longpredtocontrast = false;
         bool longpredvars = false;
         unsigned ds = 0;
-        double additionalcontrastweight = 1e5;
+        double additionalcontrastweight = 1e3;
     };
 
 

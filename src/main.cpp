@@ -8,8 +8,8 @@ extern void mzcr2mzcr(const std::string& horizon, bool);
 
 int main()
 {
-//    mzcr2mzcr("2021-02-25", false);
-//    uzis2uzis("2021-02-25", true, false,false,false);
+//    mzcr2mzcr("2021-03-03", false);
+//    uzis2uzis("2021-03-03", true, false,false,false);
 //    return 0;
     return nw();
 }

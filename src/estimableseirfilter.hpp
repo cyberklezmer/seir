@@ -103,14 +103,31 @@ public:
             for(unsigned i=0; i<n(); i++)
             {
                 unsigned ki=k()+i;
+
+                double s7=0;
+                double s27=0;
+                unsigned n7=0;
+                for(unsigned j=ep.firstcomputedcontrasttime
+                     ;j<=esthorizon;j++)
+                {
+                    const uncertain& x = r.predlong[j];
+                    double dd = (r.Y(j)[i]-x.x()[ki]) / sqrt(x.var()(ki,ki));
+
+                    s7 += dd;
+                    s27 += dd * dd;
+                    n7++;
+                }
+                double stdev7 = sqrt( s27 / n7 - s7*s7 / n7 / n7 );
+                if(stdev7 == 0)
+                    throw "zero stdev";
+
                 double s=0;
                 double s2=0;
                 unsigned n=0;
                 for(unsigned j=ep.firstcomputedcontrasttime
                      ;j<=esthorizon;j++)
                 {
-                    const uncertain& x = ep.longpredtocontrast
-                            ? r.predlong[j]: r.pred[j];
+                    const uncertain& x = r.pred[j];
                     double dd = (r.Y(j)[i]-x.x()[ki]) / sqrt(x.var()(ki,ki));
 
                     s += dd;
@@ -120,7 +137,7 @@ public:
                 double stdev = sqrt( s2 / n - s*s / n / n );
                 if(stdev == 0)
                     throw "zero stdev";
-                contrast += exp((stdev-1)*(stdev-1));
+                contrast += (stdev-1)*(stdev-1) + (stdev7-1)*(stdev7-1) ;
             }
             return contrast;
         }

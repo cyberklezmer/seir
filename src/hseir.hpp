@@ -171,12 +171,14 @@ public:
                ce,
                          firstdisp=ce,
                  cd,
-               cs,
+               cu,
                chospital,
                         lastdisp=chospital,
                racoef,
-               rscoef,
-                        lastvar=rscoef,
+               hcoef,
+               gcoef,
+               dcoef,
+                        lastvar=dcoef,
 //               newvarcoef,
                omega,
 //               omega2,
@@ -274,7 +276,7 @@ public:
    {
       static int p[hpartial::numstates ] =
     //    E,    Ia,   Ip,   Is,   Iu, R,
-       {  ce,   ce,   ce,   cs,   cs, -1,
+       {  ce,   ce,   ce,   ce,   cu, -1,
     //    Edelta, Iadelta, Ipdelta,  Isdelta,  Rdelta,
           cd,     cd,      cd,       cd,       -1,
 
