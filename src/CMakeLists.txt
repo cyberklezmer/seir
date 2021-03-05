@@ -12,7 +12,7 @@ include_directories("../orpp/orpp")
 # nlopt has to be installed, change accordingly
 find_library(LNLOPT libnlopt.so "/usr/local/lib" )
 
-add_executable(seirfilter main.cpp new.cpp rates.cpp)
+add_executable(seirfilter new.cpp rates.cpp)
 
 target_link_libraries("seirfilter" ${LNLOPT} )
 

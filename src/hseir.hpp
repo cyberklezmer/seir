@@ -167,6 +167,7 @@ public:
                      numexcolumns};
 
     enum computationparams {
+               paqshift,
                varbfactor,
                ce,
                          firstdisp=ce,
@@ -237,6 +238,11 @@ public:
 
         preparams[hpartial::pi] = min(1.0,params[pi] * g.Z(t,PDET));
 
+        double shiftedt = max(t-params[paqshift],0.0);
+        unsigned paqtl = static_cast<unsigned>(shiftedt);
+        unsigned paqth = static_cast<unsigned>(shiftedt+1);
+        double lweight = paqth - shiftedt;
+
         preparams[hpartial::eta] =
                 params[eta0]
 //                *  g.Z(t,DAYADJUST)
@@ -247,10 +253,14 @@ public:
                 ;
 
         preparams[hpartial::prebeta]
-           = g.Z(t,REDUCTIONMEAN) * g.Z(t,BFACTOR)
-                * exp(-params[omega] * g.Z(t,BETAFACTOR));
+           = (lweight*g.Z(paqtl,REDUCTIONMEAN) + (1-lweight)*g.Z(paqth,REDUCTIONMEAN))
+              * (lweight*g.Z(paqtl,BFACTOR) + (1-lweight)*g.Z(paqth,BFACTOR))
+
+
+                * exp(-params[omega] *
+                                      (lweight*g.Z(paqtl,BETAFACTOR) + (1-lweight)*g.Z(paqth,BETAFACTOR)));
 //* exp(-params[omega2] * g.Z(t,FEAR));
-//                * (1-params[omega2] * g.Z(t,FEAR));
+//                * (1-params[omega2] * g.Z(paqt,FEAR));
 
 
         unsigned srcc=numcomputationparams;
