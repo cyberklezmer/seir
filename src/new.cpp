@@ -28,7 +28,7 @@ program g =
     true, // bool estimate;
     true, //bool output;
     false, //bool outputx0;
-    false,// bool estimatex0;
+    true,// bool estimatex0;
     false, // estimatevars
     false, // grid
     //    unsigned firstcomputedcontrasttime=1;
@@ -45,46 +45,31 @@ program g =
     3*60, // time
     180, // offset
     {
-        {"v",26,0,2000,true},// (0.065903)
-        {"ce",11.074,0,200000,false},// (0.0248247)
-        {"cd",199991,0,200000,false},// (433452)
-        {"cu",5971.96,0,200000,false},// (13897)
-        {"chospital",383.702,0,1e+10,false},// (6.19437)
-        {"racoef",0.00490284,0,100,false},// (8.57326e-05)
-        {"hcoef",0.074455,0,100,false},// (0.00133232)
-        {"gcoef",0.50111,0,100,false},// (0.00585291)
-        {"dcoef",0.03151,0,100,false},// (0.000716232)
-        {"omega",1.69578,0,10,false},// (0.000492283)
-        {"pdetcoef",3.29191,0,5,false},// (0.000575609)
-        {"thetacoef",0.0216987,0,0.3,false},// (2.91765e-05)
-        {"eta0",0.599953,0,0.6,false},// (0.000146828)
-        {"theta0",0.0336791,0,0.3,false},// (1.20204e-05)
-        {"sigma",0.1787,0,1,true},// (2.62395e-05)
-        {"varsigma",0.2212,0,1,true},// (3.23402e-05)
-        {"ufactor",0.999741,0,1,false},// (0.00499152)
-        {"vfactor",0.458875,0,1,false},// (0.0237466)
-        {"gammas0",0.079,0,1,true},// (6.97655e-05)
-        {"gammaa0",0.12,0,1,true},// (0.0001902)
-        {"betafactor0",0.991651,0,6,false},// (0.000495559)
-        {"iotas0",0.00290449,0,1,false},// (2.69597e-05)
-        {"mus0",2.46915e-06,0,1,true},// (1.09711e-05)
-        {"gammah0",0.999999,0,1,false},// (0.105039)
-        {"muh0",1.27311e-22,0,1,true},// (0.00111293)
-        {"betafactor20",1.05755,0,6,false},// (0.000426707)
-        {"iotas20",0.00134574,0,1,false},// (5.56653e-06)
-        {"mus20",7.6707e-05,0,1,false},// (2.89366e-06)
-        {"gammah20",0.0634497,0,1,false},// (0.000325534)
-        {"muh20",0.00735203,0,1,false},// (0.000101842)
-        {"betafactor65",1.46407,0,10,false},// (0.000765975)
-        {"iotas65",0.00912542,0,1,false},// (2.53118e-05)
-        {"mus65",0.00143761,0,1,false},// (1.71177e-05)
-        {"gammah65",0.0147488,0,1,false},// (6.94565e-05)
-        {"muh65",0.0139227,0,1,false},// (4.02885e-05)
-        {"betafactor80",3.23028,0,10,false},// (0.00138771)
-        {"iotas80",0.109319,0,1,false},// (0.000147976)
-        {"mus80",4.81152e-21,0,1,false},// (0.000115913)
-        {"gammah80",0.164111,0,1,false},// (0.000634142)
-        {"muh80",0.051732,0,1,false},// (0.000164913)
+        {"v",26,0,2000,true},// (-nan)
+        {"ce",13.86086,0,200000,false},// (-nan)
+        {"cd",198128,0,200000,false},// (-nan)
+        {"cu",7984.89,0,200000,false},// (-nan)
+        {"chospital",94.8807,0,1e+10,false},// (-nan)
+        {"racoef",0.00894881,0,100,false},// (-nan)
+        {"hcoef",0.0440444,0,100,false},// (-nan)
+        {"gcoef",0.069311,0,100,false},// (-nan)
+        {"dcoef",0.0348468,0,100,false},// (-nan)
+        {"omega",1.13855,0,10,false},// (0.00180536)
+        {"pdetcoef",2.91109,0,5,false},// (0.000699761)
+        {"thetacoef",0.00430324,0,0.3,false},// (4.79915e-05)
+        {"eta0",0.599999,0,0.6,false},// (0.00048152)
+        {"theta0",0.036791,0,0.3,false},// (1.82074e-05)
+        {"sigma",0.1787,0,1,true},// (0.000102741)
+        {"varsigma",0.2212,0,1,true},// (7.80681e-05)
+        {"ufactor",0.99966,0,1,false},// (0.00697003)
+        {"vfactor",1,0,1,false},// (0.141812)
+        {"gammas0",0.079,0,1,true},// (6.9194e-05)
+        {"gammaa0",0.12,0,1,true},// (0.00074614)
+        {"betafactor20",0.581247,0,6,false},// (0.00085974)
+        {"iotas20",0.00463917,0,1,false},// (3.84633e-06)
+        {"mus20",0.000120981,1e-10,1,false},// (1.69141e-06)
+        {"gammah20",0.0607359,0,1,false},// (9.09599e-05)
+        {"muh20",0.0208259,0,1,false},// (6.78418e-05)
     },
     {11725.7,1759.01,4755.83,1820.47,1395.16,33293.5,323.712,145.995,333.369,733.771,5743.53,47.7464,119.458,6.45025,35.7232,1643.46,10065.6,115.508,924.08,71.6217,301.49},
     {
@@ -173,7 +158,7 @@ template <typename S, typename D, estimationmethod method>
 void ns(const program& prg)
 { // ucitele: ucinovaclock.csv ucihhlllock.csv
 
-    csv<','> c("../input/epi.csv");
+    csv<','> c("../input/epiold.csv");
     D dr;
 
     uncertain x0;
@@ -415,8 +400,8 @@ int nw()
 
     try
     {
-    ns<hfourseir,fourdatareader,emwls>(g4);
-//      ns<hsingleseir,singledatareader,emwlsstd>(g);
+//    ns<hfourseir,fourdatareader,emwls>(g4);
+      ns<hsingleseir,singledatareader,emwls>(g);
     }
     catch (std::exception& e) {
         std::cerr << e.what() << endl;
