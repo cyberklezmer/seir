@@ -12,7 +12,7 @@ modely_05_datumy.csv from restricted dataset (apply here https://docs.google.com
 - run uzis2uzis(todays date) from src/new.cpp, ane copy result to $uzis (adjust path accordingly in src/rates.cpp)
 - run mzcr2mzcr(todays date), ane copy result to $mzcr (osoby.csv and umrti.csv needed, adjust path accordingly)
 - supply hospital detection probabilities (from PES dataset) to $pdet
-- copy testy.csv to $testy.csv (be sure to preserve positions of dates)
+- copy testy-pcr-antigenni.csv to $testy.csv (be sure to preserve positions of dates)
 - copy content nakazeni-vyleceni-umrti-testy.csv to $nvut.csv (be sure to preserve dates positions, i.e. copy only the rows starting from 24.2.2020)
 - copy hospitalizace.csv to $hospitalizace.csv (be sure to keep dates' position)
 - copy paq_data.csv to $paq_data.csv (chagnes bi-weekliy, on demand at bisop)
