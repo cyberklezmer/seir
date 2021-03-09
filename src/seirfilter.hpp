@@ -209,10 +209,11 @@ public:
                 else
                     for(unsigned i=0; i < additional.rows(); i++)
                         o << ",";
+                uncertain pr = longpred ? predlong[s] : pred[s];
 
-                dvector p = additional * pred[s].x().block(sm.k(),0,sm.n(),1);
+                dvector p = additional * pr.x().block(sm.k(),0,sm.n(),1);
                 dvector v = additional
-                        * pred[s].var().block(sm.k(),sm.k(),sm.n(),sm.n())
+                        * pr.var().block(sm.k(),sm.k(),sm.n(),sm.n())
                         * additional.transpose();
                 for(unsigned i=0; i < additional.rows(); i++)
                     o << p[i] << ",";
