@@ -89,6 +89,11 @@ public:
         double contrast;
         const seirfilter& sm;
 
+        string date(unsigned i) const
+        {
+            return dates[i];
+        }
+
         dmatrix T(unsigned i) const
         {
             assert(i<Ps.size());
@@ -203,6 +208,7 @@ public:
                 if(s < y.size())
                 {
                     dvector e = additional * y[s];
+
                     for(unsigned i=0; i < additional.rows(); i++)
                         o << e[i] << ",";
                 }
@@ -210,15 +216,14 @@ public:
                     for(unsigned i=0; i < additional.rows(); i++)
                         o << ",";
                 uncertain pr = longpred ? predlong[s] : pred[s];
-
                 dvector p = additional * pr.x().block(sm.k(),0,sm.n(),1);
-                dvector v = additional
+                dmatrix v = additional
                         * pr.var().block(sm.k(),sm.k(),sm.n(),sm.n())
                         * additional.transpose();
                 for(unsigned i=0; i < additional.rows(); i++)
                     o << p[i] << ",";
                 for(unsigned i=0; i < additional.rows(); i++)
-                    o << sqrt(v[i]) << ",";
+                    o << sqrt(v(i,i)) << ",";
 
                 if(s<contrasts.size())
                 {
@@ -257,6 +262,7 @@ public:
         bool longpredvars = false;
         unsigned ds = 0;
         double additionalcontrastweight = 1e3;
+        bool diflongpreds = false;
     };
 
 
@@ -402,7 +408,6 @@ public:
         dvector nanvector(k()+n());
         nanvector.setConstant(numeric_limits<double>::quiet_NaN());
 
-
         for(unsigned i=0; i<g.predlong.size(); i++)
             g.predlong[i] = nanvector;
 
@@ -425,7 +430,6 @@ public:
                       && ( i<=esthorizon);
 
             dmatrix T = g.T(i-1);
-
             dvector Xold;
             dmatrix Wold;
             if(i<=esthorizon+1)
@@ -459,7 +463,7 @@ public:
             dvector Xnew = T * Xold + I(i-1,pars,g);
             dvector Ynew = F * Xnew;
             dmatrix Wnew = T * Wold * T.transpose() + Lambda(i-1,pars,Xplus,y,g);
-//assert(isVar(Lambda(i-1,pars,Xplus,g),"L",i-1,dv(pars)));
+
             dvector Yplus = F * Xplus;
             dvector gm = gamma(i-1,pars, g);
             dvector gd(n());
@@ -467,27 +471,39 @@ public:
                 gd[i] = gm[i] * Yplus[i];
             dmatrix V =  block( Wnew, Wnew*F.transpose(),
                                 F*Wnew, F*Wnew*F.transpose() + diag(gd));
-//if(i-1==21)
-//{
-//    cout << m2csv(Lambda(i-1,pars,Xplus,g)) << endl;
-//    assert(isVar(Lambda(i-1,pars,Xplus,g),"V2",i-1,dv(pars)));
-//}
+
             assert(isVar(V,"V2",i-1,dv(pars)));
 
             g.pred[i] = uncertain(stackv(Xnew, Ynew),V);
             unsigned ilong = i + ep.longpredlag - 1;
             if(ep.longpredlag && ilong <= evalhorizon)
             {
-
                 G tmpg = g;
                 dvector xpred = Xnew;
-                dmatrix W = Wnew;
+                dmatrix W;
+                W = Wnew;
+
+/*                if(!ep.diflongpreds || i<=esthorizon+1)
+                    W = Wnew;
+
+                else
+                {
+
+                } */
                 dvector xpredplus = Xplus;
+//clog << endl;
                 for(unsigned j=1;j<ep.longpredlag;j++ )
                 {
                     tmpg.est[i+j-1] = { xpred, W };
+//if(g.date(i)=="2021-03-13" || g.date(i)=="2021-03-12" || g.date(i)=="2021-03-11")
+//{
+//  clog << g.date(i) << "," << xpred[0] << endl;
+//}
 
                     xpred = this->T(i+j-1,pars,tmpg)*xpred + I(i+j-1,pars,tmpg);
+
+
+
                     if(ep.longpredvars)
                     {
                         xpredplus = xpred;
@@ -506,6 +522,11 @@ public:
 
                 auto F = this->F(ilong,pars,tmpg);
 
+                dvector lp;
+//                if(ep.diflongpreds)
+//                   lp= stackv(xpred-Xold, F*(xpred-Xold));
+//                else
+                   lp = stackv(xpred, F*xpred);
                 if(ep.longpredvars)
                 {
                     dvector Yplus = F * xpredplus;
@@ -514,16 +535,15 @@ public:
                     for(unsigned i=0; i<n(); i++)
                         gd[i] = gm[i] * Yplus[i];
 
-
                     g.predlong[ilong] = {
-                        stackv(xpred, F*xpred),
+                        lp,
                         block( W, W*F.transpose(),
                                F*W, F*W*F.transpose()
                                   + diag(gd))
                         };
                 }
                 else
-                    g.predlong[ilong] = stackv(xpred, F*xpred);
+                    g.predlong[ilong] = lp;
             }
 
             if(i<=esthorizon)
