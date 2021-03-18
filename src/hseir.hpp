@@ -163,7 +163,6 @@ class hcohortseir: public cohortseir<hpartial>
 public:
     enum excolumns {I0,	I20,	I65,	I80,
                      DAYADJUST,PDET,REDUCTIONMEAN,REDUCTIONMEDIAN,FEAR,BETAFACTOR,BFACTOR,
-                     ALPHA0, ALPHA20, ALPHA65, ALPHA80,
                      numexcolumns};
 
     enum computationparams {
@@ -259,8 +258,6 @@ public:
 
                 * exp(-params[omega] *
                                       (lweight*g.Z(paqtl,BETAFACTOR) + (1-lweight)*g.Z(paqth,BETAFACTOR)));
-//* exp(-params[omega2] * g.Z(t,FEAR));
-//                * (1-params[omega2] * g.Z(paqt,FEAR));
 
 
         unsigned srcc=numcomputationparams;
@@ -272,7 +269,9 @@ public:
             res[c] = preparams;
             for(unsigned i=0; i<exclusivepars.size(); i++)
                 res[c][exclusivepars[i]] = params[srcc++];
-            res[c][hpartial::alpha] = g.Z(t,ALPHA0+c);
+            res[c][hpartial::alpha] =
+0.179; // tbd
+            res[c][hpartial::prebeta] *= (1.0-g.V(t,c));
         }
         assert(srcc==params.size());
         return res;
@@ -322,7 +321,7 @@ public:
     virtual unsigned numobs() const = 0;
     virtual vector<double> obs2obs(const vector<double>&) const = 0;
 
-    seirdata read(csv<','>& c, unsigned lag = 0)
+    seirdata read(csv<','>& c, unsigned lag = 0, csv<','>* vc = 0)
     {
         seirdata res;
         bool rfin = false;
@@ -354,7 +353,12 @@ public:
             vector<double> exp;
             for(unsigned j=0; j<hcohortseir::numexcolumns; j++)
                 exp.push_back(c.getdouble(i+1,1+numobscolumns+j));
-            res.z.push_back(dv(exp));
+            res.z.push_back(dv(exp));            
+
+            vector<double> vac;
+            for(unsigned j=0; j<4; j++)
+                vac.push_back(vc ? vc->getdouble(i+1,j+1) : 0);
+            res.v.push_back(dv(vac));
         }
         res.lag = lag;
         return res;

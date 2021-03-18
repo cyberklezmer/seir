@@ -17,6 +17,7 @@ struct seirdata
     vector<string> dates;
     vector<dvector> y;
     vector<dvector> z;
+    vector<dvector> v;
 
     unsigned lag = 0;
     unsigned abstime(unsigned t) const { return t+lag; }
@@ -133,9 +134,16 @@ public:
             return z[t<z.size() ? t : z.size()-1];
         }
 
+
+
         double Z(unsigned t, unsigned i) const
         {
             return Z(t)[i];
+        }
+
+        double V(unsigned t, unsigned i) const
+        {
+            return v[t<v.size() ? t : v.size()-1][i];
         }
 
         void output(ostream& o, bool longpred = true, dmatrix additional = dmatrix())
