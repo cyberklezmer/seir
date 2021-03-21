@@ -23,6 +23,7 @@ public:
     enum params { alpha, sigma, varsigma, gammas, gammaa, iotas, mus,
                   theta, eta, pi,
                   gammah, muh,
+                  muratio,
                   prebeta,
                   betafactor,
                   ufactor,
@@ -50,6 +51,9 @@ public:
                       / (params[varsigma]+params[theta]);
         double pu = max(min(1.0, (params[pi] - A ) / B),0.0);
 
+        double mh= params[muh] * params[muratio];
+        double ms = params[mus] * params[muratio];
+
         Pt(E,Ia) = params[sigma] * params[alpha];
         Pt(E,Ip) = params[sigma] * (1-params[alpha]);
         Pt(Ip,Is) = params[varsigma] * pu;
@@ -68,25 +72,25 @@ Pt(Ip,Hd) = params[iotas];
         Pt(Ip,Ipdelta) = params[theta];
         Pt(Is,Isd) = params[eta];
         Pt(Is,Hd) = params[iotas];
-        Pt(Is,Dd) = params[mus];
+        Pt(Is,Dd) = ms;
         Pt(Iu,Hd) = params[ufactor] * params[iotas];
-        Pt(Iu,Dd) = params[vfactor] * params[mus];
+        Pt(Iu,Dd) = params[vfactor] * ms;
 
         Pt(Edelta,Iadelta) = params[sigma] * params[alpha];
         Pt(Edelta,Ipdelta) = params[sigma] * (1-params[alpha]);
         Pt(Ipdelta,Isdelta) = params[varsigma];
         Pt(Iadelta,Rdelta) = params[gammaa];
         Pt(Isdelta,Rdelta) = params[gammas];
-        Pt(Isdelta,Ddelta) = params[mus];
+        Pt(Isdelta,Ddelta) = ms;
         Pt(Isdelta,Hdelta) = params[iotas];
         Pt(Hdelta,Rhdelta) = params[gammah];
-        Pt(Hdelta,Dhdelta) = params[muh];
+        Pt(Hdelta,Dhdelta) = mh;
 
         Pt(Isd,Rd) = params[gammas];
-        Pt(Isd,Dd) = params[mus];
+        Pt(Isd,Dd) = ms;
         Pt(Isd,Hd) = params[iotas];
         Pt(Hd,Rhd) = params[gammah];
-        Pt(Hd,Dhd) = params[muh];
+        Pt(Hd,Dhd) = mh;
 
         for(unsigned i=0; i<k(); i++)
         {
@@ -195,7 +199,9 @@ public:
         vfactor,
         gammas,
         gammaa,
-        numcompandcommonparams
+        mus,
+        muh,
+        numcommonparams
     };
 
     static std::vector<hpartial::params> commonpars()
@@ -205,7 +211,9 @@ public:
                hpartial::ufactor,
                hpartial::vfactor,
                hpartial::gammas,
-               hpartial::gammaa
+               hpartial::gammaa,
+               hpartial::mus,
+               hpartial::muh
               };
     }
 
@@ -214,9 +222,8 @@ public:
     {
         betafactor,
         iotas,
-        mus,
         gammah,
-        muh,
+        muratio,
         numexclusivepars
     };
 
@@ -224,9 +231,8 @@ public:
     {
            return { hpartial::betafactor,
                hpartial::iotas,
-               hpartial::mus,
                hpartial::gammah,
-               hpartial::muh};
+               hpartial::muratio};
     }
 
     hcohortseir(unsigned numcohorts, const vector<double>& pop) :
@@ -278,8 +284,6 @@ public:
         preparams[hpartial::prebeta]
            = (lweight*g.Z(paqtl,REDUCTIONMEAN) + (1-lweight)*g.Z(paqth,REDUCTIONMEAN))
               * (lweight*g.Z(paqtl,BFACTOR) + (1-lweight)*g.Z(paqth,BFACTOR))
-
-
                 * exp(-params[omega] *
                                       (lweight*g.Z(paqtl,BETAFACTOR) + (1-lweight)*g.Z(paqth,BETAFACTOR)));
 
