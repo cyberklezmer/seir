@@ -1,4 +1,4 @@
-    #ifndef SEIRFILTER_HPP
+#ifndef SEIRFILTER_HPP
 #define SEIRFILTER_HPP
 
 
@@ -271,6 +271,7 @@ public:
         unsigned ds = 0;
         double additionalcontrastweight = 1e3;
         bool diflongpreds = false;
+        vector<bool> yfilter = vector<bool>();
     };
 
 

@@ -115,7 +115,7 @@ public:
         ret.setZero();
         ret[HY] = ret[HO] = params[hcoef];
         ret[GY] = ret[GO] = params[gcoef];
-        ret[RS]=ret[R0] = ret[R20] = ret[R65] = ret[R80] = params[racoef];
+        ret[RS]=ret[R0] = ret[R20] = ret[R65] = ret[R80] = params[rcoef];
         ret[D0]=ret[D20]=ret[D65]=ret[D80]
                 =ret[DHY]=ret[DHO]=params[dcoef];
         return ret;
@@ -162,6 +162,8 @@ class fourdatareader : public datareader
 
         return dst;
     }
+
+
 };
 
 #endif // HFOURSEIR_HPP

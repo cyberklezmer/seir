@@ -172,9 +172,9 @@ public:
                          firstdisp=ce,
                cd,
                cu,
-               chospital,
-                        lastdisp=chospital,
-               racoef,
+               ch,
+                        lastdisp=ch,
+               rcoef,
                hcoef,
                gcoef,
                dcoef,
@@ -187,6 +187,48 @@ public:
                numcomputationparams
     };
 
+    enum commonparams
+    {
+        sigma = numcomputationparams,
+        varsigma,
+        ufactor,
+        vfactor,
+        gammas,
+        gammaa,
+        numcompandcommonparams
+    };
+
+    static std::vector<hpartial::params> commonpars()
+    {
+           return {hpartial::sigma,
+               hpartial::varsigma,
+               hpartial::ufactor,
+               hpartial::vfactor,
+               hpartial::gammas,
+               hpartial::gammaa
+              };
+    }
+
+
+    enum exclusiveparams
+    {
+        betafactor,
+        iotas,
+        mus,
+        gammah,
+        muh,
+        numexclusivepars
+    };
+
+    static std::vector<hpartial::params> exclusivepars()
+    {
+           return { hpartial::betafactor,
+               hpartial::iotas,
+               hpartial::mus,
+               hpartial::gammah,
+               hpartial::muh};
+    }
+
     hcohortseir(unsigned numcohorts, const vector<double>& pop) :
         cohortseir<hpartial>(numcohorts,pop)
     {
@@ -195,22 +237,6 @@ public:
     virtual std::vector<std::vector<double>> pars2pars(
             unsigned t, const vector<double>& params, const G& g) const
     {
-        static std::vector<hpartial::params> commonpars
-                = {hpartial::sigma,
-                   hpartial::varsigma,
-                   hpartial::ufactor,
-                   hpartial::vfactor,
-                   hpartial::gammas,
-                   hpartial::gammaa
-                  };
-
-        static std::vector<hpartial::params> exclusivepars
-               = { hpartial::betafactor,
-                   hpartial::iotas,
-                   hpartial::mus,
-                   hpartial::gammah,
-                   hpartial::muh};
-
         static std::vector<hpartial::params> computedpars
                = { hpartial::alpha,
                    hpartial::pi,
@@ -258,15 +284,17 @@ public:
                                       (lweight*g.Z(paqtl,BETAFACTOR) + (1-lweight)*g.Z(paqth,BETAFACTOR)));
 
 
+        auto cp = commonpars();
         unsigned srcc=numcomputationparams;
-        for(unsigned i=0; i<commonpars.size(); i++)
-            preparams[commonpars[i]]=params[srcc++];
+        for(unsigned i=0; i<cp.size(); i++)
+            preparams[cp[i]]=params[srcc++];
 
+        auto ep = exclusivepars();
         for(unsigned c=0; c<numcohorts(); c++)
         {
             res[c] = preparams;
-            for(unsigned i=0; i<exclusivepars.size(); i++)
-                res[c][exclusivepars[i]] = params[srcc++];
+            for(unsigned i=0; i<ep.size(); i++)
+                res[c][ep[i]] = params[srcc++];
             res[c][hpartial::alpha] =
 0.179; // tbd
             res[c][hpartial::prebeta] *= (1.0-g.V(t,c));
@@ -288,10 +316,10 @@ public:
           cd,     cd,      cd,       cd,       -1,
 
      //  Hdelta,    Rhdelta,   Ddelta,    Dhdelta,
-         chospital, -1,        -1,        -1,
+         ch, -1,        -1,        -1,
 
      //   Isd, Rd,      Hd,        Rhd,       Dd,     Dhd,
-          cd,  -1,      chospital, -1,        -1,     -1 };
+          cd,  -1,      ch,        -1,        -1,     -1 };
        unsigned ci = i % partial().k();
 
        if(p[ci]==-1)

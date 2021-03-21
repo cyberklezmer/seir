@@ -46,6 +46,7 @@ public:
 
     virtual double contrast(unsigned t, const vector<double>& pars, G& g, evalparams ep) const
     {
+        vector<bool> yf = ep.yfilter.size() ? ep.yfilter : vector<bool>(n(),true);
         double mlecoef = method == emwlsmle  ? -ep.additionalcontrastweight : 1.0;
         g.icontrasts[t] = vector<double>(n(),0);
         double s=0;
@@ -54,13 +55,16 @@ public:
             vector<double> wa = weekave(t,g);
             for(unsigned i=0; i<n(); i++)
             {
-                double w = wa[i] < 10 ? 1.0 / 10 : 1.0 / wa[i];
-                double x = g.Y(t,i)-
-                        (ep.longpredtocontrast
-                           ?  g.predlong[t].x()[k()+i]
-                          :g.pred[t].x()[k()+i]);
-                g.icontrasts[t][i]=w * x * x;
-                s += w * x * x;
+                if(yf[i])
+                {
+                    double w = wa[i] < 10 ? 1.0 / 10 : 1.0 / wa[i];
+                    double x = g.Y(t,i)-
+                            (ep.longpredtocontrast
+                               ?  g.predlong[t].x()[k()+i]
+                              :g.pred[t].x()[k()+i]);
+                    g.icontrasts[t][i]=w * x * x;
+                    s += w * x * x;
+                }
             }
         }
         if constexpr(method==emmle || method==emwlsmle)
@@ -82,7 +86,8 @@ public:
             dvector d =g.Y(t)-x.x().block(k(),0,n(),1);
 
             for(unsigned i=0; i<n(); i++)
-                g.icontrasts[t][i] += mlecoef * d[i] / sqrt(Vyy(i,i));
+                if(yf[i])
+                    g.icontrasts[t][i] += mlecoef * d[i] / sqrt(Vyy(i,i));
 
             s += mlecoef * (-(n()/2.0) * ::log(2*3.1415926)
                 -0.5 * ::log(det)
@@ -94,6 +99,7 @@ public:
     virtual double contrastaddition(const vector<double>& params, const G& r ,
                                   evalparams ep ) const
     {
+        vector<bool> yf = ep.yfilter.size() ? ep.yfilter : vector<bool>(n(),true);
         if(method == emstdres || method == emwlsstd)
         {
             unsigned horizon = r.Ysize()-1;
@@ -102,42 +108,45 @@ public:
             double contrast = 0;
             for(unsigned i=0; i<n(); i++)
             {
-                unsigned ki=k()+i;
-
-                double s7=0;
-                double s27=0;
-                unsigned n7=0;
-                for(unsigned j=ep.firstcomputedcontrasttime
-                     ;j<=esthorizon;j++)
+                if(yf[i])
                 {
-                    const uncertain& x = r.predlong[j];
-                    double dd = (r.Y(j)[i]-x.x()[ki]) / sqrt(x.var()(ki,ki));
+                    unsigned ki=k()+i;
 
-                    s7 += dd;
-                    s27 += dd * dd;
-                    n7++;
+                    double s7=0;
+                    double s27=0;
+                    unsigned n7=0;
+                    for(unsigned j=ep.firstcomputedcontrasttime
+                         ;j<=esthorizon;j++)
+                    {
+                        const uncertain& x = r.predlong[j];
+                        double dd = (r.Y(j)[i]-x.x()[ki]) / sqrt(x.var()(ki,ki));
+
+                        s7 += dd;
+                        s27 += dd * dd;
+                        n7++;
+                    }
+                    double stdev7 = sqrt( s27 / n7 - s7*s7 / n7 / n7 );
+                    if(stdev7 == 0)
+                        throw "zero stdev";
+
+                    double s=0;
+                    double s2=0;
+                    unsigned n=0;
+                    for(unsigned j=ep.firstcomputedcontrasttime
+                         ;j<=esthorizon;j++)
+                    {
+                        const uncertain& x = r.pred[j];
+                        double dd = (r.Y(j)[i]-x.x()[ki]) / sqrt(x.var()(ki,ki));
+
+                        s += dd;
+                        s2 += dd * dd;
+                        n++;
+                    }
+                    double stdev = sqrt( s2 / n - s*s / n / n );
+                    if(stdev == 0)
+                        throw "zero stdev";
+                    contrast += (stdev-1)*(stdev-1) + (stdev7-1)*(stdev7-1) ;
                 }
-                double stdev7 = sqrt( s27 / n7 - s7*s7 / n7 / n7 );
-                if(stdev7 == 0)
-                    throw "zero stdev";
-
-                double s=0;
-                double s2=0;
-                unsigned n=0;
-                for(unsigned j=ep.firstcomputedcontrasttime
-                     ;j<=esthorizon;j++)
-                {
-                    const uncertain& x = r.pred[j];
-                    double dd = (r.Y(j)[i]-x.x()[ki]) / sqrt(x.var()(ki,ki));
-
-                    s += dd;
-                    s2 += dd * dd;
-                    n++;
-                }
-                double stdev = sqrt( s2 / n - s*s / n / n );
-                if(stdev == 0)
-                    throw "zero stdev";
-                contrast += (stdev-1)*(stdev-1) + (stdev7-1)*(stdev7-1) ;
             }
             return contrast;
         }
@@ -177,7 +186,7 @@ private:
 public:
 
 
-    double estimate(const vector<seirparaminit>& params,
+    virtual double estimate(const vector<seirparaminit>& params,
                     const seirdata& ad,
                     const evalparams& ep,
                     uncertain& res,

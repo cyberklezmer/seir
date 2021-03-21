@@ -44,8 +44,8 @@ public:
     {
         dvector ret(n());
         ret.setZero();
-        ret[RA] = params[racoef];
-        ret[RS] = params[racoef];
+        ret[RA] = params[rcoef];
+        ret[RS] = params[rcoef];
         //ret[RS] = params[rscoef];
         ret[G] = params[gcoef];
         ret[H] = params[gcoef];
