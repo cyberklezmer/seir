@@ -134,8 +134,6 @@ public:
             return z[t<z.size() ? t : z.size()-1];
         }
 
-
-
         double Z(unsigned t, unsigned i) const
         {
             return Z(t)[i];
