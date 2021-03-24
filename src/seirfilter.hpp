@@ -144,7 +144,9 @@ public:
             return v[t<v.size() ? t : v.size()-1][i];
         }
 
-        void output(ostream& o, bool longpred = true, dmatrix additional = dmatrix())
+        void output(ostream& o, unsigned diflag = 0,
+                    dmatrix additional = dmatrix(),
+                    vector<string> lbls = vector<string>())
         {
             assert(ylabels.size()==sm.n());
             o << "date,";
@@ -164,12 +166,23 @@ public:
                 o << ylabels[i] << ",";
             for(unsigned i=0; i<zlabels.size(); i++)
                 o << zlabels[i]<<",";
+
+            for(unsigned i=lbls.size(); i<additional.rows(); i++)
+            {
+                ostringstream ss;
+                ss << "A" << i << endl;
+                lbls.push_back(ss.str());
+            }
+            ostringstream ss;
+            if(diflag)
+                ss << "(" << diflag << ")";
+
             for(unsigned i=0; i < additional.rows(); i++)
-                o << "A" << i << " act,";
+                o << lbls[i] << ss.str() << " act,";
             for(unsigned i=0; i < additional.rows(); i++)
-                o << "A" << i << " pred,";
+                o << lbls[i] << ss.str()<< " pred,";
             for(unsigned i=0; i < additional.rows(); i++)
-                o << "A" << i << " stdev,";
+                o << lbls[i] << ss.str() << " stdev,";
             o << "contrast,";
             for(unsigned i=0; i<sm.n(); i++)
                 o << "C_" + ylabels[i] << ",";
@@ -182,7 +195,7 @@ public:
                     o << dates[s] << ",";
                 else
                     o << ",";
-                const uncertain& u = longpred ? predlong[s] : pred[s];
+                const uncertain& u =  predlong[s];
                 for(unsigned i=0; i<u.dim(); i++)
                     o << u.x()[i] << ",";
                 for(unsigned i=0; i<u.dim(); i++)
@@ -208,12 +221,14 @@ public:
                 }
                 else
                     for(unsigned i=0; i<y[0].size(); i++)
-                        o<< ",";
+                        o << ",";
                 for(unsigned i=0; i<z[0].size(); i++)
-                     o<< Z(s,i) << ",";
-                if(s < y.size())
+                     o << Z(s,i) << ",";
+                if(s < y.size() && s>= diflag)
                 {
                     dvector e = additional * y[s];
+                    if(diflag)
+                        e -= additional * y[s-diflag];
 
                     for(unsigned i=0; i < additional.rows(); i++)
                         o << e[i] << ",";
@@ -221,7 +236,7 @@ public:
                 else
                     for(unsigned i=0; i < additional.rows(); i++)
                         o << ",";
-                uncertain pr = longpred ? predlong[s] : pred[s];
+                uncertain pr = predlong[s];
                 dvector p = additional * pr.x().block(sm.k(),0,sm.n(),1);
                 dmatrix v = additional
                         * pr.var().block(sm.k(),sm.k(),sm.n(),sm.n())
@@ -267,8 +282,8 @@ public:
         bool longpredtocontrast = false;
         bool longpredvars = false;
         unsigned ds = 0;
-        double additionalcontrastweight = 1e3;
         bool diflongpreds = false;
+        double additionalcontrastweight = 1e3;
         vector<bool> yfilter = vector<bool>();
     };
 
@@ -400,6 +415,8 @@ public:
     TG eval(const vector<double>& pars,
             const seirdata& data, evalparams ep) const
     {
+//        assert(!(ep.diflongpreds && ep.longpredtocontrast));
+        assert(!(!ep.longpredvars && ep.longpredtocontrast));
         assert(data.y.size());
         assert(ep.firstcomputedcontrasttime > 0);
 
@@ -417,7 +434,7 @@ public:
 
         for(unsigned i=0; i<g.predlong.size(); i++)
             g.predlong[i] = nanvector;
-
+//tbd overhead
         uncertain x0 = X0(pars);
 
         auto x0mean = x0.x();
@@ -488,28 +505,27 @@ public:
                 G tmpg = g;
                 dvector xpred = Xnew;
                 dmatrix W;
-                W = Wnew;
+                dmatrix Tt;
 
-/*                if(!ep.diflongpreds || i<=esthorizon+1)
-                    W = Wnew;
-
-                else
+                if(ep.longpredvars)
                 {
-
-                } */
+                    if(ep.diflongpreds)
+                    {
+                        W=dmatrix(k(),k());
+                        W.setZero();
+                        Tt=dmatrix::Identity(k(),k());
+                    }
+                    else
+                        W = Wnew;
+                }
                 dvector xpredplus = Xplus;
-//clog << endl;
+
                 for(unsigned j=1;j<ep.longpredlag;j++ )
                 {
                     tmpg.est[i+j-1] = { xpred, W };
-//if(g.date(i)=="2021-03-13" || g.date(i)=="2021-03-12" || g.date(i)=="2021-03-11")
-//{
-//  clog << g.date(i) << "," << xpred[0] << endl;
-//}
 
-                    xpred = this->T(i+j-1,pars,tmpg)*xpred + I(i+j-1,pars,tmpg);
-
-
+                    auto thisT = this->T(i+j-1,pars,tmpg);
+                    xpred = thisT*xpred + I(i+j-1,pars,tmpg);
 
                     if(ep.longpredvars)
                     {
@@ -524,30 +540,62 @@ public:
                         }
 
                         W = T * W * T.transpose() + Lambda(i+j-1,pars,xpredplus,y,tmpg);
+                        if(ep.diflongpreds)
+                            Tt *= thisT;
                     }
                 }
 
-                auto F = this->F(ilong,pars,tmpg);
+                auto Flong = this->F(ilong,pars,tmpg);
 
                 dvector lp;
-//                if(ep.diflongpreds)
-//                   lp= stackv(xpred-Xold, F*(xpred-Xold));
-//                else
+                if(ep.diflongpreds)
+                   lp= stackv(xpred-Xold, Flong*xpred-F*Xold);
+                else
                    lp = stackv(xpred, F*xpred);
                 if(ep.longpredvars)
                 {
-                    dvector Yplus = F * xpredplus;
+                    dvector Yplus = Flong * xpredplus;
                     dvector gm = gamma(ilong-1,pars, tmpg);
-                    dvector gd(n());
+                    dvector gdnew(n());
                     for(unsigned i=0; i<n(); i++)
-                        gd[i] = gm[i] * Yplus[i];
+                        gdnew[i] = gm[i] * Yplus[i];
 
-                    g.predlong[ilong] = {
-                        lp,
-                        block( W, W*F.transpose(),
-                               F*W, F*W*F.transpose()
-                                  + diag(gd))
-                        };
+                    if(ep.diflongpreds)
+                    {
+                        auto trsf = Tt-dmatrix::Identity(k(),k());
+                        if(i > esthorizon)
+                        {
+                            W += trsf * Wnew * trsf.transpose();
+                            g.predlong[ilong] = {
+                                lp,
+                                block( W, W*Flong.transpose(),
+                                       Flong*W, Flong*W*Flong.transpose()
+                                          + diag(gd+gdnew))
+                                };
+                        }
+                        else
+                        {
+                            auto FTt = F * Tt;
+                            g.predlong[ilong] = {
+                                lp,
+                                block( W+ trsf * Wnew * trsf.transpose(),
+                                       W*Flong.transpose() + trsf * Wnew * FTt.transpose(),
+                                       Flong*W + FTt * Wnew * trsf.transpose(),
+                                       Flong*W*Flong.transpose() + FTt * Wnew * FTt.transpose()
+                                          + diag(gdnew))
+                                };
+
+                        }
+                    }
+                    else
+                    {
+                        g.predlong[ilong] = {
+                            lp,
+                            block( W, W*Flong.transpose(),
+                                   Flong*W, Flong*W*Flong.transpose()
+                                      + diag(gdnew))
+                            };
+                    }
                 }
                 else
                     g.predlong[ilong] = lp;

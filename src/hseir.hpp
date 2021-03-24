@@ -23,7 +23,8 @@ public:
     enum params { alpha, sigma, varsigma, gammas, gammaa, iotas, mus,
                   theta, eta, pi,
                   gammah, muh,
-                  muratio,
+                  musratio,
+                  muhratio,
                   prebeta,
                   betafactor,
                   ufactor,
@@ -51,8 +52,8 @@ public:
                       / (params[varsigma]+params[theta]);
         double pu = max(min(1.0, (params[pi] - A ) / B),0.0);
 
-        double mh= params[muh] * params[muratio];
-        double ms = params[mus] * params[muratio];
+        double mh= params[muh] * params[muhratio];
+        double ms = params[mus] * params[musratio];
 
         Pt(E,Ia) = params[sigma] * params[alpha];
         Pt(E,Ip) = params[sigma] * (1-params[alpha]);
@@ -201,7 +202,7 @@ public:
         gammaa,
         mus,
         muh,
-        numcommonparams
+        numcommonandcompparams
     };
 
     static std::vector<hpartial::params> commonpars()
@@ -232,7 +233,9 @@ public:
            return { hpartial::betafactor,
                hpartial::iotas,
                hpartial::gammah,
-               hpartial::muratio};
+               hpartial::musratio,
+               hpartial::muhratio
+           };
     }
 
     hcohortseir(unsigned numcohorts, const vector<double>& pop) :
@@ -252,13 +255,12 @@ public:
 
         assert(hpartial::numparams==
                                 computedpars.size()
-                               +commonpars.size()
-                               +exclusivepars.size());
+                               +numcommonandcompparams-numcomputationparams
+                               +numexclusivepars);
 
 
-        assert(params.size()== numcomputationparams
-                              + commonpars.size()
-                              + numcohorts() * exclusivepars.size());
+        assert(params.size()==  numcommonandcompparams
+                              + numcohorts() * numexclusivepars);
 
         std::vector<std::vector<double>>
            res(numcohorts());
