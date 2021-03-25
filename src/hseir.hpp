@@ -167,7 +167,7 @@ class hcohortseir: public cohortseir<hpartial>
 {
 public:
     enum excolumns {I0,	I20,	I65,	I80,
-                     DAYADJUST,PDET,REDUCTIONMEAN,REDUCTIONMEDIAN,FEAR,BETAFACTOR,BFACTOR,
+                     DAYADJUST,PDET,REDUCTIONMEAN,BRIGITATTACK,FEAR,BETAFACTOR,BFACTOR,
                      numexcolumns};
 
     enum computationparams {
@@ -189,6 +189,7 @@ public:
                thetacoef,
                eta0,
                theta0,
+               hbrigitefect,
                numcomputationparams
     };
 
@@ -224,7 +225,8 @@ public:
         betafactor,
         iotas,
         gammah,
-        muratio,
+        musratio,
+        muhratio,
         numexclusivepars
     };
 
@@ -303,6 +305,7 @@ public:
                 res[c][ep[i]] = params[srcc++];
             res[c][hpartial::alpha] =
 0.179; // tbd
+            res[c][hpartial::iotas] *= 1+ g.Z(t,BRIGITATTACK) * params[hbrigitefect];
             res[c][hpartial::prebeta] *= (1.0-g.V(t,c));
         }
         assert(srcc==params.size());
