@@ -167,7 +167,7 @@ class hcohortseir: public cohortseir<hpartial>
 {
 public:
     enum excolumns {I0,	I20,	I65,	I80,
-                     DAYADJUST,PDET,REDUCTIONMEAN,BRIGITATTACK,FEAR,BETAFACTOR,BFACTOR,
+                     DAYADJUST,PDET,REDUCTIONMEAN,BRIGITATTACK,FEAR,_BETAFACTOR,BFACTOR,
                      numexcolumns};
 
     enum computationparams {
@@ -190,6 +190,8 @@ public:
                eta0,
                theta0,
                hbrigitefect,
+               brigiteeffect,
+               cycleeffect,
                numcomputationparams
     };
 
@@ -285,11 +287,16 @@ public:
 //                * g.Z(t,DAYADJUST)
                 ;
 
+        double c = 1.0 + params[cycleeffect]*cos((g.abstime(shiftedt)-325)/365 * 2*3.141592653);
+        double be = 1.0 + params[brigiteeffect] *
+                (lweight * g.Z(paqtl,BRIGITATTACK) + (1-lweight)* g.Z(paqth,BRIGITATTACK));
         preparams[hpartial::prebeta]
-           = (lweight*g.Z(paqtl,REDUCTIONMEAN) + (1-lweight)*g.Z(paqth,REDUCTIONMEAN))
-              * (lweight*g.Z(paqtl,BFACTOR) + (1-lweight)*g.Z(paqth,BFACTOR))
-                * exp(-params[omega] *
-                                      (lweight*g.Z(paqtl,BETAFACTOR) + (1-lweight)*g.Z(paqth,BETAFACTOR)));
+           = c * be * (lweight*g.Z(paqtl,REDUCTIONMEAN) + (1-lweight)*g.Z(paqth,REDUCTIONMEAN))
+//              * (lweight*g.Z(paqtl,BFACTOR) + (1-lweight)*g.Z(paqth,BFACTOR))
+                * exp(
+//                 * (1-
+                    -params[omega] *
+                                      (lweight*g.Z(paqtl,FEAR) + (1-lweight)*g.Z(paqth,FEAR)));
 
 
         auto cp = commonpars();
@@ -377,7 +384,7 @@ public:
             {
                 vector<double> origobs;
                 for(unsigned j=0; j<numobscolumns; j++)
-                    origobs.push_back( /* lastobs[j] */ +c.getdouble(i+1,1+j));
+                    origobs.push_back( c.getdouble(i+1,1+j));
                 auto obs = obs2obs(origobs);
                 assert(obs.size()==numobs());
                 res.y.push_back(dv(obs));

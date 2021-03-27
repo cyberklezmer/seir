@@ -144,6 +144,48 @@ public:
             return v[t<v.size() ? t : v.size()-1][i];
         }
 
+        struct forecastrecord
+        {
+            double pred = numeric_limits<double>::quiet_NaN();
+            double stderr = numeric_limits<double>::quiet_NaN();
+            double act = numeric_limits<double>::quiet_NaN();
+        };
+
+        using tforecasts = vector<vector<forecastrecord>>;
+        tforecasts forecasts(unsigned diflag, dmatrix additional = dmatrix())
+        {
+            vector<vector<forecastrecord>> res;
+            unsigned m=additional.rows();
+            for(unsigned s=y.size(); s<predlong.size(); s++)
+            {
+                vector<forecastrecord> r(m);
+                if(s>= diflag)
+                {
+                    if(s < y.size())
+                    {
+                        dvector e = additional * y[s];
+                        if(diflag)
+                            e -= additional * y[s-diflag];
+
+                        for(unsigned i=0; i < additional.rows(); i++)
+                            r[i].act = e[i];
+                    }
+
+                    uncertain pr = predlong[s];
+                    dvector p = additional * pr.x().block(sm.k(),0,sm.n(),1);
+                    dmatrix v = additional
+                            * pr.var().block(sm.k(),sm.k(),sm.n(),sm.n())
+                            * additional.transpose();
+                    for(unsigned i=0; i < m; i++)
+                        r[i].pred = p[i];
+                    for(unsigned i=0; i < m; i++)
+                        r[i].stderr=sqrt(v(i,i));
+                }
+                res.push_back(r);
+            }
+            return res;
+        }
+
         void output(ostream& o, unsigned diflag = 0,
                     dmatrix additional = dmatrix(),
                     vector<string> lbls = vector<string>())
@@ -416,7 +458,7 @@ public:
             const seirdata& data, evalparams ep) const
     {
 //        assert(!(ep.diflongpreds && ep.longpredtocontrast));
-        assert(!(!ep.longpredvars && ep.longpredtocontrast));
+//        assert(!(!ep.longpredvars && ep.longpredtocontrast));
         assert(data.y.size());
         assert(ep.firstcomputedcontrasttime > 0);
 
