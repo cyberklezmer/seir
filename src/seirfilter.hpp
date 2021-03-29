@@ -156,7 +156,7 @@ public:
         {
             vector<vector<forecastrecord>> res;
             unsigned m=additional.rows();
-            for(unsigned s=y.size(); s<predlong.size(); s++)
+            for(unsigned s=0; s<predlong.size(); s++)
             {
                 vector<forecastrecord> r(m);
                 if(s>= diflag)

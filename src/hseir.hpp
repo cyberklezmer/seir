@@ -287,16 +287,14 @@ public:
 //                * g.Z(t,DAYADJUST)
                 ;
 
+        double ba =lweight * g.Z(paqtl,BRIGITATTACK) + (1-lweight)* g.Z(paqth,BRIGITATTACK);
         double c = 1.0 + params[cycleeffect]*cos((g.abstime(shiftedt)-325)/365 * 2*3.141592653);
-        double be = 1.0 + params[brigiteeffect] *
-                (lweight * g.Z(paqtl,BRIGITATTACK) + (1-lweight)* g.Z(paqth,BRIGITATTACK));
+        double be = 1.0 + params[brigiteeffect] * ba;
         preparams[hpartial::prebeta]
            = c * be * (lweight*g.Z(paqtl,REDUCTIONMEAN) + (1-lweight)*g.Z(paqth,REDUCTIONMEAN))
 //              * (lweight*g.Z(paqtl,BFACTOR) + (1-lweight)*g.Z(paqth,BFACTOR))
                 * exp(
-//                 * (1-
-                    -params[omega] *
-                                      (lweight*g.Z(paqtl,FEAR) + (1-lweight)*g.Z(paqth,FEAR)));
+                    -params[omega] *(lweight*g.Z(paqtl,FEAR) + (1-lweight)*g.Z(paqth,FEAR)));
 
 
         auto cp = commonpars();
@@ -312,7 +310,7 @@ public:
                 res[c][ep[i]] = params[srcc++];
             res[c][hpartial::alpha] =
 0.179; // tbd
-            res[c][hpartial::iotas] *= 1+ g.Z(t,BRIGITATTACK) * params[hbrigitefect];
+            res[c][hpartial::iotas] *= 1+ ba * params[hbrigitefect];
             res[c][hpartial::prebeta] *= (1.0-g.V(t,c));
         }
         assert(srcc==params.size());

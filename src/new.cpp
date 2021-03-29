@@ -31,6 +31,7 @@ struct program
     unsigned diflength;
 
     bool compositeforecast;
+    unsigned forecastdate=0;
     unsigned numweeks = 3;
     double volatility = 0.03;
 
@@ -90,12 +91,13 @@ program g =
     60,      // double evtime=100;
     10000.0, // double regularizationweight;
 
-    true,        // bool output;
-    120,         // unsigned predictionlength;
+    false,        // bool output;
+    40,         // unsigned predictionlength;
     7,           // predlength
 
-    false, // bool compositeforecast;
-    3, // unsigned numweeks = 3;
+    true, // bool compositeforecast;
+    211+7-1,    //unsigned forecastdate=0;
+    2, // unsigned numweeks = 3;
     0.03, // double volatility = 0.03;
 
 
@@ -108,103 +110,54 @@ program g =
 
 vector<seirparaminit> newplain =
 {
-{"paqshift",7.25875,0,14,false},// (0.00430109)
-{"v",26,0,2000,true},// (1.15429)
-{"ce",41.0908,0,200000,true},// (1.52365)
-{"cd",10555,0,200000,true},// (3644.01)
-{"cu",7554.24,0,200000,true},// (685.055)
-{"ch",60.2775,0,1e+10,true},// (6.65857)
-{"rcoef",0.252287,0,100,true},// (0.00941021)
-{"hcoef",0.000334341,0,100,true},// (0.00507129)
-{"gcoef",0.000632012,0,100,true},// (0.0040203)
-{"dcoef",4.85491e-17,0,100,true},// (3.28593e-05)
-{"omega",7.44686,0,10,false},// (0.00826002)
-{"pi",0.9,0,5,true},// (0.00284931)
-{"thetacoef",0.0139434,0,0.3,false},// (0.000212391)
-{"eta0",0.278236,0,0.6,false},// (0.000327846)
-{"theta0",0.00995659,0,0.3,false},// (7.70553e-05)
-{"hbrigiteffect",0.0775156,0,2,false},// (0.0021217)
-{"brigiteffect",1.53548,0,2,false},// (0.00314652)
-{"cycleeffect",6.15573e-05,0,0.5,false},// (0.261011)
-{"sigma",0.1787,0,1,true},// (0.000472007)
-{"varsigma",0.2212,0,1,true},// (0.00079037)
-{"ufactor",1,0,1,true},// (0.0105033)
-{"vfactor",1,0,1,true},// (0.0415972)
-{"gammas",0.0820165,0,1,false},// (0.000186685)
-{"gammaa",0.644871,0,1,false},// (0.0531476)
-{"mus",0.000962787,1e-10,1,false},// (0.00187027)
-{"muh",0.0464459,0,1,false},// (0.591631)
-{"betafactor0",3.40789,0,6,false},// (0.891774)
-{"iotas0",0.00179483,0,1,false},// (4.12279e-05)
-{"gammah0",0.493426,0,1,false},// (0.0294932)
-{"musratio0",0.0001,0,1,true},// (0.0055142)
-{"muhratio0",0.05,0,1,true},// (0.635602)
-{"betafactor20",3.97005,0,6,false},// (1.03793)
-{"iotas20",0.000360001,0,1,false},// (9.01749e-06)
-{"gammah20",0.0527785,0,1,false},// (0.00189961)
-{"musratio20",0.0436633,0,1,true},// (0.0857445)
-{"muhratio20",0.2,0,1,true},// (2.5477)
-{"betafactor65",3.94355,0,10,false},// (1.03232)
-{"iotas65",0.00917478,0,1,false},// (9.28238e-05)
-{"gammah65",0.0986957,0,1,false},// (0.00193924)
-{"musratio65",0.552886,0,1,true},// (1.07792)
-{"muhsatio65",0.5,0,1,true},// (6.37098)
-{"betafactor80",8.90774,0,10,false},// (2.32304)
-{"iotas80",0.0108426,0,1,false},// (0.000253855)
-{"gammah80",0.0231481,0,1,false},// (0.00078894)
-{"musratio80",0.745,0,1,true},// (1.45696)
-{"muhratio80",0.6,0,1,true},// (7.64171)
+    {"paqshift",5.18095,0,14,false},// (0.00483516)
+    {"v",26,0,2000,true},// (1.29043)
+    {"ce",41.0908,0,200000,true},// (1.92954)
+    {"cd",10555,0,200000,true},// (16440)
+    {"cu",7554.24,0,200000,true},// (2060.15)
+    {"ch",60.2775,0,1e+10,true},// (6.86083)
+    {"rcoef",0.252287,0,100,true},// (0.0116302)
+    {"hcoef",0.000334341,0,100,true},// (0.00294291)
+    {"gcoef",0.000632012,0,100,true},// (0.00290253)
+    {"dcoef",4.85491e-17,0,100,true},// (0.000143642)
+    {"omega",7.50205,0,10,false},// (0.0114309)
+    {"pi",1,0,5,true},// (0.00265752)
+    {"thetacoef",0.0218548,0,0.3,false},// (0.000203288)
+    {"eta0",0.131374,0,0.6,false},// (0.000246196)
+    {"theta0",0.0105132,0,0.3,false},// (4.38999e-05)
+    {"hbrigiteffect",0.256691,0,2,false},// (0.00318754)
+    {"brigiteffect",1.63824,0,2,false},// (0.00235515)
+    {"cycleeffect",0.170724,0,0.5,false},// (5.397)
+    {"sigma",0.1787,0,1,true},// (0.000411475)
+    {"varsigma",0.2212,0,1,true},// (0.000545058)
+    {"ufactor",1,0,1,true},// (0.00969833)
+    {"vfactor",1,0,1,true},// (0.0388927)
+    {"gammas",0.0820165,0,1,true},// (0.000131503)
+    {"gammaa",0.644871,0,1,true},// (0.0436424)
+    {"mus",0.00161448,1e-10,1,false},// (0.00119116)
+    {"muh",0.0451726,0,1,false},// (0.672839)
+    {"betafactor0",3.51222,0,6,false},// (16.1905)
+    {"iotas0",0.00250349,0,1,false},// (5.36718e-05)
+    {"gammah0",0.483169,0,1,false},// (0.0195164)
+    {"musratio0",0.0001,0,1,true},// (0.00328522)
+    {"muhratio0",0.05,0,1,true},// (0.747845)
+    {"betafactor20",4.06809,0,6,false},// (18.7526)
+    {"iotas20",0.000339157,0,1,false},// (1.03015e-05)
+    {"gammah20",0.0399014,0,1,false},// (0.00154499)
+    {"musratio20",0.0436633,0,1,true},// (0.0326857)
+    {"muhratio20",0.2,0,1,true},// (2.97883)
+    {"betafactor65",4.10836,0,10,false},// (18.9383)
+    {"iotas65",0.0103284,0,1,false},// (7.83679e-05)
+    {"gammah65",0.0979353,0,1,false},// (0.00160868)
+    {"musratio65",0.552886,0,1,true},// (0.402692)
+    {"muhsatio65",0.5,0,1,true},// (7.44748)
+    {"betafactor80",9.9895,0,10,false},// (46.0464)
+    {"iotas80",0.0109438,0,1,false},// (0.000196876)
+    {"gammah80",0.0218626,0,1,false},// (0.000630589)
+    {"musratio80",0.745,0,1,true},// (0.580754)
+    {"muhratio80",0.6,0,1,true},// (8.93691)
 };
 
-vector<seirparaminit> oldplain =
-{ // v version
-  {"paqshift",8.70899,0,14,false},// (0.00460813)
-  {"v",26,0,2000,true},// (0.393856)
-  {"ce",41.0908,0,200000,true},// (0.423352)
-  {"cd",10555,0,200000,true},// (623.365)
-  {"cu",7554.24,0,200000,true},// (194.938)
-  {"ch",60.2775,0,1e+10,true},// (3.83431)
-  {"rcoef",0.252287,0,100,true},// (0.00297807)
-  {"hcoef",0.000334341,0,100,true},// (0.00332564)
-  {"gcoef",0.000632012,0,100,true},// (0.00420443)
-  {"dcoef",4.85491e-17,0,100,true},// (6.75124e-06)
-  {"omega",3.77275,0,10,false},// (0.00543069)
-  {"pi",0.9,0,5,true},// (0.00193352)
-  {"thetacoef",0.00789677,0,0.3,false},// (0.000101368)
-  {"eta0",0.6,0,0.6,false},// (0.000796369)
-  {"theta0",0.00981834,0,0.3,false},// (3.91966e-05)
-  {"hbrigiteffect",0.4,0,2,false},// (0.0026903)
-  {"brigiteffect",0.6,0,2,false},// (0.00053459)
-  {"cycleeffect",0,0,0.5,false},// (0.00053459)
-  {"sigma",0.1787,0,1,true},// (0.000215715)
-  {"varsigma",0.2212,0,1,true},// (0.000343639)
-  {"ufactor",1,0,1,true},// (0.0100659)
-  {"vfactor",1,0,1,true},// (0.00665381)
-  {"gammas",0.128562,0,1,false},// (0.000484998)
-  {"gammaa",0.362483,0,1,false},// (0.0066054)
-  {"mus",0.0005,1e-10,1,false},// (0.00201656)
-  {"muh",0.0436081,0,1,false},// (0.516154)
-  {"betafactor0",3.426,0,6,false},// (0.0135237)
-  {"iotas0",0.0019064,0,1,false},// (5.79392e-05)
-  {"gammah0",0.435918,0,1,false},// (0.0237592)
-  {"musratio0",0.0001,0,1,true},// (0.000791245)
-  {"muhratio0",0.05,0,1,true},// (0.590165)
-  {"betafactor20",3.94058,0,6,false},// (0.0160353)
-  {"iotas20",0.000543719,0,1,false},// (1.1959e-05)
-  {"gammah20",0.0686205,0,1,false},// (0.00161559)
-  {"musratio20",0.0436633,0,1,true},// (0.0208427)
-  {"muhratio20",0.2,0,1,true},// (2.36711)
-  {"betafactor65",3.97595,0,10,false},// (0.0177897)
-  {"iotas65",0.01101,0,1,false},// (7.37656e-05)
-  {"gammah65",0.130249,0,1,false},// (0.00178548)
-  {"musratio65",0.552886,0,1,true},// (0.260892)
-  {"muhsatio65",0.5,0,1,true},// (6.88124)
-  {"betafactor80",8.42999,0,10,false},// (0.0392598)
-  {"iotas80",0.0244393,0,1,false},// (0.0003003)
-  {"gammah80",0.0252108,0,1,false},// (0.000461633)
-  {"musratio80",0.745,0,1,true},// (0.360319)
-  {"muhratio80",0.6,0,1,true},// (5.32592)
-};
 
 program g4 =
 {
@@ -214,25 +167,26 @@ program g4 =
     // vector<seirparaminit> params;
     newplain,
 
-    17, //15, // estoffset
+    0, //15, // estoffset
 
     false, //  bool computeinitparam;
 
-    true, // bool estimate;
-    6*60*60,     // double etime=100;
+    false, // bool estimate;
+    120*60,     // double etime=100;
     180,   // unsigned offset;
 
     false, // bool estimatevars;
     3*60*60,      // double evtime=100;
     200000.0, // double regularizationweight;
 
-    true,        // bool output;
-    120,         // unsigned predictionlength;
+    false,        // bool output;
+    35,         // unsigned predictionlength;
     7,           // predlength
 
-    false, // bool compositeforecast;
+    true, // bool compositeforecast;
+    211+7-1,    //unsigned forecastdate=0;
     3, // unsigned numweeks = 3;
-    0.03, // double volatility = 0.03;
+    0.15, // double volatility = 0.03;
 
 
     {379.825,55.803,172.399,51.3361,34.4831,1435.16,59.9787,24.7866,54.6797,114.072,1073.02,0.132924,6.25241,0.00221726,-1.58985e-22,227.338,915.583,0.575834,17.1049,-0.00217329,-2.53641e-21,1951.43,291.697,883.981,261.553,148.18,4877.72,268.26,119.002,228.506,517.383,3904.04,10.067,36.178,2.06028,2.40233,1244.83,8241.84,36.4418,456.983,5.96911,24.8427,302.447,38.7119,120.199,32.96,17.7616,2516.21,40.785,14.6717,32.0999,55.6695,541.175,8.85015,5.87317,10.214,2.87409,112.853,802.865,67.8936,175.556,58.6853,86.351,122.13,14.6814,35.5019,8.21852,1.258,467.606,17.1954,7.99159,13.5243,14.435,276.955,7.92967,53.6585,2.93064e-17,34.186,13.1986,82.372,16.4426,308.014,4.76779e-17,188.197},
@@ -423,7 +377,7 @@ void run(const program& prg, const dmatrix& add, vector<string> lbls)
     {
 
         seirfilter::evalparams ep =
-          {40,0,prg.diflength, true, true, prg.predictionlength};
+          {40,prg.diflength,0, true, true, prg.predictionlength};
 
         hestseir<S,emwls> es(x0);
 
@@ -433,57 +387,114 @@ void run(const program& prg, const dmatrix& add, vector<string> lbls)
         for(unsigned traj = 0; traj < nt; traj++)
         {
             assert(dd.y.size() > 0);
-            unsigned t=dd.y.size()-1;
-            double v = dd.z[t++][hcohortseir::REDUCTIONMEAN];
+clog << "trajectory " << traj << " ";
+            unsigned t=dd.y.size()-1-7;
+            double oldv = dd.z[t++][hcohortseir::REDUCTIONMEAN];
             unsigned tr = traj;
+            double newv;
             for(unsigned i=0; i< prg.numweeks; i++)
             {
                 bool up = tr % 2;
                 if(up)
-                    v *= 1+prg.volatility;
+                    newv = oldv * (1+prg.volatility);
                 else
-                    v *= 1-prg.volatility;
-                dd.z[t++][hcohortseir::REDUCTIONMEAN] = v;
+                    newv = oldv * (1-prg.volatility);
+
+
+                for(unsigned j=1; j<=7; j++)
+                    dd.z[t++][hcohortseir::REDUCTIONMEAN]
+                        = oldv * (7-j) / 7.0 + newv * j / 7.0;
                 tr /= 2;
+                oldv = newv;
+                if(t > dd.z.size())
+                    throw "too short horizon for prediction";
             }
             for(; t<d.z.size(); t++)
-                dd.z[t][hcohortseir::REDUCTIONMEAN] = v;
+                dd.z[t][hcohortseir::REDUCTIONMEAN] = newv;
+clog << newv << endl;
             ep.diflongpreds = true;
             seirfilter::G rdif = es.eval(rp, dd, ep);
             difpreds.push_back(rdif.forecasts(prg.diflength,add));
 
             ep.diflongpreds = false;
             seirfilter::G rabs= es.eval(rp, dd, ep);
-            abspreds.push_back(rdif.forecasts(0,add));
+            abspreds.push_back(rabs.forecasts(0,add));
         }
         struct compositefrecord { double lo, pred, hi; };
         vector<vector<compositefrecord>> fs;
-        unsigned s=0;
         unsigned fn = abspreds[0][0].size();
         unsigned nf = fn + difpreds[0][0].size();
-        for(unsigned t=d.y.size(); t < d.z.size(); t++,s++)
+        unsigned t = prg.forecastdate + 1;
+
+
+        string cvsfn = "../../hub/covid19-forecast-hub-europe/data-processed/bisop-seirfilter/"
+                +d.dates[prg.forecastdate+2]+"-bisop-seirfilter.csv";
+        ofstream ecvs(cvsfn);
+
+        if(!ecvs)
+            throw "cannot open " + cvsfn;
+
+        ecvs << "forecast_date,scenario_id,target,target_end_date,location,type,quantile,value" << endl;
+
+
+        for(; t < abspreds[0].size(); t++)
         {
+clog << d.dates[t] << endl;
             vector<compositefrecord> tdst;
             for(unsigned i=0; i<nf; i++)
             {
+clog << "series " << i << " ";
                 vector<seirfilter::G::forecastrecord> f(nf);
                 double s=0;
                 vector<double> means;
                 vector<double> stdevs;
                 for(unsigned j=0; j<nt; j++)
                 {
+clog << ".";
                     const seirfilter::G::forecastrecord& src
-                        = j<fn ? abspreds[i][t][j] : difpreds[i][t][j-fn];
+                        = i<fn ? abspreds[j][t][i] : difpreds[j][t][i-fn];
                     s += src.pred;
                     means.push_back(src.pred);
                     stdevs.push_back(src.stderr);
                 }
                 mixfunction mf(means,stdevs);
+                if((t-prg.forecastdate) % 7 ==0 && (i==3 || i==4))
+                {
+                    unsigned nw = (t-prg.forecastdate) / 7;
+                    static vector<double> qs = {0.01, 0.025, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 0.975, 0.99};
+                    for(unsigned j=0; j<qs.size()+1; j++)
+                    {
+                        ecvs << d.dates[prg.forecastdate+2] << ",forecast,"
+                             << nw << " wk ahead inc " << (i==3 ? "case," : "death," )
+                             <<  d.dates[t] << ",CZ,";
+                        if(j<qs.size())
+                            ecvs << "quantile," << qs[j] << "," << round(mf.inv(qs[j]));
+                        else
+                            ecvs << "point,NA," << round(s/nt);
+                        ecvs << endl;
+                    }
+                }
 
+clog << endl;
                 tdst.push_back({mf.inv(0.025), s/nt, mf.inv(0.975) });
             }
             fs.push_back(tdst);
         }
+
+
+        t=prg.forecastdate+1;
+        clog << "Forecasts" << endl;
+        for(unsigned i=0; i<fs.size(); i++,t++)
+        {
+            for(unsigned j=0; j<fs[i].size(); j++)
+                clog << dd.dates[t] << "," << fs[i][j].pred
+                     << "," << fs[i][j].lo << "," << fs[i][j].hi << ",";
+            clog << endl;
+        }
+
+
+
+
     }
 };
 
@@ -545,8 +556,8 @@ int main()
 /// Uncomment what you want to run
        run4(g4);
 //       run1(g);
-//       mzcr2mzcr("2021-03-25", false);
-//       uzis2uzis("2021-03-25", true, false,false,false);
+//       mzcr2mzcr("2021-03-29", false);
+//       uzis2uzis("2021-03-29", true, false,false,false);
     }
     catch (std::exception& e) {
         std::cerr << e.what() << endl;

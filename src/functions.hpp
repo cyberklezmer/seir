@@ -39,7 +39,6 @@ public:
 
     double operator () (double x) const
     {
-        assert(p.size()==npars());
         double s=0;
         double p=1.0 /basefns.size();
 
@@ -52,20 +51,25 @@ public:
     {
         assert(y>0);
         assert(y<1);
-        double lo = 0.0;
-        assert((*this)(lo,p) > y);
+        double lo = -1.0;
         double hi = 1.0;
         for(;;)
         {
-            if((*this)(hi) < y)
+            if((*this)(hi) > y)
                 break;
             hi *= 2.0;
         }
         for(;;)
         {
+            if((*this)(lo) < y)
+                break;
+            lo *= 2.0;
+        }
+        for(;;)
+        {
             double mid = (hi+lo) / 2.0;
             double fx = (*this)(mid);
-            if(fx > y)
+            if(fx < y)
                 lo = mid;
             else
                 hi = mid;
