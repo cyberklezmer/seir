@@ -18,6 +18,19 @@ struct seirparaminit
     bool omit;
 };
 
+inline vector<double> spi2v(const vector<seirparaminit>& pi)
+{
+    vector<double> res(pi.size());
+    for(unsigned i=0; i<pi.size();i++)
+        res[i] = pi[i].initial;
+    return res;
+}
+
+inline void v2spi(const vector<double>& p, vector<seirparaminit>& pi)
+{
+    for(unsigned i=0; i<p.size() && i<pi.size(); i++)
+        pi[i].initial = p[i];
+}
 enum estimationmethod { emwls, emmle, emstdres, emwlsstd, emwlsmle };
 
 template <estimationmethod method=emwls>
@@ -99,6 +112,8 @@ public:
     virtual double contrastaddition(const vector<double>& params, const G& r ,
                                   evalparams ep ) const
     {
+        if(method != emwls && !ep.longpredvars)
+            throw "vars have to be swithed on";
         vector<bool> yf = ep.yfilter.size() ? ep.yfilter : vector<bool>(n(),true);
         if(method == emstdres || method == emwlsstd)
         {
@@ -179,7 +194,7 @@ private:
         G r = f.eval(x,f.fdata, f.fevalparams);
 
 //        double ret = f.totalcontrast(x,f.d,f.ct);
-        clog << r.contrast << endl;
+//        clog << r.contrast << '\a';
         return r.contrast;
     }
 
@@ -245,7 +260,10 @@ public:
         }
         catch(std::exception &e)
         {
-            throw std::runtime_error(e.what());
+            if(e.what() == std::string("nlopt roundoff-limited"))
+                clog << "roundoff limited, however continuing" << endl;
+            else
+                throw std::runtime_error(e.what());
         }
         if(oresult < 0)
         {
@@ -253,6 +271,7 @@ public:
             es << "Negative result of nlopt: " << oresult << endl;
             throw std::runtime_error(es.str());
         }
+        clog << "contrast=" << ov << endl;
         unsigned j=0;
         vector<double> r;
         for(unsigned i=0; i<params.size(); i++)

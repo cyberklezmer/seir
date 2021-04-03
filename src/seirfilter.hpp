@@ -4,7 +4,9 @@
 
 #include "orpp.hpp"
 #include "orpp/matrices.hpp"
+#include "orpp/gnuplot.hpp"
 #include "orpp/estimation.hpp"
+#include <ostream>
 
 using namespace orpp;
 using namespace std;
@@ -21,6 +23,41 @@ struct seirdata
 
     unsigned lag = 0;
     unsigned abstime(unsigned t) const { return t+lag; }
+
+    void output(ostream& os)
+    {
+        os <<"date";
+        for(unsigned i=0; i<ylabels.size(); i++)
+            os << "," << ylabels[i];
+        for(unsigned i=0; i<zlabels.size(); i++)
+            os << "," << zlabels[i];
+        os << endl;
+        for(unsigned j=0; j<dates.size(); j++)
+        {
+            os << dates[j];
+            for(unsigned i=0; i<ylabels.size(); i++)
+            {
+                os << "," ;
+                if(j<y.size())
+                    os << y[j][i];
+            }
+            for(unsigned i=0; i<zlabels.size(); i++)
+            {
+                os << ",";
+                if(j<z.size())
+                    os << z[j][i];
+            }
+            os << endl;
+            // tbd v
+        }
+    }
+    void removebeginning(unsigned toremove)
+    {
+        dates.erase(dates.begin(), dates.begin() + toremove);
+        y.erase(y.begin(), y.begin() + min(toremove,static_cast<unsigned>(y.size())));
+        v.erase(v.begin(), v.begin() + min(toremove,static_cast<unsigned>(v.size())));
+        z.erase(z.begin(), z.begin() + min(toremove,static_cast<unsigned>(z.size())));
+    }
 };
 
 class seirfilter
@@ -73,12 +110,16 @@ public:
 
     struct G : private seirdata
     {
-        G(const seirdata& d, const seirfilter& am, unsigned evalsize) :
-            seirdata(d),
+        G(const seirdata& d, const seirfilter& am, unsigned evalsize,
+            unsigned alongpredlag, bool adiflongpreds) :
+            seirdata(d), longpredlag(alongpredlag), diflongpreds(adiflongpreds),
             pred(evalsize), predlong(evalsize), est(evalsize),
             hatBs(evalsize),Ps(evalsize),
             contrasts(d.y.size(),0),icontrasts(d.y.size()), contrast(0), sm(am)
            { assert(d.z.size()>=d.y.size()); }
+
+        unsigned longpredlag;
+        bool diflongpreds;
         vector<uncertain> pred;
         vector<uncertain> predlong;
 
@@ -152,20 +193,20 @@ public:
         };
 
         using tforecasts = vector<vector<forecastrecord>>;
-        tforecasts forecasts(unsigned diflag, dmatrix additional = dmatrix())
+        tforecasts forecasts(dmatrix additional = dmatrix())
         {
             vector<vector<forecastrecord>> res;
             unsigned m=additional.rows();
             for(unsigned s=0; s<predlong.size(); s++)
             {
                 vector<forecastrecord> r(m);
-                if(s>= diflag)
+                if(s>= longpredlag)
                 {
                     if(s < y.size())
                     {
                         dvector e = additional * y[s];
-                        if(diflag)
-                            e -= additional * y[s-diflag];
+                        if(diflongpreds)
+                            e -= additional * y[s-longpredlag];
 
                         for(unsigned i=0; i < additional.rows(); i++)
                             r[i].act = e[i];
@@ -186,7 +227,66 @@ public:
             return res;
         }
 
-        void output(ostream& o, unsigned diflag = 0,
+        struct tforecasteval
+        {
+            double stdmean;
+            double stderr;
+            double numoutsideerr;
+        };
+
+
+
+        static vector<tforecasteval> moments(const vector<vector<forecastrecord>>& r)
+        {
+            vector<tforecasteval> res;
+            for(unsigned j=0; j<r[0].size(); j++)
+            {
+                double s=0;
+                double s2=0;
+                unsigned n = 0;
+                unsigned noutside =0 ;
+                for(unsigned i=0; i<r.size(); i++)
+                {
+                    if(!(isnan(r[i][j].pred) || isnan(r[i][j].act)))
+                    {
+                        double dif = (r[i][j].act - r[i][j].pred)/r[i][j].stderr;
+                        s += dif;
+                        s2 += dif * dif;
+                        n++;
+                        if(fabs(dif) > 1)
+                            noutside++;
+                    }
+                }
+                double mean = s / n;
+                res.push_back(
+                { mean, sqrt(s2 / n - mean*mean), static_cast<double>(noutside) / n}
+                            );
+            }
+            return res;
+        }
+
+        static void fcststognuplot(const vector<vector<forecastrecord>>& r, vector<string> labels)
+        {
+            for(unsigned i=0; i<r[0].size(); i++)
+            {
+                string glabel = labels[i] + "_for";
+                gnuplot g(glabel);
+                for(unsigned j=0; j<r.size();j++)
+                    g.datfile() << j << " " << r[j][i].act << " "
+                      << r[j][i].pred << " " << r[j][i].stderr << endl;
+
+                g.script()
+                << "set style data lines" << endl
+                << "set title \"" + labels[i] + " forecasts\"" << endl
+                << "plot '" << glabel << ".dat'"
+                << " using 2 with lines, '' using 1:3:4 with errorlines" << endl;
+
+                g.process();
+            }
+        }
+
+
+        void output(ostream& o,
                     dmatrix additional = dmatrix(),
                     vector<string> lbls = vector<string>())
         {
@@ -216,8 +316,8 @@ public:
                 lbls.push_back(ss.str());
             }
             ostringstream ss;
-            if(diflag)
-                ss << "(" << diflag << ")";
+            if(diflongpreds)
+                ss << "(" << longpredlag << ")";
 
             for(unsigned i=0; i < additional.rows(); i++)
                 o << lbls[i] << ss.str() << " act,";
@@ -266,11 +366,11 @@ public:
                         o << ",";
                 for(unsigned i=0; i<z[0].size(); i++)
                      o << Z(s,i) << ",";
-                if(s < y.size() && s>= diflag)
+                if(s < y.size() && s>= longpredlag)
                 {
                     dvector e = additional * y[s];
-                    if(diflag)
-                        e -= additional * y[s-diflag];
+                    if(diflongpreds)
+                        e -= additional * y[s-longpredlag];
 
                     for(unsigned i=0; i < additional.rows(); i++)
                         o << e[i] << ",";
@@ -325,7 +425,7 @@ public:
         bool longpredvars = false;
         unsigned ds = 0;
         bool diflongpreds = false;
-        double additionalcontrastweight = 1e3;
+        double additionalcontrastweight = 100000;
         vector<bool> yfilter = vector<bool>();
     };
 
@@ -465,7 +565,7 @@ public:
         if(ep.longpredtocontrast)
             assert(ep.longpredlag <= ep.firstcomputedcontrasttime);
 
-        TG g(data,*this, data.y.size() + ep.ds);
+        TG g(data,*this, data.y.size() + ep.ds, ep.longpredlag, ep.diflongpreds);
 
         unsigned horizon = g.Ysize()-1;
         assert(ep.estoffset <= horizon);
@@ -542,7 +642,7 @@ public:
 
             g.pred[i] = uncertain(stackv(Xnew, Ynew),V);
             unsigned ilong = i + ep.longpredlag - 1;
-            if(ep.longpredlag && ilong <= evalhorizon)
+            if(ep.longpredlag && ilong <= evalhorizon && ilong >= ep.firstcomputedcontrasttime)
             {
                 G tmpg = g;
                 dvector xpred = Xnew;
