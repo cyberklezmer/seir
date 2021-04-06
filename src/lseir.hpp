@@ -9,11 +9,19 @@
 class lseir: virtual public seirfilter
 {
 public:
+    static constexpr unsigned fineobs = 40;
+
     enum states { E,  Ia,  Ip,  Is, numactives, Rd=numactives, Ru, D, numstates };
 
     enum obs { CASES, DEATHS, numobscolumns};
 
-    enum excolumns {REDUCTIONMEAN, R0, numexcolumns};
+    enum excolumns {
+#ifdef GOOGLE
+      retail,	grocery,parks,	transit,	workplaces,	residential,
+#endif
+        REDUCTIONMEAN,
+      R0,
+                    numexcolumns};
 
     virtual unsigned k() const  { return numstates; }
     virtual unsigned n() const  { return numobscolumns; }
@@ -26,7 +34,13 @@ public:
     }
 
     enum params { v, ce, cs, ccoef, dcoef,
-                  alpha, sigma, varsigma, gammas, mu, beta, tshift, ralpha, numparams};
+                  alpha, sigma, varsigma, gammas, mu, beta, tshift, ralpha,
+#ifdef GOOGLE
+                  cretail, firstgoogle=cretail,
+                  cgrocery,cparks,	ctransit,	cworkplaces,cresidential,
+                  lastgoogle = cresidential,
+#endif
+                  betafactor, mufactor, numparams};
 
 
     virtual dvector I(unsigned , const vector<double>& , const G& ) const
@@ -36,7 +50,7 @@ public:
         return ret;
     }
 
-    virtual dmatrix P(unsigned /*t*/, const vector<double>& params, const G& /* g */) const
+    virtual dmatrix P(unsigned t, const vector<double>& params, const G& g ) const
     {
         dmatrix Pt(k(),k());
         Pt.setZero();
@@ -46,7 +60,11 @@ public:
         Pt(Ip,Is) = params[varsigma];
         Pt(Ia,Ru) = params[gammas];
         Pt(Is,Rd) = params[gammas];
-        Pt(Is,D) = params[mu];
+        double m = params[mu];
+        if(t >= g.Ysize() - fineobs - g.estoffset)
+            m *= params[mufactor];
+
+        Pt(Is,D) = m;
 
         for(unsigned i=0; i<k(); i++)
         {
@@ -79,9 +97,31 @@ public:
             r0 = params[ralpha] * lweight*g.Z(rt,R0) + (1-lweight)*g.Z(rt+1,R0)
                  + (1-params[ralpha]) * r0;
 
-        double b = (lweight*g.Z(paqtl,REDUCTIONMEAN) + (1-lweight)*g.Z(paqth,REDUCTIONMEAN))
-              * r0 * params[beta];
-//clog << t << ", R0=" << r0 << ", b=" << b << endl;
+        double rl;
+        double rr;
+        double bet = params[beta];
+#ifdef GOOGLE
+        rl = bet;
+        rr = bet;
+        unsigned zp=0;
+        for(unsigned i=firstgoogle; i<=lastgoogle; i++,zp++)
+        {
+            rl += params[i] * g.Z(paqtl,zp);
+            rr += params[i] * g.Z(paqth,zp);
+        }
+        double b = (lweight*rl + (1-lweight)*rr)
+              * r0;
+#else
+        rl = g.Z(paqtl,REDUCTIONMEAN);
+        rr = g.Z(paqth,REDUCTIONMEAN);
+        double b = (lweight*rl + (1-lweight)*rr)
+              * r0 * bet;
+
+#endif
+        if(t >= g.Ysize() - fineobs - g.estoffset)
+            b *= params[betafactor];
+
+
         Bt(Is,E) = b;
         Bt(Ip,E) = b;
         Bt(Ia,E) = b / 4;
@@ -236,7 +276,40 @@ class ldatareader
 {
 public:
 
+    time_t date2t(const string s)
+    {
+        struct tm ti;
+        ti.tm_sec=0;
+        ti.tm_min=0;
+        ti.tm_hour=9;
+        ti.tm_mday= stoi(s.substr(8,2));
+        ti.tm_mon = stoi(s.substr(5,2))-1;
+        ti.tm_year=stoi(s.substr(0,4))-1900;
 
+        return mktime(&ti);
+    }
+
+    int date2int(const string s)
+    {
+        time_t res = date2t(s);
+        int di = round((res + 86400 *0.5) / 86400);
+        return di;
+    }
+
+
+    string t2date(time_t t)
+    {
+        struct tm * ptm = gmtime ( &t );
+        ostringstream s;
+        s << 1900 + ptm->tm_year << "-";
+        if(ptm->tm_mon+1 < 10)
+            s << "0";
+        s << ptm->tm_mon+1 << "-";
+        if(ptm->tm_mday < 10)
+            s << "0";
+        s << ptm->tm_mday;
+        return s.str();
+    }
 
 //    ldatareader(const string& acountry) : country(acountry)
 //    {}
@@ -247,8 +320,9 @@ public:
 
     seirdata read(const string& googlefn, const string& country, const string& jhupath)
     {
-        csv<','> cases(jhupath + "/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv" );
-        csv<','> deaths(jhupath + "/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv" );
+        string firstdate = "2020-02-16";
+        csv<','> cases(jhupath + "time_series_covid19_confirmed_global.csv" );
+        csv<','> deaths(jhupath + "time_series_covid19_deaths_global.csv" );
         csv<','> mobility(googlefn);
 
         unsigned firstcol = 29;
@@ -256,20 +330,29 @@ public:
             throw "JH changed format!";
         if(deaths(0,firstcol) != "2/16/20")
             throw "JH changed format!";
-        if(mobility(1,0) != "2020-02-16")
+        if(mobility(1,0) != firstdate)
             throw "Vitek changed format!";
 
         seirdata res;
         res.ylabels.push_back("CASES");
         res.ylabels.push_back("DEATHS");
 
+
+#ifdef GOOGLE
+        res.zlabels.push_back("retail");
+        res.zlabels.push_back("grocery");
+        res.zlabels.push_back("parks");
+        res.zlabels.push_back("transit");
+        res.zlabels.push_back("workplaces");
+        res.zlabels.push_back("residential");
+#endif
         res.zlabels.push_back("REDUCTIONMEAN");
         res.zlabels.push_back("R0");
 
         unsigned j=1;
         for(; j<cases.r(); j++)
         {
-            if(cases(j,1)==country)
+            if(cases(j,1)==country && cases(j,0) == "")
                 break;
         }
 
@@ -283,7 +366,6 @@ public:
         vector<double> d;
         for(unsigned i=firstcol; i< cases.c(0); i++)
         {
-            res.dates.push_back(cases(0,i));
             c.push_back(cases.getunsigned(j,i));
             d.push_back(deaths.getunsigned(j,i));
         }
@@ -324,14 +406,29 @@ public:
 
         constexpr unsigned mobcol = 7;
         double firstmob = mobility.getdouble(1,mobcol);
+        int firstmobdate = date2int(mobility(1,0));
 
         for(unsigned i=1; i<mobility.r()-1; i++)
         {
             for(unsigned j=0; j<7; j++)
                 mr.push_back((mobility.getdouble(i,mobcol) * (1 - j / 7.0)
                              +mobility.getdouble(i+1,mobcol) * j / 7.0)/firstmob);
+            if(date2int(mobility(i,0))-firstmobdate != 7 * (i-1))
+                throw "mobility data not ascening";
         }
+#ifdef GOOGLE
 
+        constexpr unsigned ngoogles = 6;
+        vector<vector<double>> ggs(ngoogles);
+
+        for(unsigned i=1; i<mobility.r()-1; i++)
+        {
+            for(unsigned j=0; j<7; j++)
+                for(unsigned k=0; k<ngoogles; k++)
+                    ggs[k].push_back((mobility.getdouble(i,1+k) * (1 - j / 7.0)
+                             +mobility.getdouble(i+1,1+k) * j / 7.0));
+        }
+#endif
         vector<double> r0;
         for(unsigned i=0; i+r0shift < r.size(); i++)
             r0.push_back(r[i+r0shift] / mr[i]);
@@ -342,10 +439,20 @@ public:
             res.y.push_back(dv({cs[i],d[i]}));
 
         for(unsigned i=0; i<res.y.size()+forecastlen; i++)
-            res.z.push_back(dv({mr[min(i,static_cast<unsigned>(mr.size()-1))],
+            res.z.push_back(dv({
+#ifdef GOOGLE
+                             ggs[0][min(i,static_cast<unsigned>(ggs.size()-1))],
+                               ggs[1][min(i,static_cast<unsigned>(ggs.size()-1))],
+                               ggs[2][min(i,static_cast<unsigned>(ggs.size()-1))],
+                               ggs[3][min(i,static_cast<unsigned>(ggs.size()-1))],
+                               ggs[4][min(i,static_cast<unsigned>(ggs.size()-1))],
+                               ggs[5][min(i,static_cast<unsigned>(ggs.size()-1))],
+#endif
+                             mr[min(i,static_cast<unsigned>(mr.size()-1))],
                              r0[min(i,static_cast<unsigned>(r0.size()-1))]}));
-        for(unsigned i=res.dates.size(); i<res.y.size()+forecastlen; i++)
-            res.dates.push_back("0/0/0");
+        time_t t = date2t(firstdate);
+        for(unsigned i=0; i<res.y.size()+forecastlen; i++, t+= 24*3600)
+            res.dates.push_back(t2date(t));
         res.lag = 0;
         return res;
     }

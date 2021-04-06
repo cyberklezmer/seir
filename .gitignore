@@ -1,6 +1,7 @@
 trash/
 build-src-Desktop_Qt_5_12_2_GCC_64bit-Debug/
 build-src-Desktop_Qt_5_12_2_GCC_64bit-Release-with-Debug-Information/
+output/
 paper/*.pdf
 paper/tz/*.pdf
 seirwork/mzcr.ods

@@ -90,8 +90,8 @@ void mzcr2mzcr(const string& horizon, bool elementary=false)
     counter ocounter;
     unsigned inconsistento = 0;
 
-    unsigned firstelem = 6;
-    unsigned numclasses = 9;
+    unsigned firstschool = 3;
+    unsigned numclasses = 3+9+4;
 
     vector<vector<unsigned>> I(numdates,vector<unsigned>(numcohorts,0));
     vector<vector<unsigned>> R(numdates,vector<unsigned>(numcohorts,0));
@@ -115,8 +115,8 @@ void mzcr2mzcr(const string& horizon, bool elementary=false)
             unsigned v = osoby.getunsigned(i,vek);
             cohorts c = v2cohort(v);
 
-            if(v>=firstelem && v < firstelem + numclasses)
-                E[d-zerodate][v-firstelem]++;
+            if(v>=firstschool && v < firstschool + numclasses)
+                E[d-zerodate][v-firstschool]++;
 
             if(c==numcohorts)
                 inconsistento++;
@@ -167,7 +167,7 @@ void mzcr2mzcr(const string& horizon, bool elementary=false)
 
     if(elementary)
     {
-        cout << "1,2,3,4,5,6,7,8,9" << endl;
+        cout << "S1,S2,S3,1,2,3,4,5,6,7,8,9,G1,G2,G3,G4" << endl;
         for(unsigned i=0; i<numdates; i++)
         {
             for(unsigned j=0; j<numclasses; j++)
@@ -230,7 +230,7 @@ void uzis2uzis(const string& horizon, bool uziscsv=false, bool rates=false, bool
 
     enum efromis { efideath, efihosp, efidet};
 
-    csv<';'> src("/home/martin/Documents/s/covid/data/pepa/IDEA-anti-COVID-19-data/epidemie/modely_05_datumy.csv");
+    csv<';'> src("/home/martin/Documents/s/covid/data/epidemie/modely_05_datumy.csv");
 
     assert(src.c(0)==numlabels);
 

@@ -65,6 +65,7 @@ class seirfilter
     static bool isVar(const dmatrix& W, const string& label, unsigned t,
                       dvector params)
     {
+return true;
         for(unsigned j=0; j<W.cols();j++)
         {
             if(W(j,j) < -1e-5)
@@ -111,8 +112,9 @@ public:
     struct G : private seirdata
     {
         G(const seirdata& d, const seirfilter& am, unsigned evalsize,
-            unsigned alongpredlag, bool adiflongpreds) :
+            unsigned alongpredlag, bool adiflongpreds, unsigned aestoffset) :
             seirdata(d), longpredlag(alongpredlag), diflongpreds(adiflongpreds),
+            estoffset(aestoffset),
             pred(evalsize), predlong(evalsize), est(evalsize),
             hatBs(evalsize),Ps(evalsize),
             contrasts(d.y.size(),0),icontrasts(d.y.size()), contrast(0), sm(am)
@@ -120,6 +122,7 @@ public:
 
         unsigned longpredlag;
         bool diflongpreds;
+        unsigned estoffset;
         vector<uncertain> pred;
         vector<uncertain> predlong;
 
@@ -190,6 +193,7 @@ public:
             double pred = numeric_limits<double>::quiet_NaN();
             double stderr = numeric_limits<double>::quiet_NaN();
             double act = numeric_limits<double>::quiet_NaN();
+            string lbl = "";
         };
 
         using tforecasts = vector<vector<forecastrecord>>;
@@ -218,10 +222,14 @@ public:
                             * pr.var().block(sm.k(),sm.k(),sm.n(),sm.n())
                             * additional.transpose();
                     for(unsigned i=0; i < m; i++)
-                        r[i].pred = p[i];
-                    for(unsigned i=0; i < m; i++)
-                        r[i].stderr=sqrt(v(i,i));
+                        if(!isnan(p[i]))
+                        {
+                            r[i].pred = p[i];
+                            r[i].stderr=sqrt(v(i,i));
+                            r[i].lbl = dates[s];
+                        }
                 }
+
                 res.push_back(r);
             }
             return res;
@@ -565,7 +573,7 @@ public:
         if(ep.longpredtocontrast)
             assert(ep.longpredlag <= ep.firstcomputedcontrasttime);
 
-        TG g(data,*this, data.y.size() + ep.ds, ep.longpredlag, ep.diflongpreds);
+        TG g(data,*this, data.y.size() + ep.ds, ep.longpredlag, ep.diflongpreds, ep.estoffset);
 
         unsigned horizon = g.Ysize()-1;
         assert(ep.estoffset <= horizon);
