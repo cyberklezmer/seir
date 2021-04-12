@@ -7,9 +7,9 @@ vector<seirparaminit> cz=
 //    v, ce, cs, ccoef, dcoef,
 //                      alpha, sigma, varsigma, gammas, gammaa, mu, beta, tshift, ralpha, numparams};
     {"v",26,0,2000,true},// (0.431221)
-    {"ce",1e+07,0,1e+09,true},// (1.66768e+06)
-    {"cs",1e+07,0,1e+09,true},// (2.07871e+08)
-    {"ccpef",0,0,100,true},// (1.1647e-06)
+    {"ce",1e+09,0,1e+09,true},// (1.66768e+06)
+    {"cs",1e+09,0,1e+09,true},// (2.07871e+08)
+    {"ccoef",0,0,100,true},// (1.1647e-06)
     {"dcoef",0,0,100,true},// (9.68045e-05)
     {"alpha",0.179,0,1,true},// (0.0137321)
     {"sigma",0.1787,0,1,true},// (0.00039807)
@@ -46,10 +46,12 @@ double finddisp(estlseir<M>& es, const seirdata& d,
 
     unsigned disp = s ? lseir::cs : lseir::ce;
 
-    seirfilter::evalparams oep = {obsomit,7,estoffset,true, true, 0, true};
+    seirfilter::evalparams oep = {obsomit,7,
+                                  estoffset,
+                                  true, true, 0, true};
 
     double hi= 1e5;
-    double lo= 1e-5;
+    double lo= 2;
     auto p = ap;
     for(;;)
     {
@@ -60,6 +62,8 @@ double finddisp(estlseir<M>& es, const seirdata& d,
            hi *= 2;
        else
            break;
+       clog << "hi:" << hi << endl;
+
     }
 
     for(;;)
@@ -67,10 +71,11 @@ double finddisp(estlseir<M>& es, const seirdata& d,
        p[disp] = lo;
        seirfilter::G g = es.eval(p, d, oep);
        auto ms = seirfilter::G::moments(g.forecasts(b));
-       if(ms[0].stderr > 1)
+       if(ms[0].stderr > 1 && lo > 1)
            lo /= 2;
        else
            break;
+       clog << "lo:" << lo << endl;
     }
 
     for(;;)
@@ -83,12 +88,13 @@ double finddisp(estlseir<M>& es, const seirdata& d,
             hi = mid;
         else
             lo = mid;
+        clog << mid << endl;
         if(hi-lo < 0.01)
             return mid;
     }
 };
 
-enum estmode { noest, checkdata, lastadjust, disperse, initial, full };
+enum estmode { noest, checkdata, lastadjust, initial, disperse, full };
 
 template <estimationmethod M>
 vector<double> estimate(estlseir<M>& es,  const seirdata& d,
@@ -99,10 +105,10 @@ vector<double> estimate(estlseir<M>& es,  const seirdata& d,
     seirfilter::evalparams eep = {numomit,7,estoffset,
                                   true, M==emwls ? false : true,0, false, 50000};
 
-
     uncertain res;
 
     clog << "Estimating by wls." << endl; // tbd not always
+
 
     es.estimate(pinit,d, eep , res, atime);
 
@@ -121,6 +127,80 @@ vector<double> estimate(estlseir<M>& es,  const seirdata& d,
     return rp;
 }
 
+
+void grid(const string& country, const string& cabbr)
+{ // ucitele: ucinovaclock.csv ucihhlllock.csv
+
+    vector<seirparaminit> apinit=
+    {
+        {"v",26,0,2000,true},// (8.16045)
+        {"ce",1e+20,0,1e+09,true},// (1.57427e+23)
+        {"cs",1e+20,0,1e+09,true},// (1.13218e+22)
+        {"ccoef",0,0,100,true},// (2.39812e-09)
+        {"dcoef",0,0,100,true},// (1.33183e-08)
+        {"alpha",0.179,0,1,true},// (0.270034)
+        {"sigma",0.1787,0,1,true},// (0.0167875)
+        {"varsigma",0.2212,0,1,true},// (0.017533)
+        {"gamma",0.29987,0,1,true},// (0.00840391)
+        {"mu",0.00524024,1e-10,1,true},// (0.000131991)
+        {"beta",0.0771058,0,6,true},// (4.6957)
+        {"tshift",0,0,14,true},// (1.88383e-18)
+        {"talpha",0.01,0,0.1,true},// (0.000298457)
+        {"retail",0.000207996,-1,1,true},// (0.545954)
+        {"grocery",0,-1,1,true},// (0.677397)
+        {"parks",0,-1,1,true},// (0.335742)
+        {"ransit",5.35151e-05,-1,1,true},// (0.405235)
+        {"workplaces",-0.000165894,-1,1,true},// (0.396318)
+        {"residential",0,-1,1,true},// (0.51494)
+        {"betafactor",0.710872,0.5,5,false},// (0.00528296)
+        {"mufactor",1.10389,0.5,5,false},// (0.034626)
+    };
+
+
+    assert(apinit.size() == lseir::numparams);
+
+    ldatareader r;
+
+    seirdata fulld = r.read(
+                "../input/country_data/"
+                 + cabbr + ".csv",
+                country,
+                "../input/jhu/"
+                );
+
+    seirfilter::evalparams eep = {260,7,0,
+                              true, true,0, false, 50000};
+
+    eep.yfilter = vector<bool>(2);
+    eep.yfilter[0] = true;
+    eep.yfilter[1] = false;
+
+    dvector x0(lseir::numstates);
+    x0.setZero();
+    x0[lseir::E] = 3;
+
+    estlseir<emwls> es(x0);
+
+    vector<double> rp = spi2v(apinit);
+
+    clog << "grid for " << cabbr << endl;
+
+    for(double c = 1.77922e+08 / 10; c > 0.01 ; c /= 10 )
+    {
+        for(double r = 0; r < 0.001; r += 0.0001)
+        {
+            rp[lseir::ce] = c;
+            rp[lseir::ccoef] = r;
+            seirfilter::G rinit = es.eval(rp, fulld, eep);
+            dmatrix b(1,2);
+            b(0,0)=1;
+            b(0,1)=0;
+            double s = seirfilter::G::moments(rinit.forecasts(b))[0].stderr;
+            clog << rinit.contrast << "," << s << ",";
+        }
+        clog << endl;
+    }
+}
 
 seirfilter::G::tforecasts runlite(const string& country, const string& cabbr,
          const vector<seirparaminit>& apinit, double atime, estmode mode, unsigned estoffset )
@@ -175,8 +255,9 @@ seirfilter::G::tforecasts runlite(const string& country, const string& cabbr,
     if(mode >= initial)
         rp = estimate<emwls>(es,d,pinit,atime / 3,obsomit,estoffset);
 
-    dmatrix b(2,2);
-    b.setIdentity();
+
+
+
 
     if(0 && mode >= disperse)
     {
@@ -185,36 +266,41 @@ seirfilter::G::tforecasts runlite(const string& country, const string& cabbr,
         clog << "ce set to " << ce<< endl;
         rp[lseir::ce]=ce;
 
-//        rp = estimate<emwls>(es,d,pinit,atime / 3, estoffset);
-
-        double cs =  finddisp(es,d,rp,true, estoffset);
+        double cs =  finddisp(es,d,rp,true,
+d.y.size()-lseir::fineobs-estoffset
+//                              estoffset
+                              );
         clog << "cs set to " << cs << endl;
 
         rp[lseir::cs] = cs;
 
         v2spi(rp,pinit);
-        for(unsigned i=0; i<pinit.size(); i++)
-            pinit[i].omit = true;
-pinit[lseir::dcoef].omit = false;
-pinit[lseir::ccoef].omit = false;
-pinit[lseir::ce].omit = false;
-pinit[lseir::cs].omit = false;
 
-estlseir<emwlsstd> ses(x0);
-
-        rp = estimate<emwlsstd>(ses,d,pinit, atime / 3, obsomit, estoffset);
+        rp = estimate<emwls>(es,d,pinit, atime / 6, d.y.size()-lseir::fineobs-estoffset, estoffset);
     }
 
     if(mode >= lastadjust)
     {
-        clog << "last adjustment" << endl;
+        clog << "last adjustment: from " << d.y.size()-lseir::fineobs-estoffset << endl;
         v2spi(rp,pinit);
         for(unsigned i=0; i<pinit.size(); i++)
             pinit[i].omit = true;
         pinit[lseir::betafactor].omit=false;
         pinit[lseir::mufactor].omit=false;
-        rp = estimate<emwls>(es,d,pinit, atime / 6, d.y.size()-lseir::fineobs-estoffset, estoffset);
+
+//pinit[lseir::ce].omit=false;
+//pinit[lseir::cs].omit=false;
+//pinit[lseir::ccoef].omit=false;
+//pinit[lseir::dcoef].omit=false;
+
+//estlseir<emmle> es(x0);
+
+
+                rp = estimate<emwls>
+//rp = estimate<emmle>
+                (es,d,pinit, atime / 6, d.y.size()-lseir::fineobs-estoffset, estoffset);
     }
+
 
     seirfilter::evalparams evalep =
       { static_cast<unsigned>(d.y.size())-lseir::fineobs-estoffset
@@ -222,6 +308,10 @@ estlseir<emwlsstd> ses(x0);
 
 
     seirfilter::G g = es.eval(rp, d, evalep);
+
+
+    dmatrix b(2,2);
+    b.setIdentity();
     auto f = g.forecasts(b);
     auto ms = seirfilter::G::moments(f);
     clog << "C: " << ms[0].stderr  << "(" << ms[0].stdmean << ","
@@ -285,14 +375,14 @@ vector<countryinfo> countries =
     {"SK", "Slovakia"}
 };
 
-void light(bool expforecast)
+void light(bool expforecast, string submdate)
 {
-    try {
+    try
+    {
         sys::setoutputfolder("../output/");
 
         if(expforecast) // evaluate
         {
-            string submdate = "2021-04-05";
             ofstream ecvs(sys::outputfolder()
                           +submdate+"-bisop-seirfilterlite.csv");
             if(!ecvs)
@@ -307,12 +397,17 @@ void light(bool expforecast)
             {
                 try
                 {
+  //grid(r.name,r.abbr);
+  //throw;
+
+
+
                     static vector<vector<double>> cfscale =
                     {
-                        {0.85, 1.15, 1.8, 2.5},
-                        {1.5, 1.7, 1.9, 2.20 }
+                        {0.9, 1.02, 1.32, 1.8},
+                        {1.26, 1.34, 1.46, 1.67 }
                     };
-                    auto f=runlite(r.name, r.abbr,cz,5*60,full, 0);
+                    auto f=runlite(r.name, r.abbr,cz,5*60, full, 0);
                     for(unsigned i=0; i<2; i++)
                     {
                         unsigned t=0;
@@ -344,9 +439,9 @@ void light(bool expforecast)
                                          << k+1 << " wk ahead inc " << (i==0 ? "case," : "death," )
                                          <<  fr.lbl << "," << r.abbr << ",";
                                     if(j<qs.size())
-                                        ecvs << "quantile," << qs[j] << "," << round(fr.pred + f[s][i].stderr * cfscale[i][k] * qsv[j]);
+                                        ecvs << "quantile," << qs[j] << "," << std::max(0.0,round(fr.pred + f[s][i].stderr * cfscale[i][k] * qsv[j]));
                                     else
-                                        ecvs << "point,NA," << fr.pred;
+                                        ecvs << "point,NA," << std::max(0.0,round(fr.pred));
                                     ecvs << endl;
                                 }
                                 k++;
@@ -481,3 +576,6 @@ trials < 5 &&
 
 //    clog << "time: " << time(0)-startt << " seconds." << endl;
 }
+
+
+

@@ -111,6 +111,7 @@ public:
 
     virtual dvector gamma(unsigned /* t */, const vector<double>& params, const struct G& /*g*/) const
     {
+throw;
         dvector ret(n());
         ret.setZero();
         ret[HY] = ret[HO] = params[hcoef];

@@ -167,7 +167,7 @@ class hcohortseir: public cohortseir<hpartial>
 {
 public:
     enum excolumns {I0,	I20,	I65,	I80,
-                     DAYADJUST,PDET,REDUCTIONMEAN,BRIGITATTACK,FEAR,_BETAFACTOR,BFACTOR,
+                     DAYADJUST,PDET,REDUCTIONMEAN,BRIGITATTACK,FEAR,BETAFACTOR,BFACTOR,
                      numexcolumns};
 
     enum computationparams {
@@ -185,6 +185,7 @@ public:
                dcoef,
                         lastvar=dcoef,
                omega,
+               omega2,
                pi,
                thetacoef,
                eta0,
@@ -294,7 +295,9 @@ public:
            = c * be * (lweight*g.Z(paqtl,REDUCTIONMEAN) + (1-lweight)*g.Z(paqth,REDUCTIONMEAN))
 //              * (lweight*g.Z(paqtl,BFACTOR) + (1-lweight)*g.Z(paqth,BFACTOR))
                 * exp(
-                    -params[omega] *(lweight*g.Z(paqtl,FEAR) + (1-lweight)*g.Z(paqth,FEAR)));
+                    -params[omega] *(lweight*g.Z(paqtl,FEAR) + (1-lweight)*g.Z(paqth,FEAR))
+                    -params[omega2] *(lweight*g.Z(paqtl,BETAFACTOR) + (1-lweight)*g.Z(paqth,BETAFACTOR))
+                    );
 
 
         auto cp = commonpars();

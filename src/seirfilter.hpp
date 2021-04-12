@@ -13,6 +13,7 @@ using namespace std;
 
 struct seirdata
 {
+
     vector<string> ylabels;
     vector<string> zlabels;
 
@@ -421,8 +422,30 @@ public:
     virtual dmatrix hatB(unsigned t, const vector<double>& params, const G& g) const = 0;
     virtual dmatrix F(unsigned t, const vector<double>& params, const G& g) const = 0;
     virtual dvector I(unsigned t, const vector<double>& params, const G& g) const = 0;
-    virtual dvector gamma(unsigned /* t */, const vector<double>& /* params */, const G& /*g*/) const
-        { dvector ret(n()); ret.setZero(); return ret; }
+    virtual dvector gamma(const dvector& x, const dvector& y, unsigned t , const vector<double>& params , const G& g) const
+    {
+        dvector ret= gamma0(t,params,g) + gamma1(t,params,g) * x + gamma2(t,params,g) * y;
+        return ret;
+    }
+    virtual dvector gamma0(unsigned , const vector<double>&, const G&) const
+    {
+        dvector ret(n());
+        ret.setZero();
+        return ret;
+    }
+    virtual dmatrix gamma1(unsigned , const vector<double>&, const G&) const
+    {
+        dmatrix ret(n(),k());
+        ret.setZero();
+        return ret;
+    }
+
+    virtual dmatrix gamma2(unsigned , const vector<double>&, const G&) const
+    {
+        dvector ret(n(),k());
+        ret.setZero();
+        return ret;
+    }
 
     struct evalparams
     {
@@ -639,12 +662,10 @@ public:
             dmatrix Wnew = T * Wold * T.transpose() + Lambda(i-1,pars,Xplus,y,g);
 
             dvector Yplus = F * Xplus;
-            dvector gm = gamma(i-1,pars, g);
-            dvector gd(n());
-            for(unsigned i=0; i<n(); i++)
-                gd[i] = gm[i] * Yplus[i];
+            dvector gm = gamma(Xplus,square(Xplus),i-1,pars, g);
+//clog << i << "gm " << gm[0] << "," << gm[1] << endl;
             dmatrix V =  block( Wnew, Wnew*F.transpose(),
-                                F*Wnew, F*Wnew*F.transpose() + diag(gd));
+                                F*Wnew, F*Wnew*F.transpose() + diag(gm));
 
             assert(isVar(V,"V2",i-1,dv(pars)));
 
@@ -704,11 +725,7 @@ public:
                    lp = stackv(xpred, F*xpred);
                 if(ep.longpredvars)
                 {
-                    dvector Yplus = Flong * xpredplus;
-                    dvector gm = gamma(ilong-1,pars, tmpg);
-                    dvector gdnew(n());
-                    for(unsigned i=0; i<n(); i++)
-                        gdnew[i] = gm[i] * Yplus[i];
+                    dvector gmnew = gamma(xpredplus,square(xpredplus), ilong-1,pars, tmpg);
 
                     if(ep.diflongpreds)
                     {
@@ -720,7 +737,7 @@ public:
                                 lp,
                                 block( W, W*Flong.transpose(),
                                        Flong*W, Flong*W*Flong.transpose()
-                                          + diag(gd+gdnew))
+                                          + diag(gm+gmnew))
                                 };
                         }
                         else
@@ -732,7 +749,7 @@ public:
                                        W*Flong.transpose() + trsf * Wnew * FTt.transpose(),
                                        Flong*W + FTt * Wnew * trsf.transpose(),
                                        Flong*W*Flong.transpose() + FTt * Wnew * FTt.transpose()
-                                          + diag(gdnew))
+                                          + diag(gmnew))
                                 };
 
                         }
@@ -743,7 +760,7 @@ public:
                             lp,
                             block( W, W*Flong.transpose(),
                                    Flong*W, Flong*W*Flong.transpose()
-                                      + diag(gdnew))
+                                      + diag(gmnew))
                             };
                     }
                 }
@@ -761,11 +778,12 @@ public:
                 if(Vyy.isZero())
                 {
                     g.est[i] = uncertain(Xnew, Vxx); // ?? divný
-                    assert(!computingcontrast);
+//                    assert(!computingcontrast);
                 }
                 else
                 {
                     dmatrix Vinv = pseudoinverse(Vyy); // Vyy.inverse();
+
                     dvector Xest = Xnew + Vxy * Vinv * (g.Y(i)-Ynew);
                     dmatrix West =Vxx + ((-1) * Vxy) * Vinv * Vyx;
                     assert(isVar(West,"W",i-1,dv(pars)));
@@ -792,6 +810,7 @@ public:
         }
 
         g.contrast += ep.additionalcontrastweight * contrastaddition(pars,g,ep);
+//throw;
         return g;
     }
 

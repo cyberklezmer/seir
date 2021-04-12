@@ -143,13 +143,12 @@ public:
             return params[p[i]];
     }
 
-
-    virtual dvector gamma(unsigned /* t */, const vector<double>& params, const struct G& /*g*/) const
+    virtual dmatrix gamma2(unsigned , const vector<double>& params, const G&) const
     {
-        dvector ret(n());
+        dmatrix ret(n(),k());
         ret.setZero();
-        ret[CASES] = params[ccoef];
-        ret[DEATHS] = params[dcoef];
+        ret(CASES,E) = params[ccoef];
+        ret(DEATHS,Is) = params[dcoef];
         return ret;
     }
 

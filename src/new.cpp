@@ -57,6 +57,7 @@ program g =
         {"gcoef",0.0164452,0,100,true},// (0.00463542)
         {"dcoef",0.327983,0,100,true},// (0.0881409)
         {"omega",3.90358,0,10,false},// (0.00455381)
+        {"omega2",0,0,10,false},// (0.00455381)
         {"pi",1,0,5,true},// (0.00217803)
         {"thetacoef",0.0054748,0,0.3,false},// (5.334e-05)
         {"eta0",0.2,0,0.6,true},// (0.000224081)
@@ -84,7 +85,7 @@ program g =
     false, //  bool computeinitparam;
 
     false, // bool estimate;
-    3*60,     // double etime=100;
+    15*60,     // double etime=100;
     180,   // unsigned offset;
 
     false, // bool estimatevars;
@@ -95,7 +96,7 @@ program g =
     40,         // unsigned predictionlength;
     7,           // predlength
 
-    true, // bool compositeforecast;
+    false, // bool compositeforecast;
     211+7-1,    //unsigned forecastdate=0;
     2, // unsigned numweeks = 3;
     0.03, // double volatility = 0.03;
@@ -112,59 +113,60 @@ program g =
 
 vector<seirparaminit> newplain =
 {
-    {"paqshift",6.08563,0,14,false},// (0.00367128)
-    {"v",26,0,2000,true},// (0.987325)
-    {"ce",41.0908,0,200000,true},// (1.2367)
-    {"cd",10555,0,200000,true},// (15532.4)
-    {"cu",7554.24,0,200000,true},// (1222.32)
-    {"ch",60.2775,0,1e+10,true},// (4.29244)
-    {"rcoef",0.252287,0,100,true},// (0.0074909)
-    {"hcoef",0.000334341,0,100,true},// (0.00227923)
-    {"gcoef",0.000632012,0,100,true},// (0.00149619)
-    {"dcoef",4.85491e-17,0,100,true},// (0.000117302)
-    {"omega",8.15404,0,10,false},// (0.0149356)
-    {"pi",1,0,5,true},// (0.00363171)
-    {"thetacoef",0.00943328,0,0.3,false},// (0.000175504)
-    {"eta0",0.130607,0,0.6,false},// (0.000224698)
-    {"theta0",0.0135984,0,0.3,false},// (6.43455e-05)
-    {"hbrigiteffect",0.100504,0,2,false},// (0.00233585)
-    {"brigiteffect",1.42286,0,2,false},// (0.00262725)
-    {"cycleeffect",0.142051,0,0.5,false},// (6.92083)
-    {"sigma",0.1787,0,1,true},// (0.00039696)
-    {"varsigma",0.2212,0,1,true},// (0.000504227)
-    {"ufactor",1,0,1,true},// (0.00743711)
-    {"vfactor",1,0,1,true},// (0.0455374)
-    {"gammas",0.0507184,0,1,false},// (0.000113811)
-    {"gammaa",0.904684,0,1,false},// (0.10332)
-    {"mus",0.000922335,1e-10,1,false},// (0.000884046)
-    {"muh",0.0502859,0,1,false},// (0.801974)
-    {"betafactor0",3.57435,0,6,false},// (21.6588)
-    {"iotas0",0.00189545,0,1,false},// (3.1862e-05)
-    {"gammah0",0.500704,0,1,false},// (0.0192648)
-    {"musratio0",0.0001,0,1,true},// (0.000414488)
-    {"muhratio0",0.05,0,1,true},// (0.797731)
-    {"betafactor20",4.15602,0,6,false},// (25.1833)
-    {"iotas20",0.000269982,0,1,false},// (7.20778e-06)
-    {"gammah20",0.12998,0,1,false},// (0.00248646)
-    {"musratio20",0.0436633,0,1,true},// (0.0424063)
-    {"muhratio20",0.2,0,1,true},// (3.18947)
-    {"betafactor65",3.96392,0,10,false},// (24.0183)
-    {"iotas65",0.00968087,0,1,false},// (7.79369e-05)
-    {"gammah65",0.130323,0,1,true},// (0.00151546)
-    {"musratio65",0.552886,0,1,true},// (0.508822)
-    {"muhsatio65",0.5,0,1,true},// (7.97364)
-    {"betafactor80",9.9899,0,10,false},// (60.5371)
-    {"iotas80",0.00650165,0,1,false},// (0.000146189)
-    {"gammah80",0.0133762,0,1,false},// (0.000579205)
-    {"musratio80",0.745,0,1,true},// (0.764228)
-    {"muhratio80",0.6,0,1,true},// (9.56911)
+    {"paqshift",6.6114,0,14,false},// (-nan)
+    {"v",26,0,2000,true},// (-nan)
+    {"ce",41.0908,0,200000,true},// (-nan)
+    {"cd",10555,0,200000,true},// (-nan)
+    {"cu",7554.24,0,200000,true},// (-nan)
+    {"ch",60.2775,0,1e+10,true},// (-nan)
+    {"rcoef",0.252287,0,100,true},// (-nan)
+    {"hcoef",0.000334341,0,100,true},// (-nan)
+    {"gcoef",0.000632012,0,100,true},// (-nan)
+    {"dcoef",4.85491e-17,0,100,true},// (inf)
+    {"omega",8.36847,0,10,false},// (0.0106571)
+    {"omega2",0.474832,0,10,false},// (0.000528343)
+    {"pi",1,0,5,true},// (0.00336143)
+    {"thetacoef",0.00781977,0,0.3,true},// (0.00015602)
+    {"eta0",0.161952,0,0.6,true},// (0.000186723)
+    {"theta0",0.0137329,0,0.3,true},// (6.94893e-05)
+    {"hbrigiteffect",0.211474,0,2,false},// (0.00216806)
+    {"brigiteffect",1.65646,0,2,false},// (0.00261956)
+    {"cycleeffect",0.208944,0,0.5,false},// (7.79306)
+    {"sigma",0.1787,0,1,true},// (0.000282897)
+    {"varsigma",0.2212,0,1,true},// (0.000535242)
+    {"ufactor",1,0,1,true},// (0.00658018)
+    {"vfactor",1,0,1,true},// (0.0231578)
+    {"gammas",0.042587,0,1,true},// (0.000104398)
+    {"gammaa",0.899829,0,1,true},// (0.104687)
+    {"mus",0.6 * 0.00105315,1e-10,1,false},// (0.0008066)
+    {"muh",0.6* 0.0433582,0,1,false},// (0.907525)
+    {"betafactor0",3.50809,0,6,false},// (22.6121)
+    {"iotas0",0.00178857,0,1,true},// (2.21328e-05)
+    {"gammah0",0.426342,0,1,true},// (0.0136905)
+    {"musratio0",0.0001,0,1,true},// (0.000623099)
+    {"muhratio0",0.05,0,1,true},// (1.04704)
+    {"betafactor20",4.12467,0,6,false},// (26.5858)
+    {"iotas20",0.000210695,0,1,true},// (4.56694e-06)
+    {"gammah20",0.0856702,0,1,true},// (0.0013621)
+    {"musratio20",0.0436633,0,1,true},// (0.0334685)
+    {"muhratio20",0.2,0,1,true},// (4.18623)
+    {"betafactor65",4.05492,0,10,false},// (26.1348)
+    {"iotas65",0.00902148,0,1,true},// (6.73886e-05)
+    {"gammah65",0.130323,0,1,true},// (0.00118363)
+    {"musratio65",0.552886,0,1,true},// (0.422802)
+    {"muhsatio65",0.5,0,1,true},// (10.4653)
+    {"betafactor80",9.9974,0,10,false},// (64.4421)
+    {"iotas80",0.0059404,0,1,true},// (9.13792e-05)
+    {"gammah80",0.0102214,0,1,true},// (0.00044248)
+    {"musratio80",0.745,0,1,true},// (0.574239)
+    {"muhratio80",0.6,0,1,true},// (12.5585)
 };
 
 
 program g4 =
 {
     "epi.csv",  //    string input;
-    "21.csv",  // vac
+    "1104.csv",  // vac
     "cohort", // string name;
     // vector<seirparaminit> params;
     newplain,
@@ -174,11 +176,11 @@ program g4 =
     false, //  bool computeinitparam;
 
     false, // bool estimate;
-    6*60*60,     // double etime=100;
+    15*60,     // double etime=100;
     180,   // unsigned offset;
 
     false, // bool estimatevars;
-    3*60*60,      // double evtime=100;
+    10*60,      // double evtime=100;
     200000.0, // double regularizationweight;
 
     false,        // bool output;
@@ -186,7 +188,7 @@ program g4 =
     7,           // predlength
 
     true, // bool compositeforecast;
-    211+7+7-1,    //unsigned forecastdate=0;
+    211+7+7+7-1,    //unsigned forecastdate=0;
     3, // unsigned numweeks = 3;
     0.15, // double volatility = 0.03;
 
@@ -560,7 +562,7 @@ void run4(const program& prg)
 
 extern void uzis2uzis(const std::string& horizon, bool, bool, bool, bool);
 extern void mzcr2mzcr(const std::string& horizon, bool);
-extern void light(bool expforecast);
+extern void light(bool expforecast, string submdate);
 
 int main()
 {
@@ -570,11 +572,11 @@ int main()
     {
 
 /// Uncomment what you want to run
-//       run4(g4);
+       run4(g4);
 //       run1(g);
-        light(false);
-//       mzcr2mzcr("2021-04-05", false);
-//       uzis2uzis("2021-04-05", true, false,false,false);
+//       light(true, "2021-04-12");
+//       mzcr2mzcr("2021-04-11", false);
+//       uzis2uzis("2021-04-11", true, false,false,false);
     }
     catch (std::exception& e) {
         std::cerr << e.what() << endl;
@@ -604,3 +606,60 @@ int main()
 
 }
 
+/*
+ *
+ * contrast=2.64044e+06
+{
+{"paqshift",5.48296,0,14,false},// (-nan)
+{"v",26,0,2000,true},// (-nan)
+{"ce",41.0908,0,200000,true},// (-nan)
+{"cd",10555,0,200000,true},// (-nan)
+{"cu",7554.24,0,200000,true},// (-nan)
+{"ch",60.2775,0,1e+10,true},// (-nan)
+{"rcoef",0.252287,0,100,true},// (-nan)
+{"hcoef",0.000334341,0,100,true},// (-nan)
+{"gcoef",0.000632012,0,100,true},// (-nan)
+{"dcoef",4.85491e-17,0,100,true},// (inf)
+{"omega",8.24817,0,10,false},// (0.0113161)
+{"pi",1,0,5,true},// (0.002822)
+{"thetacoef",0.00903535,0,0.3,false},// (0.000167685)
+{"eta0",0.149589,0,0.6,false},// (0.000165259)
+{"theta0",0.0137112,0,0.3,false},// (5.11831e-05)
+{"hbrigiteffect",0.0890946,0,2,false},// (0.00197674)
+{"brigiteffect",1.51939,0,2,false},// (0.00245682)
+{"cycleeffect",0.145591,0,0.5,false},// (5.43727)
+{"sigma",0.1787,0,1,true},// (0.000335461)
+{"varsigma",0.2212,0,1,true},// (0.000544957)
+{"ufactor",1,0,1,true},// (0.00709302)
+{"vfactor",1,0,1,true},// (0.0327765)
+{"gammas",0.0477403,0,1,false},// (9.63694e-05)
+{"gammaa",0.900548,0,1,false},// (0.0946789)
+{"mus",0.000950123,1e-10,1,false},// (0.00078807)
+{"muh",0.041512,0,1,false},// (0.500535)
+{"betafactor0",3.61355,0,6,false},// (17.1506)
+{"iotas0",0.00176691,0,1,false},// (2.62348e-05)
+{"gammah0",0.460497,0,1,false},// (0.0162368)
+{"musratio0",0.0001,0,1,true},// (0.00320272)
+{"muhratio0",0.05,0,1,true},// (0.607245)
+{"betafactor20",4.24781,0,6,false},// (20.1609)
+{"iotas20",0.000259166,0,1,false},// (5.91844e-06)
+{"gammah20",0.108765,0,1,false},// (0.00164018)
+{"musratio20",0.0436633,0,1,true},// (0.0363884)
+{"muhratio20",0.2,0,1,true},// (2.41071)
+{"betafactor65",3.9221,0,10,false},// (18.6148)
+{"iotas65",0.00969794,0,1,false},// (6.79259e-05)
+{"gammah65",0.130323,0,1,true},// (0.000813453)
+{"musratio65",0.552886,0,1,true},// (0.455472)
+{"muhsatio65",0.5,0,1,true},// (6.02748)
+{"betafactor80",9.99036,0,10,false},// (47.4146)
+{"iotas80",0.0065849,0,1,false},// (9.7546e-05)
+{"gammah80",0.012308,0,1,false},// (0.00033078)
+{"musratio80",0.745,0,1,true},// (0.630845)
+{"muhratio80",0.6,0,1,true},// (7.23616)
+},
+
+*/
+/*
+contrast=2.61342e+06
+
+*/
