@@ -75,8 +75,8 @@ public:
                             (ep.longpredtocontrast
                                ?  g.predlong[t].x()[k()+i]
                               :g.pred[t].x()[k()+i]);
-                    g.icontrasts[t][i]=w * x * x;
-                    s += w * x * x;
+                    g.icontrasts[t][i]= w * w * x * x;
+                    s += w * w * x * x;
                 }
             }
         }
@@ -194,7 +194,7 @@ private:
         G r = f.eval(x,f.fdata, f.fevalparams);
 
 //        double ret = f.totalcontrast(x,f.d,f.ct);
-//        clog << r.contrast << '\a';
+//        clog << r.contrast << endl;
         return r.contrast;
     }
 

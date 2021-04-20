@@ -52,6 +52,7 @@ struct seirdata
             // tbd v
         }
     }
+
     void removebeginning(unsigned toremove)
     {
         dates.erase(dates.begin(), dates.begin() + toremove);
@@ -287,7 +288,7 @@ public:
                 g.script()
                 << "set style data lines" << endl
                 << "set title \"" + labels[i] + " forecasts\"" << endl
-                << "plot '" << glabel << ".dat'"
+                << "plot '" << g.datfn() << "'"
                 << " using 2 with lines, '' using 1:3:4 with errorlines" << endl;
 
                 g.process();
@@ -406,8 +407,92 @@ public:
                 o << endl;
             }
         }
+
+        vector<double> contrastvars()
+        {
+            vector<double> s(ylabels.size(),0);
+            vector<double> s2(ylabels.size(),0);
+            vector<unsigned> n(ylabels.size(),0);
+
+            for(auto r: icontrasts)
+            {
+                for(unsigned i=0; i<r.size();i++)
+                {
+                    auto x = r[i];
+                    s[i] += x;
+                    s2[i] += x * x;
+                    n[i]++;
+                }
+            }
+            vector<double> res;
+            for(unsigned i=0; i<s.size();i++)
+            {
+                double m= s[i] / n[i];
+                res.push_back( s2[i] / n[i] - m*m);
+            }
+            return res;
+        }
+
+        void report(const string& fn)
+        {
+            ofstream o(sys::outputfolder()+fn+".tex");
+            if(!o)
+                throw "cannot open " + sys::outputfolder()+fn;
+
+            o << "\\documentclass[12pt,english,a4paper]{article}" << endl
+              << "\\usepackage{graphicx}" << endl
+              << "\\begin{document}" << endl << endl;
+
+            o << "\\section*{Residuals}" << endl;
+
+
+
+            for(unsigned i=0; i<ylabels.size(); i++)
+            {
+
+                o << "\\subsection*{" + ylabels[i] << "}" << endl;
+
+                using namespace std;
+                string forlabel = fn+ylabels[i] + "_for";
+                string reslabel = fn+ylabels[i] + "_res";
+                string stdreslabel = fn+ylabels[i] + "_stdres";
+                o << "\\begin{tabular}{ccc}" << endl
+//                  <<  "\\includegraphics[width=4cm]{" << forlabel << ".eps}"
+//                  <<  "& \\includegraphics[width=4cm]{" << reslabel << ".eps}"
+                   <<  "& \\includegraphics[width=6cm]{" << stdreslabel << ".eps}"
+                 << "\\end{tabular}" << endl << endl << endl;
+
+                gnuplot g(stdreslabel);
+
+                g.script()
+                << "set style data lines" << endl
+                << "set zeroaxis" << endl
+                << "set title \"" + ylabels[i] + " std resituals\"" << endl
+                << "plot '" << g.datfn() << "'"
+                << " using 2 with lines" << endl;
+
+
+                for(unsigned s=0; s<y.size(); s++)
+                {
+                    auto yy = y[s][i];
+                    if(diflongpreds && s > longpredlag)
+                        yy -= y[s-longpredlag][i];
+                    g.datfile() << s << " "
+                      << (yy - predlong[s].x()[i+sm.k()]) / sqrt(predlong[s].var()(i+sm.k(),i+sm.k())) << endl;
+                }
+                g.process();
+            }
+
+
+
+            o << "\\end{document}" << endl;
+        }
+
+
+
         unsigned abstime(unsigned t) const { return seirdata::abstime(t);}
     };
+
 
 
     virtual unsigned k() const = 0;
@@ -442,7 +527,7 @@ public:
 
     virtual dmatrix gamma2(unsigned , const vector<double>&, const G&) const
     {
-        dvector ret(n(),k());
+        dmatrix ret(n(),k());
         ret.setZero();
         return ret;
     }
@@ -458,6 +543,7 @@ public:
         bool diflongpreds = false;
         double additionalcontrastweight = 100000;
         vector<bool> yfilter = vector<bool>();
+        vector<double> additionalwlsweights = vector<double>();
     };
 
 

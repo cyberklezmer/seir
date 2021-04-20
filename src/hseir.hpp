@@ -23,7 +23,6 @@ public:
     enum params { alpha, sigma, varsigma, gammas, gammaa, iotas, mus,
                   theta, eta, pi,
                   gammah, muh,
-                  musratio,
                   muhratio,
                   prebeta,
                   betafactor,
@@ -53,7 +52,7 @@ public:
         double pu = max(min(1.0, (params[pi] - A ) / B),0.0);
 
         double mh= params[muh] * params[muhratio];
-        double ms = params[mus] * params[musratio];
+        double ms = params[mus];
 
         Pt(E,Ia) = params[sigma] * params[alpha];
         Pt(E,Ip) = params[sigma] * (1-params[alpha]);
@@ -168,6 +167,7 @@ class hcohortseir: public cohortseir<hpartial>
 public:
     enum excolumns {I0,	I20,	I65,	I80,
                      DAYADJUST,PDET,REDUCTIONMEAN,BRIGITATTACK,FEAR,BETAFACTOR,BFACTOR,
+                     F0, F20, F65, F80, FALL, S0, S20, S65, S80, SALL,
                      numexcolumns};
 
     enum computationparams {
@@ -204,7 +204,6 @@ public:
         vfactor,
         gammas,
         gammaa,
-        mus,
         muh,
         numcommonandcompparams
     };
@@ -217,7 +216,6 @@ public:
                hpartial::vfactor,
                hpartial::gammas,
                hpartial::gammaa,
-               hpartial::mus,
                hpartial::muh
               };
     }
@@ -228,7 +226,7 @@ public:
         betafactor,
         iotas,
         gammah,
-        musratio,
+        mus,
         muhratio,
         numexclusivepars
     };
@@ -238,7 +236,7 @@ public:
            return { hpartial::betafactor,
                hpartial::iotas,
                hpartial::gammah,
-               hpartial::musratio,
+               hpartial::mus,
                hpartial::muhratio
            };
     }
@@ -313,8 +311,25 @@ public:
                 res[c][ep[i]] = params[srcc++];
             res[c][hpartial::alpha] =
 0.179; // tbd
-            res[c][hpartial::iotas] *= 1+ ba * params[hbrigitefect];
-            res[c][hpartial::prebeta] *= (1.0-g.V(t,c));
+            if(c < 2)
+                res[c][hpartial::iotas] *= 1+ ba * params[hbrigitefect];
+            double pf = 0, ps = 0;
+            if(t > 20)
+            {
+                if(numcohorts()==1)
+                {
+                    pf = g.Z(t-14,FALL);
+                    ps = g.Z(t-7,SALL);
+                }
+                else
+                {
+                    pf = g.Z(t-14,F0 + c);
+                    ps = g.Z(t-7,S0 + c);
+                }
+            }
+            double vred = ps * 0.1 + (pf-ps) * 0.3 + (1 - pf) * 1;
+//clog << t << ": c= " << c << " ps=" << ps << " vred=" << vred << endl;
+            res[c][hpartial::prebeta] *= vred;
         }
         assert(srcc==params.size());
         return res;
@@ -347,6 +362,7 @@ public:
 
 };
 
+template <bool single>
 class datareader
 {
 public:
@@ -399,8 +415,11 @@ public:
             res.z.push_back(dv(exp));            
 
             vector<double> vac;
-            for(unsigned j=0; j<4; j++)
-                vac.push_back(vc ? vc->getdouble(i+1,j+1) : 0);
+            if(single)
+                vac.push_back(vc->getdouble(i+1,5));
+            else
+                for(unsigned j=0; j<4; j++)
+                    vac.push_back(vc ? vc->getdouble(i+1,j+1) : 0);
             res.v.push_back(dv(vac));
         }
         res.lag = lag;

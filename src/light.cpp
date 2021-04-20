@@ -203,7 +203,8 @@ void grid(const string& country, const string& cabbr)
 }
 
 seirfilter::G::tforecasts runlite(const string& country, const string& cabbr,
-         const vector<seirparaminit>& apinit, double atime, estmode mode, unsigned estoffset )
+         const vector<seirparaminit>& apinit, double atime, estmode mode,
+                                  unsigned estoffset, vector<double> *resp = 0)
 { // ucitele: ucinovaclock.csv ucihhlllock.csv
 
     assert(apinit.size() == lseir::numparams);
@@ -254,10 +255,6 @@ seirfilter::G::tforecasts runlite(const string& country, const string& cabbr,
 
     if(mode >= initial)
         rp = estimate<emwls>(es,d,pinit,atime / 3,obsomit,estoffset);
-
-
-
-
 
     if(0 && mode >= disperse)
     {
@@ -334,6 +331,8 @@ d.y.size()-lseir::fineobs-estoffset
         for(unsigned j=0; j<2; j++)
             f[i][j].pred =f[i][j].stderr = numeric_limits<double>::quiet_NaN();
     seirfilter::G::fcststognuplot(f, {cabbr + "_C"+eo.str(), cabbr+"_D"+eo.str()});
+    if(resp)
+        *resp = rp;
     return f;
 };
 
@@ -488,8 +487,18 @@ void light(bool expforecast, string submdate)
             ofstream o(sys::outputfolder()+"eval.csv");
             if(!o)
                 throw "cannot open evalcsv";
+
+            ofstream op(sys::outputfolder()+"params.csv");
+            if(!op)
+                throw "cannot open paramcsv";
+            op << "Country, delay ";
+            for(auto r: cz)
+                op << "," << r.name;
+            op << endl;
+
             for(auto r : countries)
             {
+                const int ntrials = 5;
                 try
                 {
                     otex << "\\begin{tabular}{ccc}" << endl;
@@ -497,15 +506,21 @@ void light(bool expforecast, string submdate)
                     o << r.abbr;
                     vector<unsigned> cfails(5,0);
                     vector<unsigned> dfails(5,0);
+                    vector<vector<double>> cerrs(5);
+                    vector<vector<double>> derrs(5);
                     unsigned trials = 0;
                     for(unsigned t=35;
-trials < 5 &&
+trials < ntrials &&
                         t < numobsforest / 2; t += 14, trials++)
                     {
+                        vector<double> rp;
                         auto f = runlite(r.name, r.abbr,cz,
-20,
- //                                       5*60,
-                                         full, t);
+                                        5*60,
+                                         full, t,&rp);
+                        op << r.abbr << "," << t;
+                        for(auto r:rp)
+                            op << "," << r;
+                        op << endl;
                         for(unsigned i=0;i<=5;i++)
                         {
                             auto rc=f[f.size()-1-i*7][0];
@@ -514,11 +529,13 @@ trials < 5 &&
                             {
                                 if(fabs(rc.act-rc.pred) > rc.stderr)
                                     cfails[i]++;
+                                cerrs[i].push_back((rc.act-rc.pred) / rc.stderr);
                             }
                             if(!(isnan(rd.pred) || isnan(rd.act) || isnan(rd.stderr)))
                             {
                                 if(fabs(rd.act-rd.pred) > rd.stderr)
                                     dfails[i]++;
+                                derrs[i].push_back((rd.act-rd.pred) / rd.stderr);
                             }
                         }
 
@@ -532,8 +549,20 @@ trials < 5 &&
                         o << "," << cfails[i];
                     for(unsigned i=0; i<5; i++)
                         o << "," << dfails[i];
-                    o <<  "," << trials << endl;
-
+                    o <<  "," << trials << ",";
+                    for(unsigned i=0; i<5; i++)
+                    {
+                        for(unsigned j=0; j<cerrs[i].size(); j++)
+                            o << "," << cerrs[i][j];
+                        o << ",";
+                    }
+                    for(unsigned i=0; i<5; i++)
+                    {
+                        for(unsigned j=0; j<derrs[i].size(); j++)
+                            o << "," << derrs[i][j];
+                        o << ",";
+                    }
+                    o << endl;
                     otex << "\\end{tabular}" << endl;
 
                 }

@@ -6,7 +6,7 @@
 class hsingleseir: public hcohortseir
 {
 public:
-    enum obscolums { /* R */ RA, RS, H, G, DH, DO,  numobscolumns };
+    enum obscolums { /* R */ RA, RS, H, RH, DH, DO,  numobscolumns };
 
     hsingleseir() : hcohortseir(1,{ 10699000 }) {}
 
@@ -20,11 +20,11 @@ public:
 //     E,  Ia,  Ip,  Is,  Iu  R, Edelta, Iadelta, Ipdelta,  Isdelta,  Rdelta,  Hdelta, Rhdelta, Ddelta, Dhdelta,  Isd, Rd, Hd, Rhd, Dd, Dhd
        dmatrix ret(n(),k());
        ret <<
-/*RA*/   0,  0,   0,   0,   0,  0, 0,      1,       1,        1,        1,       1,      1,       1,      1,        0,   0,  0,  0,   0,  0,
-/*RS*/     0,  0,   0,   0,   0,  0, 0,      0,       0,        0,        0,       0,      0,       0,      0,        1,   1,  1,  1,   1,  1,
-/*R  0,  0,   0,   0,   0,  0, 0,      1,       1,        1,        1,       1,      1,       1,      1,        1,   1,  1,  1,   1,  1,*/
+/*RA*/ 0,  0,   0,   0,   0,  0, 0,      1,       1,        1,        1,       1,      1,       1,      1,        0,   0,  0,  0,   0,  0,
+/*RS*/ 0,  0,   0,   0,   0,  0, 0,      0,       0,        0,        0,       0,      0,       0,      0,        1,   1,  1,  1,   1,  1,
+/*R  0,0,  0,   0,   0,   0,  0, 1,      1,       1,        1,        1,       1,      1,       1,      1,        1,   1,  1,   1,  1,  1,*/
 /*H*/  0,  0,   0,   0,   0,  0, 0,      0,       0,        0,        0,       1,      1,       0,      1,        0,   0,  1,  1,   0,  1,
-/*G*/  0,  0,   0,   0,   0,  0, 0,      0,       0,        0,        0,       0,      1,       0,      1,        0,   0,  0,  1,   0,  1,
+/*RH*/ 0,  0,   0,   0,   0,  0, 0,      0,       0,        0,        0,       0,      1,       0,      0,        0,   0,  0,  1,   0,  0,
 /*DH*/ 0,  0,   0,   0,   0,  0, 0,      0,       0,        0,        0,       0,      0,       0,      1,        0,   0,  0,  0,   0,  1,
 /*DO*/ 0,  0,   0,   0,   0,  0, 0,      0,       0,        0,        0,       0,      0,       1,      0,        0,   0,  0,  0,   1,  0;
         return ret;
@@ -40,27 +40,25 @@ public:
         return ret;
     }
 
-    virtual dvector gamma(unsigned /* t */, const vector<double>& params, const struct G& /*g*/) const
+    virtual dmatrix gamma2(unsigned , const vector<double>& params, const G&) const
     {
-throw;
-        dvector ret(n());
+        dmatrix ret(n(),k());
         ret.setZero();
-        ret[RA] = params[rcoef];
-        ret[RS] = params[rcoef];
-        //ret[RS] = params[rscoef];
-        ret[G] = params[gcoef];
-        ret[H] = params[gcoef];
-        ret[DH] = ret[DO] = params[dcoef];
+        ret(RA,hpartial::E) = params[rcoef];
+        ret(RS,hpartial::E) = params[rcoef];
+        ret(RH,hpartial::Hd) = params[gcoef];
+        ret(H,hpartial::Is) = params[hcoef];
+        ret(DH,hpartial::Hd) = ret(DO,hpartial::Is) = params[dcoef];
         return ret;
     }
 
 };
 
-class singledatareader : public datareader
+class singledatareader : public datareader<true>
 {
     virtual vector<string> obslabels() const
     {
-        return   { "RA", "RS",  "H", "G", "DH", "DO"};
+        return   { "CA", "CS",  "H", "RH", "DH", "DO"};
     }
 
     virtual unsigned numobs() const
@@ -75,8 +73,7 @@ class singledatareader : public datareader
         dst[hsingleseir::RS] = src[RS];
 //        dst[hsingleseir::R] = src[RS]+src[RA];
         dst[hsingleseir::H] = src[HY] + src[HO];
-        dst[hsingleseir::G] = src[DHY] + src[DHO]
-                                      + src[RHY] + src[RHO];
+        dst[hsingleseir::RH] = src[RHY] + src[RHO];
         dst[hsingleseir::DH] = src[DHY] + src[DHO];
         dst[hsingleseir::DO] = src[DOY] + src[DOO];
         return dst;

@@ -1,0 +1,10 @@
+open /home/martin/Documents/s/covid/seir/src/litecalibration/litecfs.ods \
+  --sheet=2
+qqplot C1
+qqplot C2
+qqplot C3
+qqplot C4
+qqplot D1
+qqplot D2
+qqplot D3
+qqplot D4

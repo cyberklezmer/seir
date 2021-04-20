@@ -9,7 +9,7 @@ class hfourseir: public hcohortseir
 public:
     enum obscolums {
        /* RA - excluded due to linear dependence  */ RS,
-       HY, HO, GY, GO, DHY, DHO, // DOY, DOO, can  computed from others
+       HY, HO, RHY, RHO, DHY, DHO, // DOY, DOO, can  computed from others
        D0 , D20, D65, D80, R0, R20, R65, R80,
        numobscolumns };
 
@@ -42,8 +42,8 @@ public:
            /*H*/ {  0,  0,   0,   0,   0,  0, 0,      0,       0,        0,        0,       1,      1,       0,      1,        0,   0,  1,  1,   0,  1}
              );
 
-           ret.block(GY+oi,offset,1,pk) = row(
-           /*G*/ {  0,  0,   0,   0,   0,  0, 0,      0,       0,        0,        0,       0,      1,       0,      1,        0,   0,  0,  1,   0,  1}
+           ret.block(RHY+oi,offset,1,pk) = row(
+           /*RHY*/ {  0,  0,   0,   0,   0,  0, 0,      0,       0,        0,        0,       0,      1,       0,      0,        0,   0,  0,  1,   0,  0}
              );
 
            ret.block(DHY+oi,offset,1,pk) = row(
@@ -109,16 +109,29 @@ public:
         return ret;
     }
 
-    virtual dvector gamma(unsigned /* t */, const vector<double>& params, const struct G& /*g*/) const
+    virtual dmatrix gamma2(unsigned , const vector<double>& params, const G&) const
     {
-throw;
-        dvector ret(n());
+        dmatrix ret(n(),k());
         ret.setZero();
-        ret[HY] = ret[HO] = params[hcoef];
-        ret[GY] = ret[GO] = params[gcoef];
-        ret[RS]=ret[R0] = ret[R20] = ret[R65] = ret[R80] = params[rcoef];
-        ret[D0]=ret[D20]=ret[D65]=ret[D80]
-                =ret[DHY]=ret[DHO]=params[dcoef];
+        constexpr auto pk = hpartial::numstates;
+
+        ret(HY,hpartial::Is) = ret(HY,pk + hpartial::Is)
+          = ret(HO,2*pk + hpartial::Is) = ret(HO,3*pk + hpartial::Is) = params[hcoef];
+
+        ret(RHY,hpartial::Hd) = ret(RHY, pk + hpartial::Hd)
+                = ret(RHO, 2 * pk + hpartial::Hd) = ret(RHO, 3 * pk + hpartial::Hd)
+                = params[gcoef];
+        ret(DHY,hpartial::Hd) = ret(DHY, pk + hpartial::Hd)
+                = ret(DHO, 2 * pk + hpartial::Hd) = ret(DHO, 3 * pk + hpartial::Hd)
+                = params[gcoef];
+        ret(RS, hpartial::E) = ret(RS, pk + hpartial::E)
+                = ret(RS, 2*pk+ hpartial::E) = ret(RS, 3 * pk + hpartial::E)
+                = ret(R0, hpartial::E) = ret(R20, pk + hpartial::E)
+                = ret(R65, 2*pk+ hpartial::E) = ret(R80, 3 * pk + hpartial::E)
+                = params[rcoef];
+        ret(D0, hpartial::Hd)=ret(D20, pk + hpartial::Hd)
+                =ret(D65, 2* pk + hpartial::Hd)=ret(D80, 3*pk + hpartial::Hd)
+                =params[dcoef];
         return ret;
     }
 
@@ -127,13 +140,13 @@ private:
 };
 
 
-class fourdatareader : public datareader
+class fourdatareader : public datareader<false>
 {
     virtual vector<string> obslabels() const
     {
-        return   { "RS",
-            "HY", "HO","GY","GO","DHY","DHO",
-            "D0","D20","D65","D80", "R0","R20","R65", "R80" };
+        return   { "CS",
+            "HY", "HO","RY","RO","DHY","DHO",
+            "D0","D20","D65","D80", "C0","C20","C65", "C80" };
     }
 
     virtual unsigned numobs() const
@@ -148,8 +161,8 @@ class fourdatareader : public datareader
         dst[hfourseir::RS] = src[RS];
         dst[hfourseir::HY] = src[HY];
         dst[hfourseir::HO] = src[HO];
-        dst[hfourseir::GY] = src[DHY] + src[RHY];
-        dst[hfourseir::GO] = src[DHO] + src[RHO];
+        dst[hfourseir::RHY] = src[RHY];
+        dst[hfourseir::RHO] = src[RHO];
         dst[hfourseir::DHY] = src[DHY];
         dst[hfourseir::DHO] = src[DHO];
         dst[hfourseir::D0] = src[D0];
