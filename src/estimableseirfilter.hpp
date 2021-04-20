@@ -194,7 +194,7 @@ private:
         G r = f.eval(x,f.fdata, f.fevalparams);
 
 //        double ret = f.totalcontrast(x,f.d,f.ct);
-//        clog << r.contrast << endl;
+        clog << r.contrast << endl;
         return r.contrast;
     }
 

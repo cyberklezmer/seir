@@ -23,7 +23,7 @@ public:
     enum params { alpha, sigma, varsigma, gammas, gammaa, iotas, mus,
                   theta, eta, pi,
                   gammah, muh,
-                  muhratio,
+                  musratio,
                   prebeta,
                   betafactor,
                   ufactor,
@@ -51,8 +51,8 @@ public:
                       / (params[varsigma]+params[theta]);
         double pu = max(min(1.0, (params[pi] - A ) / B),0.0);
 
-        double mh= params[muh] * params[muhratio];
-        double ms = params[mus];
+        double mh= params[muh] ;
+        double ms = params[mus] * params[musratio];
 
         Pt(E,Ia) = params[sigma] * params[alpha];
         Pt(E,Ip) = params[sigma] * (1-params[alpha]);
@@ -204,7 +204,7 @@ public:
         vfactor,
         gammas,
         gammaa,
-        muh,
+        mus,
         numcommonandcompparams
     };
 
@@ -216,7 +216,7 @@ public:
                hpartial::vfactor,
                hpartial::gammas,
                hpartial::gammaa,
-               hpartial::muh
+               hpartial::mus
               };
     }
 
@@ -226,8 +226,8 @@ public:
         betafactor,
         iotas,
         gammah,
-        mus,
-        muhratio,
+        muh,
+        musratio,
         numexclusivepars
     };
 
@@ -236,8 +236,8 @@ public:
            return { hpartial::betafactor,
                hpartial::iotas,
                hpartial::gammah,
-               hpartial::mus,
-               hpartial::muhratio
+               hpartial::muh,
+               hpartial::musratio
            };
     }
 
