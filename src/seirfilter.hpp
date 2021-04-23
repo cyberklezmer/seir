@@ -185,6 +185,11 @@ public:
             return Z(t)[i];
         }
 
+        unsigned Zsize() const
+        {
+            return z.size();
+        }
+
         double V(unsigned t, unsigned i) const
         {
             return v[t<v.size() ? t : v.size()-1][i];

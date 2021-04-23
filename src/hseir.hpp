@@ -194,6 +194,8 @@ public:
                hobrigitefect,
                brigiteeffect,
                cycleeffect,
+               firstdosered,
+               seconddosered,
                numcomputationparams
     };
 
@@ -329,7 +331,7 @@ public:
                     ps = g.Z(t-7,S0 + c);
                 }
             }
-            double vred = ps * 0.1 + (pf-ps) * 0.3 + (1 - pf) * 1;
+            double vred = ps * params[seconddosered] + pf * params[firstdosered] + (1 - pf - ps) * 1;
 //clog << t << ": c= " << c << " ps=" << ps << " vred=" << vred << endl;
             res[c][hpartial::prebeta] *= vred;
         }
