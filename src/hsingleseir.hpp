@@ -72,10 +72,10 @@ class singledatareader : public datareader<true>
         dst[hsingleseir::RA] = src[RA];
         dst[hsingleseir::RS] = src[RS];
 //        dst[hsingleseir::R] = src[RS]+src[RA];
-        dst[hsingleseir::H] = src[HY] + src[HO];
-        dst[hsingleseir::RH] = src[RHY] + src[RHO];
-        dst[hsingleseir::DH] = src[DHY] + src[DHO];
-        dst[hsingleseir::DO] = src[DOY] + src[DOO];
+        dst[hsingleseir::H] = src[H0] + src[H20]+ src[H65] + src[H80];
+        dst[hsingleseir::RH] = src[RH0] + src[RH20] + src[RH65] + src[RH80];
+        dst[hsingleseir::DH] = src[DH0] + src[DH20] + src[DH65] + src[DH80];
+        dst[hsingleseir::DO] = src[D0] + src[D20] + src[D65] + src[D80] - dst[hsingleseir::DH];
         return dst;
     }
 };

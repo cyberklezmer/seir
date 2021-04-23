@@ -191,8 +191,11 @@ void mzcr2mzcr(const string& horizon, bool elementary=false)
     }
 }
 
+
+
+
 // durs mean numbers to death
-void uzis2uzis(const string& horizon, bool uziscsv=false, bool rates=false, bool durs=false, bool hospdurs =false)
+void olduzis2uzis(const string& horizon, bool uziscsv=false, bool rates=false, bool durs=false, bool hospdurs =false)
 {
     enum cats {c0, c20, c65, numcats };
 
@@ -480,4 +483,139 @@ void uzis2uzis(const string& horizon, bool uziscsv=false, bool rates=false, bool
              cout << endl;
         }
     }
+}
+
+void uzis2uzis(const string& horizon)
+{
+
+
+    enum cats {c0, c20, c65, c80, numcats };
+
+    enum labels {vek_kat,pohlavi,kraj_bydliste,kraj_prvni_nemocnice,
+                 datum_priznaku,datum_odberu,datum_positivity,stav_dle_khs,
+                 zahajeni_hosp,
+                 posledni_zaznam,stav_posledni_zaznam,posledni_hosp_zaznam,nejtezsi_stav,
+                 tezky_stav,tezky_stav_pocatek,dni_tezky_stav,tezky_stav_posledni,
+                 jip,jip_pocatek,dni_jip,jip_posledni,
+                 kyslik,kyslik_pocatek,dni_kyslik,kyslik_posledni,
+                 upv,upv_pocatek,dni_upv,upv_posledni,
+                 ecmo,ecmo_pocatek,dni_ecmo,ecmo_posledni,
+                 umrti,datum_umrti,numlabels};
+
+
+    enum gender {man, woman, other, numgenders};
+
+    enum dateinds {hosp, release, death, numdateinds};
+
+    int lastdate = date2int(horizon);
+    int numdates = lastdate - zerodate + 1;
+
+    vector<counter> cntr(numdateinds); // i know the first will be unused
+    unsigned inconsistent = 0;
+
+/*    struct staterec { int min; int whofirst; cats cat; };
+
+    vector<vector<staterec>> fromisgivendet(numdates);
+    vector<vector<staterec>> fromisd(numdates);
+    vector<vector<staterec>> fromh(numdates);
+    vector<vector<double>> delays(numdates);*/
+
+    vector<vector<double>> h(numcats,vector<double>(numdates,0));
+    vector<vector<double>> r(numcats,vector<double>(numdates,0));
+    vector<vector<double>> dhosp(numcats,vector<double>(numdates,0));
+
+//    const unsigned numdurs = 100;
+//    vector<vector<unsigned>> durhist(2*3,vector<unsigned>(numdurs,0));
+//    vector<vector<unsigned>> hospdurhist(2*3,vector<unsigned>(numdurs,0));
+
+//    enum efromis { efideath, efihosp, efidet};
+
+    csv<';'> src("/home/martin/Documents/s/covid/data/epidemie/modely_05_hospitalizovani_analyza.csv");
+
+    assert(src.c(0)==numlabels);
+
+    for(unsigned i=1; i<src.r(); i++)
+    {
+        string cs = src(i,vek_kat);
+        cats c;
+        string ls;
+        unsigned age;
+        for(unsigned j=0; j<cs.size() && cs[j] != '-'; j++)
+            ls += cs[j];
+        try
+        {
+            age = stoul(ls);
+        }
+        catch (...)
+        {
+            clog << "Cannot convert'" << ls << "' to unsigned" << endl;
+            inconsistent++;
+            continue;
+
+        }
+        if(age >= 80)
+            c = c80;
+        else if(age >= 65)
+            c = c65;
+        else if(age >= 20)
+            c = c20;
+        else
+            c = c0;
+
+        gender g;
+        auto pohlstr = src(i,pohlavi);
+        if(pohlstr == "M")
+            g = man;
+        else if(pohlstr == "Z")
+            g = woman;
+        else
+            g = other;
+
+        vector<int> res(numlabels);
+        int dh = date2int(src(i,zahajeni_hosp),zerodate,lastdate,cntr[hosp]);
+        int dlr = date2int(src(i,posledni_zaznam),zerodate,lastdate,cntr[release]);
+        int dd = date2int(src(i,datum_umrti),zerodate,lastdate,cntr[death]);
+
+        if(dh < maxint)
+            h[c][dh-zerodate]++;
+        if(dd < maxint)
+            dhosp[c][dd-zerodate]++;
+        else if(dlr < maxint && src(i,posledni_hosp_zaznam)[0] != 'h') // hospitalizace okracuje
+            r[c][dlr-zerodate]++;
+
+        if(dh==maxint)
+        {
+            clog << "record without hosp date" << endl;
+            inconsistent++;
+        }
+        else if(dlr==maxint)
+        {
+            clog << "record without last record or " << endl;
+            inconsistent++;
+        }
+    }
+
+    for(unsigned j=0; j<numdateinds; j++)
+    {
+        cout << j << ": " << cntr[j].wrong << " wrong,"
+               << cntr[j].over << " over,"
+               << cntr[j].under << " under" << endl;
+    }
+
+    cout << inconsistent << " inconsistent records." << endl;
+    cout << endl;
+
+
+    cout << "H0,H20,H65,H80,R0,R20,R65,R80,DH0,DH20,DH65,DH80" << endl;
+    for(int i=0; i<numdates; i++)
+    {
+        for(unsigned j=0; j<numcats; j++)
+            cout << h[j][i] << ",";
+        for(unsigned j=0; j<numcats; j++)
+            cout << r[j][i] << ",";
+        for(unsigned j=0; j<numcats; j++)
+            cout << dhosp[j][i] << ",";
+        cout << endl;
+    }
+
 }

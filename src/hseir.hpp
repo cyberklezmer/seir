@@ -39,6 +39,9 @@ public:
         dmatrix Pt(k(),k());
         Pt.setZero();
 
+        double mh= params[muh] ;
+        double ms = params[mus] * params[musratio];
+
         double A = params[theta] *
             (1
              + params[alpha] * params[sigma] / (params[theta] + params[gammaa])
@@ -46,20 +49,17 @@ public:
           / (params[theta]+params[sigma]);
         double B =
               (1-params[alpha]) * params[sigma] * params[varsigma] * params[eta]
-                      / (params[gammas]+params[mus]+params[gammas]+params[eta])
+                      / (params[gammas]+ms+params[gammas]+params[eta])
                       / (params[theta]+params[sigma])
                       / (params[varsigma]+params[theta]);
         double pu = max(min(1.0, (params[pi] - A ) / B),0.0);
 
-        double mh= params[muh] ;
-        double ms = params[mus] * params[musratio];
 
         Pt(E,Ia) = params[sigma] * params[alpha];
         Pt(E,Ip) = params[sigma] * (1-params[alpha]);
         Pt(Ip,Is) = params[varsigma] * pu;
 
-
-Pt(Ip,Hd) = params[iotas];
+        Pt(Ip,Hd) = params[iotas];
 
         Pt(Ip,Iu) = params[varsigma] *(1-pu);
 
@@ -190,7 +190,8 @@ public:
                thetacoef,
                eta0,
                theta0,
-               hbrigitefect,
+               hybrigitefect,
+               hobrigitefect,
                brigiteeffect,
                cycleeffect,
                numcomputationparams
@@ -287,6 +288,8 @@ public:
                 ;
 
         double ba =lweight * g.Z(paqtl,BRIGITATTACK) + (1-lweight)* g.Z(paqth,BRIGITATTACK);
+        double ba21 = paqtl < 22 ? 0 : (lweight * g.Z(paqtl-14,BRIGITATTACK) + (1-lweight)* g.Z(paqth-14,BRIGITATTACK));
+
         double c = 1.0 + params[cycleeffect]*cos((g.abstime(shiftedt)-325)/365 * 2*3.141592653);
         double be = 1.0 + params[brigiteeffect] * ba;
         preparams[hpartial::prebeta]
@@ -311,8 +314,7 @@ public:
                 res[c][ep[i]] = params[srcc++];
             res[c][hpartial::alpha] =
 0.179; // tbd
-            if(c < 2)
-                res[c][hpartial::iotas] *= 1+ ba * params[hbrigitefect];
+            res[c][hpartial::iotas] *= 1+ ba21 * params[c<2 ? hybrigitefect : hobrigitefect];
             double pf = 0, ps = 0;
             if(t > 20)
             {
@@ -368,10 +370,9 @@ class datareader
 public:
     enum obscolumns {R0,	R20,	R65,	R80,
                      D0,	D20,	D65,	D80,
-                     HY,	HO,
-                     RHY,	RHO,
-                     DHY,	DHO,
-                     DOY,	DOO,
+                     H0,	H20,    H65,    H80,
+                     RH0,	RH20,   RH65,   RH80,
+                     DH0,	DH20,   DH65,   DH80,
                      RA,	RS,
                       numobscolumns};
 
