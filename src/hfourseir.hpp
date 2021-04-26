@@ -72,7 +72,7 @@ public:
     }
 
 
-    hfourseir() : hcohortseir(4,{2188232,6374077,1690530,441100}),
+    hfourseir(evaccmodellingmethod vm) : hcohortseir(4,{2188232,6374077,1690530,441100},vm),
         fF(makeF())
        {}
 

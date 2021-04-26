@@ -12,6 +12,7 @@ struct program
     string input;
     string vac;
     string name;
+    evaccmodellingmethod vaccmethod;
     vector<seirparaminit> params;
 
     unsigned estoffset;
@@ -44,6 +45,7 @@ program g =
     "epi.csv",//    string input;
     "1104.csv",  // vac
     "single", // string name;
+    evmS,
     // vector<seirparaminit> params;
     {
         {"paqshift",5.87943,0,14,false},// (4.08239)
@@ -187,6 +189,7 @@ program g4 =
     "epi.csv",  //    string input;
     "1104.csv",  // vac
     "cohort", // string name;
+    evmS,
     // vector<seirparaminit> params;
     newplain,
 
@@ -246,7 +249,7 @@ shared_ptr<seirfilter::G> run(const program& prg, const dmatrix& add, vector<str
         clog << "Computing initial value." << endl;
 //        constexpr bool single = is_same<S,hsingleseir>::value;
         seirdata d = dr.read(c,0,vc);
-        hestseir<S,emwls> ies;
+        hestseir<S,emwls> ies(prg.vaccmethod);
         seirfilter::evalparams iep = {40,7,prg.estoffset, true, false};
 
         vector<double> p;
@@ -286,7 +289,7 @@ shared_ptr<seirfilter::G> run(const program& prg, const dmatrix& add, vector<str
     {
         clog << "Estimating by wls." << endl;
 
-        hestseir<S,emwls> es(x0);
+        hestseir<S,emwls> es(prg.vaccmethod,x0);
         seirfilter::evalparams eep = {40,7,prg.estoffset,
                                       true,
                                       false
@@ -323,7 +326,7 @@ shared_ptr<seirfilter::G> run(const program& prg, const dmatrix& add, vector<str
 
     if(prg.estimatevars)
     {
-        hestseir<S,emmle> ves(x0);
+        hestseir<S,emmle> ves(prg.vaccmethod,x0);
         clog << "Estimating by mle" << endl;
 
         seirfilter::evalparams vep = {40, 7, prg.estoffset , true,true};
@@ -363,7 +366,7 @@ hcohortseir::lastdisp+1
 
         seirfilter::evalparams oep = {40,0,0, true, true, prg.predictionlength};
 
-        hestseir<S,emwls> oes(x0);
+        hestseir<S,emwls> oes(prg.vaccmethod,x0);
 
         d.y.resize(d.y.size()-prg.estoffset);
 
@@ -411,7 +414,7 @@ hcohortseir::lastdisp+1
         seirfilter::evalparams ep =
           {40,prg.diflength,0, true, true, prg.predictionlength};
 
-        hestseir<S,emwls> es(x0);
+        hestseir<S,emwls> es(prg.vaccmethod,x0);
 
         unsigned nt = 1 << prg.numweeks;
         seirdata dd = d; // we will twist it
@@ -593,14 +596,31 @@ shared_ptr<seirfilter::G> run4(const program& prg)
 }
 
 
-void vacc(string delay)
+void vacc(string delay, evaccmodellingmethod vm)
 {
+    string vms;
+    switch(vm)
+    {
+    case evmS:
+        vms = "S";
+        break;
+    case evmR:
+        vms = "R";
+        break;
+    case evmA:
+        vms = "A";
+        break;
+    default:
+        throw "unknown option";
+    }
+
     program g4v =
     {
         "epi"+delay+".csv",  //    string input;
         "",  // vac
-        "cohort", // string name;
+        vms + "_vacctest", // string name;
         // vector<seirparaminit> params;
+        vm,
         newplain,
 
         100, //15, // estoffset
@@ -631,15 +651,15 @@ void vacc(string delay)
     };
 
 
-    ofstream o(sys::outputfolder() + "LLL" + delay + ".csv");
+    ofstream o(sys::outputfolder() + vms + "LLL" + delay + ".csv");
 
     if(!o)
         throw "csv open error";
 
     o << "first_shot,second_shot,all,<65,65-79,80+" << endl;
 
-    for(double firsteff = 0; firsteff < 1.0001; firsteff += 0.5)
-        for(double seceff = firsteff; seceff < 1.0001; seceff += 0.5)
+    for(double firsteff = 0; firsteff < 1.0001; firsteff += 0.05)
+        for(double seceff = firsteff; seceff < 1.0001; seceff += 0.05)
         {
             g4v.params[hcohortseir::firstdosered].initial = (1-firsteff);
             g4v.params[hcohortseir::seconddosered].initial = (1-seceff);
@@ -672,11 +692,18 @@ int main()
         sys::settmpfolder("../tmp/");
 
 /// Uncomment what you want to run
-vacc("42");
+/*
+        vacc("21",evmA);
+vacc("42",evmA);
+vacc("21",evmS);
+vacc("42",evmS);
+vacc("21",evmR);
+vacc("42",evmR);
+*/
 //       run4(g4);
 //       run1(g);
 //       light(false, "2021-04-19");
-//       mzcr2mzcr("2021-04-18", false);
+       mzcr2mzcr("2021-04-25", true);
 //      olduzis2uzis("2021-04-18", true, false,false,false);
 //        uzis2uzis("2021-04-18");
     }
@@ -709,104 +736,4 @@ vacc("42");
 }
 
 
-/* wls
- *
- * {"paqshift",6.58868,0,14,true},// (6.86693)
-{"v",26,0,2000,true},// (536.645)
-{"ce",41.0908,0,200000,true},// (855.83)
-{"cd",10555,0,200000,true},// (2.08688e+06)
-{"cu",7554.24,0,200000,true},// (467296)
-{"ch",60.2775,0,1e+10,true},// (1378.33)
-{"rcoef",0.252287,0,100,true},// (4.82157)
-{"hcoef",0.000334341,0,100,true},// (0.00771149)
-{"gcoef",0.000632012,0,100,true},// (0.0142405)
-{"dcoef",4.85491e-17,0,100,true},// (0.000392896)
-{"omega",8.40786,0,10,true},// (8.39154)
-{"omega2",0.394722,0,10,true},// (0.492232)
-{"pi",1,0,5,true},// (0.92424)
-{"thetacoef",0.00781977,0,0.3,true},// (0.0729257)
-{"eta0",0.161703,0,0.6,false},// (0.268644)
-{"theta0",0.0142933,0,0.3,false},// (0.0330371)
-{"hbrigiteffect",0.730097,0,2,false},// (1.20372)
-{"brigiteffect",1.98935,0,2,false},// (2.14241)
-{"cycleeffect",0.0150008,0,0.5,false},// (847.08)
-{"sigma",0.1787,0,1,true},// (0.232223)
-{"varsigma",0.2212,0,1,true},// (0.393186)
-{"ufactor",1,0,1,true},// (3.23396)
-{"vfactor",1,0,1,true},// (33.6244)
-{"gammas",0.0382163,0,1,false},// (0.0380335)
-{"gammaa",0.996602,0,1,false},// (9.90497)
-{"muh",0.0611882,0,1,false},// (1735.76)
-{"betafactor0",3.58486,0,6,false},// (2991.7)
-{"iotas0",0.000454226,0,1,false},// (0.00283251)
-{"gammah0",0.873023,0,1,false},// (2.97521)
-{"mus0",8.11052e-08,0,1,false},// (2.47119e-05)
-{"muhratio0",0.05,0,1,true},// (1418.53)
-{"betafactor20",4.13205,0,6,false},// (3448.33)
-{"iotas20",0.000316524,0,1,false},// (0.000896525)
-{"gammah20",0.126376,0,1,false},// (0.142487)
-{"mus20",4.05142e-06,0,1,false},// (8.26664e-05)
-{"muhratio20",0.2,0,1,true},// (5673.5)
-{"betafactor65",4.43606,0,10,false},// (3701.98)
-{"iotas65",0.00318432,0,1,false},// (0.00732517)
-{"gammah65",0.0432362,0,1,false},// (0.0557937)
-{"mus65",5.19756e-05,0,1,false},// (0.00127134)
-{"muhratio65",0.540245,0,1,false},// (15325.5)
-{"betafactor80",4.5207,0,20,false},// (3772.79)
-{"iotas80",0.0795955,0,1,false},// (0.205329)
-{"gammah80",0.0734578,0,1,false},// (0.0728982)
-{"mus80",0.00261847,0,1,false},// (0.05338)
-{"muhratio80",0.329251,0,1,false},// (9340.11)
-
-mle
-
-{"paqshift",6.58868,0,14,true},// (28.6429)
-{"v",26,0,2000,true},// (780.094)
-{"ce",21.6269,0,200000,true},// (119.795)
-{"cd",31602.6,0,200000,true},// (5.1477e+07)
-{"cu",16809,0,200000,true},// (4.99301e+06)
-{"ch",24.6127,0,1e+10,true},// (174.077)
-{"rcoef",2.18703e-20,0,100,true},// (0.00113395)
-{"hcoef",5.4374e-23,0,100,true},// (0.00290216)
-{"gcoef",8.03323e-05,0,100,true},// (0.00459671)
-{"dcoef",2.48655e-17,0,100,true},// (0.00418429)
-{"omega",8.40786,0,10,true},// (38.7842)
-{"omega2",0.394722,0,10,true},// (3.15486)
-{"pi",1,0,5,true},// (5.44869)
-{"thetacoef",0.00781977,0,0.3,true},// (0.555768)
-{"eta0",0.161952,0,0.6,false},// (0.836024)
-{"theta0",0.0137329,0,0.3,false},// (0.161525)
-{"hbrigiteffect",0.650919,0,2,false},// (18.1313)
-{"brigiteffect",1.99039,0,2,false},// (12.5883)
-{"cycleeffect",0.00921281,0,0.5,false},// (1541.71)
-{"sigma",0.1787,0,1,true},// (1.52064)
-{"varsigma",0.2212,0,1,true},// (1.59506)
-{"ufactor",1,0,1,true},// (10.0873)
-{"vfactor",1,0,1,true},// (34.922)
-{"gammas",0.0379316,0,1,false},// (0.126727)
-{"gammaa",0.997505,0,1,false},// (58.7873)
-{"muh",0.0640433,0,1,false},// (4477.27)
-{"betafactor0",3.57351,0,6,false},// (5464.49)
-{"iotas0",0.000632917,0,1,false},// (0.0125831)
-{"gammah0",0.871164,0,1,false},// (29.6887)
-{"mus0",8.04663e-08,0,1,false},// (4.64168e-05)
-{"muhratio0",0.05,0,1,true},// (3495.68)
-{"betafactor20",4.21581,0,6,false},// (6446.8)
-{"iotas20",0.000279539,0,1,false},// (0.00601079)
-{"gammah20",0.114067,0,1,false},// (0.811724)
-{"mus20",3.93164e-06,0,1,false},// (0.000167607)
-{"muhratio20",0.2,0,1,true},// (13981.9)
-{"betafactor65",3.99829,0,10,false},// (6114.81)
-{"iotas65",0.00492571,0,1,false},// (0.0390234)
-{"gammah65",0.103331,0,1,false},// (0.708194)
-{"mus65",0.000100699,0,1,false},// (0.00465679)
-{"muhratio65",0.660937,0,1,false},// (46206.5)
-{"betafactor80",5.86752,0,20,false},// (8974.35)
-{"iotas80",0.0294215,0,1,false},// (0.277909)
-{"gammah80",0.0292145,0,1,false},// (0.177783)
-{"mus80",0.0015618,0,1,false},// (0.0402671)
-{"muhratio80",0.238775,0,1,false},// (16692.5)
-
-
-*/
 

@@ -25,6 +25,7 @@ public:
                   gammah, muh,
                   musratio,
                   prebeta,
+                  complementaryprebeta,
                   betafactor,
                   ufactor,
                   vfactor,
@@ -38,7 +39,6 @@ public:
         /// more intutive to construct transposition
         dmatrix Pt(k(),k());
         Pt.setZero();
-
         double mh= params[muh] ;
         double ms = params[mus] * params[musratio];
 
@@ -124,6 +124,12 @@ public:
         Bt(Ia,E) = b / 4;
         Bt(Iu,E) = b;
 
+        double cb = params[complementaryprebeta]*params[betafactor];
+        Bt(Is,R) = cb;
+        Bt(Ip,R) = cb;
+        Bt(Ia,R) = cb / 4;
+        Bt(Iu,R) = cb;
+
         return Bt.transpose();
     }
 
@@ -161,6 +167,8 @@ public:
     }
 
 };
+
+enum evaccmodellingmethod {evmS, evmR, evmA, enumvaccmodellingmethods};
 
 class hcohortseir: public cohortseir<hpartial>
 {
@@ -244,8 +252,9 @@ public:
            };
     }
 
-    hcohortseir(unsigned numcohorts, const vector<double>& pop) :
-        cohortseir<hpartial>(numcohorts,pop)
+    hcohortseir(unsigned numcohorts, const vector<double>& pop,
+                evaccmodellingmethod vm) :
+        cohortseir<hpartial>(numcohorts,pop), vaccmethod(vm)
     {
     }
 
@@ -257,7 +266,9 @@ public:
                    hpartial::pi,
                    hpartial::eta,
                    hpartial::theta,
-                   hpartial::prebeta };
+                   hpartial::prebeta,
+                   hpartial::complementaryprebeta
+                 };
 
         assert(hpartial::numparams==
                                 computedpars.size()
@@ -282,11 +293,9 @@ public:
 
         preparams[hpartial::eta] =
                 params[eta0]
-//                *  g.Z(t,DAYADJUST)
                 ;
         preparams[hpartial::theta] =
                 (params[theta0] + params[thetacoef] * g.Z(t,PDET))
-//                * g.Z(t,DAYADJUST)
                 ;
 
         double ba =lweight * g.Z(paqtl,BRIGITATTACK) + (1-lweight)* g.Z(paqth,BRIGITATTACK);
@@ -301,7 +310,7 @@ public:
                     -params[omega] *(lweight*g.Z(paqtl,FEAR) + (1-lweight)*g.Z(paqth,FEAR))
                     -params[omega2] *(lweight*g.Z(paqtl,BETAFACTOR) + (1-lweight)*g.Z(paqth,BETAFACTOR))
                     );
-
+        preparams[hpartial::complementaryprebeta] = 0;
 
         auto cp = commonpars();
         unsigned srcc=numcomputationparams;
@@ -314,8 +323,6 @@ public:
             res[c] = preparams;
             for(unsigned i=0; i<ep.size(); i++)
                 res[c][ep[i]] = params[srcc++];
-            res[c][hpartial::alpha] =
-0.179; // tbd
             res[c][hpartial::iotas] *= 1+ ba21 * params[c<2 ? hybrigitefect : hobrigitefect];
             double pf = 0, ps = 0;
             if(t > 20)
@@ -332,8 +339,29 @@ public:
                 }
             }
             double vred = ps * params[seconddosered] + pf * params[firstdosered] + (1 - pf - ps) * 1;
-//clog << t << ": c= " << c << " ps=" << ps << " vred=" << vred << endl;
-            res[c][hpartial::prebeta] *= vred;
+
+//clog << t << ": c= " << c << " ps=" << ps
+//     << "cpb=" << res[c][hpartial::complementaryprebeta] << " vred=" << vred << endl;
+            double oldpb = res[c][hpartial::prebeta];
+            const double asympprob = 0.179; // tbd
+            res[c][hpartial::alpha] = asympprob;
+            switch(vaccmethod)
+            {
+            case evmS:
+                res[c][hpartial::prebeta] = oldpb * vred;
+                break;
+            case evmR:
+                res[c][hpartial::prebeta] = oldpb * vred;
+                res[c][hpartial::complementaryprebeta] = oldpb * (1-vred);
+                break;
+            case evmA:
+                res[c][hpartial::alpha] =
+                       asympprob + (1-vred) * (1-asympprob);
+                break;
+            default:
+                throw "unknown option";
+            }
+
         }
         assert(srcc==params.size());
         return res;
@@ -363,7 +391,8 @@ public:
        else
            return params[p[ci]];
     }
-
+private:
+    evaccmodellingmethod vaccmethod;
 };
 
 template <bool single>
@@ -435,8 +464,8 @@ template <typename S, estimationmethod method=emwls>
 class hestseir : public S, public estimableseirfilter<method>
 {
 public:
-    hestseir(const uncertain& ax0 = uncertain(dvector(0))) : S(),
-        estimableseirfilter<method>(),
+    hestseir(evaccmodellingmethod vaccmethod, const uncertain& ax0 = uncertain(dvector(0))) :
+         estimableseirfilter<method>(), S(vaccmethod),
         fx0(ax0)
     {}
     virtual uncertain X0(const vector<double>& params) const

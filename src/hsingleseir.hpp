@@ -8,7 +8,7 @@ class hsingleseir: public hcohortseir
 public:
     enum obscolums { /* R */ RA, RS, H, RH, DH, DO,  numobscolumns };
 
-    hsingleseir() : hcohortseir(1,{ 10699000 }) {}
+    hsingleseir(evaccmodellingmethod vm) : hcohortseir(1,{ 10699000 },vm) {}
 
     virtual unsigned n() const
     {
