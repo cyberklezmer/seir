@@ -1,5 +1,7 @@
 #include "orpp/csv.hpp"
 #include <limits.h>
+#include "districts.hpp"
+
 using namespace std;
 using namespace orpp;
 
@@ -80,6 +82,16 @@ int date2int(const string s, int zerodate, int lastdate, counter& c)
         return di;
 }
 
+int str2district(const string& okres_lau_kod)
+{
+   for(unsigned i=0; i<districts.size(); i++)
+   {
+       if(okres_lau_kod==districts[i].code)
+           return i;
+   }
+   return maxint;
+}
+
 int zerodate = date2int("2020-02-24");
 
 void mzcr2mzcr(const string& horizon, bool elementary=false)
@@ -91,7 +103,7 @@ void mzcr2mzcr(const string& horizon, bool elementary=false)
     unsigned inconsistento = 0;
 
     unsigned firstschool = 3;
-    unsigned numclasses = 3+9+4;
+    unsigned numclasses = 3+9+4+1;
 
     vector<vector<unsigned>> I(numdates,vector<unsigned>(numcohorts,0));
     vector<vector<unsigned>> R(numdates,vector<unsigned>(numcohorts,0));
@@ -112,19 +124,32 @@ void mzcr2mzcr(const string& horizon, bool elementary=false)
             inconsistento++;
         else
         {
-            unsigned v = osoby.getunsigned(i,vek);
-            cohorts c = v2cohort(v);
-
-            if(v>=firstschool && v < firstschool + numclasses)
-                E[d-zerodate][v-firstschool]++;
-
-            if(c==numcohorts)
-                inconsistento++;
-            else
+            const unsigned noage = 1000;
+            unsigned v = noage;
+            try
             {
-                R[d-zerodate][c]++;
-                if(osoby(i,nakaza_v_zahranici)=="1")
-                    I[d-zerodate][c]++;
+                v = osoby.getunsigned(i,vek);
+            }
+            catch(...)
+            {
+                clog << "Bad age " << osoby(i,vek) << endl;
+                inconsistento++;
+            }
+            if(v != noage)
+            {
+                cohorts c = v2cohort(v);
+
+                if(v>=firstschool && v < firstschool + numclasses)
+                    E[d-zerodate][v-firstschool]++;
+
+                if(c==numcohorts)
+                    inconsistento++;
+                else
+                {
+                    R[d-zerodate][c]++;
+                    if(osoby(i,nakaza_v_zahranici)=="1")
+                        I[d-zerodate][c]++;
+                }
             }
         }
     }
@@ -167,7 +192,7 @@ void mzcr2mzcr(const string& horizon, bool elementary=false)
 
     if(elementary)
     {
-        cout << "S1,S2,S3,1,2,3,4,5,6,7,8,9,G1,G2,G3,G4" << endl;
+        cout << "S1,S2,S3,1,2,3,4,5,6,7,8,9,G1,G2,G3,G4,G5" << endl;
         for(unsigned i=0; i<numdates; i++)
         {
             for(unsigned j=0; j<numclasses; j++)
@@ -619,3 +644,106 @@ void uzis2uzis(const string& horizon)
     }
 
 }
+
+
+void mzcr2districts(const string& horizon)
+{
+    int lastdate = date2int(horizon);
+    int numdates = lastdate - zerodate + 1;
+//    int firstwnum = 9;
+    int numweeks = (numdates + 6) / 7;
+    int lastweekinoutput = 72;
+    if(lastweekinoutput < numweeks)
+        throw "too much weeks";
+    counter ocounter;
+    unsigned inconsistento = 0;
+
+    unsigned firstschool = 3;
+    unsigned numclasses = 3+9+4+1;
+    unsigned numdistricts = districts.size();
+
+
+    vector<vector<unsigned>> C(numdistricts,vector<unsigned>(numweeks,0));
+    vector<vector<vector<unsigned>>> E(numdistricts,
+             vector<vector<unsigned>>(numdates,vector<unsigned>(numclasses,0)));
+    vector<unsigned> Y(numweeks,0);
+    vector<unsigned> YM(numweeks,0);
+
+    csv<','> osoby("/home/martin/Documents/s/covid/data/mzcr/osoby.csv");
+
+    cout << "Importing osoby" << endl;
+
+    for(unsigned i=1; i<osoby.r(); i++)
+    {
+        enum {datum,vek,pohlavi,kraj_nuts_kod,okres_lau_kod, nakaza_v_zahranici,nakaza_zeme_csu_kod};
+
+        string ds = osoby(i,datum);
+        int d = date2int(ds, zerodate,lastdate, ocounter);
+
+        if(d == maxint)
+        {
+            clog << "Invalid or out of range date " << ds << endl;
+            inconsistento++;
+        }
+        else
+        {
+            int w = (d-zerodate) / 7;
+            const unsigned noage = 1000;
+            unsigned v = noage;
+            try
+            {
+                v = osoby.getunsigned(i,vek);
+            }
+            catch(...)
+            {
+                clog << "Bad age " << osoby(i,vek) << endl;
+                inconsistento++;
+            }
+            if(v != noage)
+            {
+                int distr = str2district(osoby(i,okres_lau_kod));
+                if(distr == maxint)
+                {
+                    clog << "Unknown district code " << osoby(i,okres_lau_kod) << endl;
+                    inconsistento++;
+                }
+                else
+                {
+                    if(v>=firstschool && v < firstschool + numclasses)
+                        E[distr][w][v-firstschool]++;
+                    else
+                        YM[w]++;
+                    C[distr][w]++;
+                    Y[w]++;
+                }
+            }
+        }
+    }
+    cout << inconsistento << " records: "
+         << ocounter.wrong << " wrong dates,"
+         << ocounter.over << " dates over,"
+         << ocounter.under << " dates under" << endl;
+
+    ofstream o(sys::outputfolder()+"schools.csv");
+    if(!o)
+    {
+        cerr << "Cannot open " + sys::outputfolder()+"schools.csv" << endl;
+        throw;
+    }
+
+    o << "D,W,Y,YM,YD,I,C3,C4,C5,C6,C7,C8,C9,C10,C11,C12,C13,C14,C15,C16,C17,C18,C19" << endl;
+    for(unsigned i=0; i<numdistricts; i++)
+    {
+        int j=1;
+        for(; j<numweeks; j++) // we start on 2.3.
+        {
+            o << i << "," << j << "," << Y[j] << "," << YM[j] << "," << C[i][j] << "," << districts[i].inhabitants;
+            for(unsigned k=0; k<numclasses; k++)
+                o << "," << E[i][j][k];
+            o << endl;
+        }
+        for(; j<=lastweekinoutput; j++)
+            o << i << "," << j << endl;
+    }
+}
+

@@ -61,8 +61,8 @@ program g =
         {"omega",7.92673,0,10,false},// (11.262)
         {"omega2",0.234601,0,10,false},// (0.786288)
         {"pi",1,0,5,true},// (1.35197)
-        {"thetacoef",0.00466988,0,0.3,true},// (0.147267)
-        {"eta0",0.114667,0,0.6,true},// (0.17508)
+        {"thetacoef",0.00466988,0,0.3,false},// (0.147267)
+        {"eta0",0.114667,0,0.6,false},// (0.17508)
         {"theta0",0.011538,0,0.3,false},// (0.0384863)
         {"hybrigiteffect",0.772248,0,2,false},// (1.4952)
         {"hobrigiteffect",0.193242,0,2,false},// (0.907416)
@@ -112,7 +112,7 @@ program g =
     10000.0, // double regularizationweight;
 
     true,        // bool output;
-    70,         // unsigned predictionlength;
+    50,         // unsigned predictionlength;
     7,           // predlength
 
     false, // bool compositeforecast;
@@ -130,59 +130,111 @@ program g =
 
 
 
-vector<seirparaminit> newplain =
+vector<seirparaminit> newestplain =
 {
-    {"paqshift",6.37515,0,14,true},// (4.3591)
-    {"v",26,0,2000,true},// (707.7)
-    {"ce",21.6269,0,200000,true},// (523.68)
-    {"cd",31602.6,0,200000,true},// (1.15047e+08)
-    {"cu",16809,0,200000,true},// (4.80523e+06)
-    {"ch",24.6127,0,1e+10,true},// (1673.5)
-    {"rcoef",2.18703e-20,0,100,true},// (0.000464573)
-    {"hcoef",5.4374e-23,0,100,true},// (4.40748e-05)
-    {"gcoef",8.03323e-05,0,100,true},// (0.00263866)
-    {"dcoef",2.48655e-17,0,100,true},// (0.000203241)
-    {"omega",8.11712,0,10,true},// (10.2939)
-    {"omega2",0.285184,0,10,true},// (0.669781)
-    {"pi",1,0,5,true},// (1.12149)
-    {"thetacoef",0.00466988,0,0.3,true},// (0.118794)
-    {"eta0",0.114667,0,0.6,true},// (0.159462)
-    {"theta0",0.0151796,0,0.3,true},// (0.0319178)
-    {"hybrigiteffect",0.827221,0,2,false},// (1.46305)
-    {"hobrigiteffect",0.123896,0,2,false},// (0.995697)
-    {"brigiteffect",2.31437,0,3,true},// (3.21386)
-    {"cycleeffect",0.110679,0,0.5,true},// (8105.12)
-    {"firstdosered",0.3,0,1,true},// (7455.88)
-    {"secdosered",0.1,0,1,true},// (7455.88)
-    {"sigma",0.1787,0,1,true},// (0.25785)
-    {"varsigma",0.2212,0,1,true},// (0.704335)
-    {"ufactor",1,0,1,true},// (2.48543)
-    {"vfactor",1,0,1,true},// (11.1113)
-    {"gammas",0.0724328,0,1,true},// (0.0568855)
-    {"gammaa",0.08,0,1,true},// (0.558512)
-    {"musfactor",1,0,1,true},// (101994)
-    {"betafactor0",3.9208,0,6,true},// (28606)
-    {"iotas0",0.000100319,0,1,false},// (0.000131056)
-    {"gammah0",0.236971,0,1,false},// (0.468497)
-    {"muh0",7.80192e-06,0,1,false},// (0.00234264)
-    {"muso0",8.03665e-07,0,1,true},// (0.0819052)
-    {"betafactor20",4.39659,0,6,true},// (32077.1)
-    {"iotas20",0.000727031,0,1,false},// (0.00112932)
-    {"gammah20",0.114422,0,1,false},// (0.115915)
-    {"muh20",0.00847768,0,1,false},// (0.00390027)
-    {"mus20",5.60736e-06,0,1,true},// (0.571916)
-    {"betafactor65",4.29251,0,10,true},// (31318.2)
-    {"iotas65",0.0097146,0,1,false},// (0.0158523)
-    {"gammah65",0.0751786,0,1,false},// (0.0756831)
-    {"muh65",0.0217955,0,1,false},// (0.0122429)
-    {"mus65",0.000309967,0,1,true},// (31.6147)
-    {"betafactor80",7.19713,0,20,true},// (52510)
-    {"iotas80",0.0240735,0,1,false},// (0.0489235)
-    {"gammah80",0.0616411,0,1,false},// (0.0403419)
-    {"muh80",0.0348873,0,1,false},// (0.020594)
-    {"mus80",0.0018117,0,1,true},// (184.781)
+    {"paqshift",6.37515,0,14,true},// (4.43171)
+    {"v",26,0,2000,true},// (648.676)
+    {"ce",21.6269,0,200000,true},// (466.106)
+    {"cd",31602.6,0,200000,true},// (1.63685e+08)
+    {"cu",16809,0,200000,true},// (1.00199e+07)
+    {"ch",24.6127,0,1e+10,true},// (1244.05)
+    {"rcoef",2.18703e-20,0,100,true},// (0.000521645)
+    {"hcoef",5.4374e-23,0,100,true},// (2.13705e-05)
+    {"gcoef",8.03323e-05,0,100,true},// (0.00212304)
+    {"dcoef",2.48655e-17,0,100,true},// (0.000134228)
+    {"omega",7.54024,0,10,false},// (8.13708)
+    {"omega2",0.654117,0,10,false},// (0.629129)
+    {"pi",1,0,5,true},// (0.94765)
+    {"thetacoef",0.00653103,0,0.3,false},// (0.119507)
+    {"eta0",0.0938582,0,0.6,false},// (0.106459)
+    {"theta0",0.0122091,0,0.3,false},// (0.0190574)
+    {"hybrigiteffect",0.942284,0,2,false},// (1.34495)
+    {"hobrigiteffect",0.227366,0,2,false},// (1.168)
+    {"brigiteffect",2.07093,0,3,false},// (2.53176)
+    {"cycleeffect",0.108946,0,0.5,false},// (1375.05)
+    {"firstdosered",0.3,0,1,true},// (1.3702)
+    {"secdosered",0.1,0,1,true},// (0.644575)
+    {"sigma",0.1787,0,1,true},// (0.242122)
+    {"varsigma",0.2212,0,1,true},// (0.588367)
+    {"ufactor",1,0,1,true},// (2.18183)
+    {"vfactor",1,0,1,true},// (10.4284)
+    {"gammas",0.0724328,0,1,true},// (0.0328842)
+    {"gammaa",0.08,0,1,true},// (0.353131)
+    {"musfactor",1,0,1,true},// (11799.1)
+    {"betafactor0",3.30149,0,6,false},// (4093.93)
+    {"iotas0",0.000102584,0,1,false},// (9.93104e-05)
+    {"gammah0",0.239021,0,1,false},// (0.319211)
+    {"muh0",4.48952e-05,0,1,false},// (0.0159306)
+    {"muso0",1.31229e-06,0,1,false},// (0.015365)
+    {"betafactor20",3.54668,0,6,false},// (4398.33)
+    {"iotas20",0.000808109,0,1,false},// (0.00113297)
+    {"gammah20",0.115236,0,1,false},// (0.118974)
+    {"muh20",0.0085347,0,1,false},// (0.00430707)
+    {"mus20",6.41372e-06,0,1,false},// (0.0756774)
+    {"betafactor65",3.77547,0,10,false},// (4681.43)
+    {"iotas65",0.00981204,0,1,false},// (0.0127802)
+    {"gammah65",0.0768855,0,1,false},// (0.0678243)
+    {"muh65",0.0203517,0,1,false},// (0.00812189)
+    {"mus65",0.000257692,0,1,false},// (3.04058)
+    {"betafactor80",6.48382,0,20,false},// (8039.24)
+    {"iotas80",0.0244655,0,1,false},// (0.0354305)
+    {"gammah80",0.0632624,0,1,false},// (0.0402357)
+    {"muh80",0.0334133,0,1,false},// (0.00985821)
+    {"mus80",0.00158669,0,1,false},// (18.7207)
 };
 
+vector<seirparaminit> newerplain =
+{
+{"paqshift",6.37515,0,14,true},// (4.5139)
+{"v",26,0,2000,true},// (710.186)
+{"ce",21.6269,0,200000,true},// (548.781)
+{"cd",31602.6,0,200000,true},// (2.04637e+08)
+{"cu",16809,0,200000,true},// (1.28378e+07)
+{"ch",24.6127,0,1e+10,true},// (1653.23)
+{"rcoef",2.18703e-20,0,100,true},// (0.000483197)
+{"hcoef",5.4374e-23,0,100,true},// (2.88329e-05)
+{"gcoef",8.03323e-05,0,100,true},// (0.00263866)
+{"dcoef",2.48655e-17,0,100,true},// (0.000228863)
+{"omega",7.65579,0,10,false},// (9.42784)
+{"omega2",0.388482,0,10,false},// (0.43067)
+{"pi",1,0,5,true},// (1.22045)
+{"thetacoef",0.00383213,0,0.3,false},// (0.137961)
+{"eta0",0.110047,0,0.6,false},// (0.142798)
+{"theta0",0.0122286,0,0.3,false},// (0.0286528)
+{"hybrigiteffect",0.900113,0,2,false},// (1.18207)
+{"hobrigiteffect",0.205664,0,2,false},// (0.946368)
+{"brigiteffect",1.9758,0,3,false},// (2.4507)
+{"cycleeffect",0.0998913,0,0.5,false},// (5039.37)
+{"firstdosered",0.3,0,1,true},// (2.54383)
+{"secdosered",0.1,0,1,true},// (2.49745)
+{"sigma",0.1787,0,1,true},// (0.216864)
+{"varsigma",0.2212,0,1,true},// (0.580962)
+{"ufactor",1,0,1,true},// (2.42354)
+{"vfactor",1,0,1,true},// (11.2366)
+{"gammas",0.0724328,0,1,true},// (0.0417156)
+{"gammaa",0.08,0,1,true},// (0.618675)
+{"musfactor",1,0,1,true},// (63079.3)
+{"betafactor0",3.48224,0,6,false},// (15951.2)
+{"iotas0",0.000103601,0,1,false},// (0.000114533)
+{"gammah0",0.24262,0,1,false},// (0.359592)
+{"muh0",2.64541e-05,0,1,false},// (0.00665176)
+{"muso0",1.34172e-06,0,1,false},// (0.0845736)
+{"betafactor20",3.77024,0,6,false},// (17270.1)
+{"iotas20",0.00079842,0,1,false},// (0.0011933)
+{"gammah20",0.114521,0,1,false},// (0.129563)
+{"muh20",0.00846724,0,1,false},// (0.00421134)
+{"mus20",6.48057e-06,0,1,false},// (0.408789)
+{"betafactor65",3.95546,0,10,false},// (18119.3)
+{"iotas65",0.00992805,0,1,false},// (0.0136417)
+{"gammah65",0.0758084,0,1,false},// (0.0826874)
+{"muh65",0.0212164,0,1,false},// (0.00898881)
+{"mus65",0.000261583,0,1,false},// (16.5005)
+{"betafactor80",6.90064,0,20,false},// (31610)
+{"iotas80",0.0237339,0,1,false},// (0.0394336)
+{"gammah80",0.0624088,0,1,false},// (0.0534423)
+{"muh80",0.0340738,0,1,false},// (0.0172594)
+{"mus80",0.00163571,0,1,false},// (103.181)
+};
 
 program g4 =
 {
@@ -191,26 +243,26 @@ program g4 =
     "cohort", // string name;
     evmS,
     // vector<seirparaminit> params;
-    newplain,
+    newerplain,
 
     0, //15, // estoffset
 
     false, //  bool computeinitparam;
 
     false, // bool estimate;
-    10*60, //30*60,     // double etime=100;
+    2*60*60, //30*60,     // double etime=100;
     180,   // unsigned offset;
 
     false, // bool estimatevars;
     2*60*60,    // double evtime=100;
     200000.0, // double regularizationweight;
 
-    true,        // bool output;
-    80,         // unsigned predictionlength;
+    false,        // bool output;
+    35,         // unsigned predictionlength;
     7,           // diflength
 
-    false, // bool compositeforecast;
-    211+7+7+7+7-1,    //unsigned forecastdate=0;
+    true, // bool compositeforecast;
+    211+7+7+7+7+7+7+7+7+7-1,    //unsigned forecastdate=0;
     3, // unsigned numweeks = 3;
     0.15, // double volatility = 0.03;
 
@@ -621,7 +673,7 @@ void vacc(string delay, evaccmodellingmethod vm)
         vms + "_vacctest", // string name;
         // vector<seirparaminit> params;
         vm,
-        newplain,
+        newestplain,
 
         100, //15, // estoffset
 
@@ -681,6 +733,8 @@ extern void uzis2uzis(const string& horizon);
 extern void olduzis2uzis(const std::string& horizon, bool, bool, bool, bool);
 extern void mzcr2mzcr(const std::string& horizon, bool);
 extern void light(bool expforecast, string submdate);
+extern void mzcr2districts(const string& horizon);
+
 
 int main()
 {
@@ -703,9 +757,10 @@ vacc("42",evmR);
 //       run4(g4);
 //       run1(g);
 //       light(false, "2021-04-19");
-       mzcr2mzcr("2021-04-25", true);
-//      olduzis2uzis("2021-04-18", true, false,false,false);
-//        uzis2uzis("2021-04-18");
+      mzcr2mzcr("2021-07-22", false);
+//      olduzis2uzis("2021-04-27", true, false,false,false);
+//        uzis2uzis("2021-05-24");
+//       mzcr2districts("2021-07-04");
     }
     catch (std::exception& e) {
         std::cerr << e.what() << endl;
@@ -731,8 +786,6 @@ vacc("42",evmR);
     clog << "time: " << time(0)-startt << " seconds." << endl;
 
     return 0;
-
-
 }
 
 
